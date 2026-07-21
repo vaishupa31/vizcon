@@ -4,6 +4,17 @@ from utils.charts import countryness_over_time, COLORS
 
 
 def render():
+    from utils.data_loader import load_metrics
+
+    df = load_metrics()
+
+    # Compute actual stats from data
+    unique_names = df["name"].nunique()
+    num_countries = df["max_country"].nunique()
+    year_min = df["year"].min()
+    year_max = df["year"].max()
+    total_records = len(df)
+
     # ─── Hero Section ─────────────────────────────────────────────
     st.markdown(
         """
@@ -23,30 +34,78 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # Stats bar
+    # Stats bar — from actual data
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Unique Names", "17,000+")
+        st.metric("Unique Names", f"{unique_names:,}")
     with col2:
-        st.metric("Countries", "8")
+        st.metric("Countries", str(num_countries))
     with col3:
-        st.metric("Time Span", "1997–2023")
+        st.metric("Time Span", f"{year_min}–{year_max}")
     with col4:
-        st.metric("Records", "1.55M")
+        st.metric("Records", f"{total_records:,}")
 
-    st.markdown("---")
-
-    # ─── The Anglosphere ──────────────────────────────────────────
+       # ─── The Anglosphere — Globe ──────────────────────────────────
     st.markdown("### 🌍 The Anglosphere")
     st.markdown(
-        """
-        Eight countries united by one language — English.
-        Connected through colonization, migration, and shared media.
-        But each carries its **own cultural currents** beneath the surface.
-        """
+        "Eight countries united by one language — English. "
+        "Connected through colonization, migration, and shared media. "
+        "But each carries its **own cultural currents** beneath the surface."
     )
 
-    # Country grid
+    import plotly.graph_objects as go
+
+    # Anglosphere countries with lat/lon for markers
+    anglosphere = {
+        "USA": {"lat": 39.8, "lon": -98.5, "culture": "Hispanic heritage, melting pot"},
+        "England & Wales": {"lat": 52.3, "lon": -1.2, "culture": "Commonwealth hub, trend bridge"},
+        "Scotland": {"lat": 56.5, "lon": -4.2, "culture": "Celtic identity"},
+        "Northern Ireland": {"lat": 54.6, "lon": -6.7, "culture": "Gaelic revival (political)"},
+        "Ireland": {"lat": 53.1, "lon": -7.7, "culture": "Gaelic heritage"},
+        "Canada": {"lat": 56.1, "lon": -106.3, "culture": "Francophone Quebec"},
+        "Australia": {"lat": -25.3, "lon": 133.8, "culture": "Early adopter, exporter"},
+        "New Zealand": {"lat": -40.9, "lon": 174.9, "culture": "Pacific connections"},
+    }
+
+    fig = go.Figure()
+
+    # Add globe with highlighted countries
+    fig.add_trace(
+        go.Scattergeo(
+            lat=[v["lat"] for v in anglosphere.values()],
+            lon=[v["lon"] for v in anglosphere.values()],
+            text=[f"<b>{k}</b><br>{v['culture']}" for k, v in anglosphere.items()],
+            hoverinfo="text",
+            mode="markers+text",
+            marker=dict(size=14, color="#667eea", opacity=0.9, line=dict(width=1, color="#ffffff")),
+            textfont=dict(size=9, color="#1a1a2e"),
+            textposition="top center",
+        )
+    )
+
+    fig.update_geos(
+        projection_type="orthographic",
+        showland=True,
+        landcolor="#f0f0f5",
+        showocean=True,
+        oceancolor="#e8edf5",
+        showcountries=True,
+        countrycolor="#d1d5db",
+        showlakes=False,
+        projection_rotation=dict(lon=-30, lat=30),  # centered on Atlantic
+        bgcolor="rgba(0,0,0,0)",
+    )
+
+    fig.update_layout(
+        height=450,
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor="rgba(0,0,0,0)",
+        geo=dict(bgcolor="rgba(0,0,0,0)"),
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # Country detail cards below the globe
     countries = {
         "🇺🇸 USA": "Hispanic heritage, melting pot",
         "🇬🇧 England & Wales": "Commonwealth hub, trend bridge",
@@ -71,7 +130,6 @@ def render():
                 """,
                 unsafe_allow_html=True,
             )
-
     st.markdown("---")
 
     # ─── Core Question ────────────────────────────────────────────
