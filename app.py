@@ -1,36 +1,49 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="The DNA of a Name | VizCon 2026",
-    page_icon="🧬",
+    page_title="What's in a Name? | VizCon 2026",
+    page_icon="👶",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# Sidebar navigation
-st.sidebar.markdown("## 🧬 DNA of a Name")
+# ─── Sidebar Navigation ───────────────────────────────────────────
+st.sidebar.markdown("## 👶 What's in a Name?")
+st.sidebar.caption("VizCon 2026 | Analyticon")
 st.sidebar.markdown("---")
+
 page = st.sidebar.radio(
     "Navigate",
-    ["🏠 Home", "⏳ Lifespan", "🦠 Contagion", "🪞 Borders", "🌊 Convergence", "📋 Methods"],
-    index=0
+    [
+        "🏠 Home",
+        "🤝 Convergence",
+        "🧱 Invisible Borders",
+        "🎉 Discoveries",
+        "📋 Methods",
+    ],
+    index=0,
+    label_visibility="collapsed",
 )
 
+st.sidebar.markdown("---")
+st.sidebar.markdown(
+    "<small style='color:#6b7280'>8 countries · 1 language · 17,000+ names · 1997–2023</small>",
+    unsafe_allow_html=True,
+)
+
+# ─── Page Routing ─────────────────────────────────────────────────
 if page == "🏠 Home":
-    from views import home
-    home.render()
-elif page == "⏳ Lifespan":
-    st.title("⏳ The Lifespan of a Name")
-    st.info("Coming soon...")
-elif page == "🦠 Contagion":
-    st.title("🦠 How Names Spread")
-    st.info("Coming soon...")
-elif page == "🪞 Borders":
-    st.title("🪞 Invisible Borders")
-    st.info("Coming soon...")
-elif page == "🌊 Convergence":
-    st.title("🌊 The Great Convergence")
-    st.info("Coming soon...")
+    from pages.home import render
+    render()
+elif page == "🤝 Convergence":
+    from pages.convergence import render
+    render()
+elif page == "🧱 Invisible Borders":
+    from pages.borders import render
+    render()
+elif page == "🎉 Discoveries":
+    from pages.discoveries import render
+    render()
 elif page == "📋 Methods":
-    st.title("📋 Methodology & Sources")
-    st.info("Coming soon...")
+    from pages.methods import render
+    render()
