@@ -27,14 +27,6 @@ def render():
     df = load_metrics()
     summary = load_summary()
 
-    # ─── Section 1: The Pronunciation Wall ────────────────────────
-    st.markdown("### 🗣️ The Pronunciation Wall")
-    st.markdown(
-        "Two Irish names. Both ancient. Both beautiful. **Completely different fates.**"
-    )
-
-    st.markdown("---")
-
     # ─── Interactive: "Can You Say This?" ─────────────────────────
     st.markdown("### 🎤 Can You Say This?")
     st.markdown(
@@ -251,6 +243,14 @@ def render():
 
     st.markdown("---")
 
+    
+    # ─── Section 1: The Pronunciation Wall ────────────────────────
+    st.markdown("### 🗣️ The Pronunciation Wall")
+    st.markdown(
+        "Two Irish names. Both ancient. Both beautiful. **Completely different fates.**"
+    )
+
+    st.markdown("---")
     # ─── Declan vs Niamh comparison ───────────────────────────────
     st.markdown("### 📊 The Proof: Declan vs Niamh")
 
