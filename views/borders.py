@@ -31,6 +31,190 @@ def render():
     st.markdown(
         "Two Irish names. Both ancient. Both beautiful. **Completely different fates.**"
     )
+    # Add this section inside views/borders.py render() function
+# Place it after the Pronunciation Wall section
+
+    st.markdown("---")
+    
+    # ─── Interactive: "Can You Say This?" ─────────────────────────
+    st.markdown("### 🎤 Can You Say This?")
+    st.markdown(
+        "These names are **cultural passwords** — if you can't say them, "
+        "they'll never leave their home country. Give it a try!"
+    )
+
+    # Pronunciation challenge data
+    challenges = [
+        {
+            "name": "Sadhbh",
+            "country": "🇮🇪 Ireland",
+            "countryness": 8171,
+            "actual": "SIVE (like 'five')",
+            "hint": "It's only ONE syllable!",
+            "letters": 6,
+            "sounds": 3,
+        },
+        {
+            "name": "Caoilfhionn",
+            "country": "🇮🇪 Ireland",
+            "countryness": 2974,
+            "actual": "KEE-lin",
+            "hint": "10 letters, but only 5 sounds",
+            "letters": 11,
+            "sounds": 5,
+        },
+        {
+            "name": "Ruaraidh",
+            "country": "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland",
+            "countryness": 2219,
+            "actual": "ROO-ree",
+            "hint": "Think 'Rory' with a Scottish twist",
+            "letters": 8,
+            "sounds": 5,
+        },
+        {
+            "name": "Caoimhín",
+            "country": "🏴 Northern Ireland",
+            "countryness": 465,
+            "actual": "KEE-veen",
+            "hint": "It's the Irish version of 'Kevin'!",
+            "letters": 8,
+            "sounds": 6,
+        },
+        {
+            "name": "Siobhán",
+            "country": "🇮🇪 Ireland",
+            "countryness": 3234,
+            "actual": "shi-VAWN",
+            "hint": "The 'bh' makes a 'v' sound",
+            "letters": 7,
+            "sounds": 6,
+        },
+        {
+            "name": "Frédérique",
+            "country": "🇨🇦 Canada",
+            "countryness": 10588,
+            "actual": "fray-day-REEK",
+            "hint": "French — every accent changes the sound",
+            "letters": 10,
+            "sounds": 9,
+        },
+        {
+            "name": "Aoife",
+            "country": "🇮🇪 Ireland",
+            "countryness": 44,
+            "actual": "EE-fah",
+            "hint": "The 'aoi' = 'ee' pattern",
+            "letters": 5,
+            "sounds": 4,
+        },
+        {
+            "name": "Niamh",
+            "country": "🇮🇪 Ireland",
+            "countryness": 28,
+            "actual": "NEEV",
+            "hint": "The 'mh' is silent!",
+            "letters": 5,
+            "sounds": 3,
+        },
+    ]
+
+    # Random challenge selector
+    if "challenge_idx" not in st.session_state:
+        st.session_state.challenge_idx = 0
+    if "revealed" not in st.session_state:
+        st.session_state.revealed = False
+
+    challenge = challenges[st.session_state.challenge_idx]
+
+    # Display the challenge card
+    st.markdown(
+        f"""
+        <div style="background: linear-gradient(135deg, #F0F8FF, #E8F4FD); 
+                    border: 2px solid #7C9FD6; border-radius: 16px; 
+                    padding: 30px; text-align: center; margin: 20px 0;">
+            <div style="font-size: 0.85em; color: #718096; text-transform: uppercase; 
+                        letter-spacing: 2px;">How do you pronounce...</div>
+            <div style="font-size: 3em; font-weight: 800; color: #4A5568; 
+                        margin: 15px 0; font-family: Georgia, serif;">
+                {challenge['name']}
+            </div>
+            <div style="font-size: 0.9em; color: #718096;">
+                {challenge['country']} · Countryness: <b>{challenge['countryness']:,}</b> · 
+                {challenge['letters']} letters, {challenge['sounds']} sounds
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Buttons row
+    col_hint, col_reveal, col_next = st.columns([1, 1, 1])
+
+    with col_hint:
+        if st.button("💡 Hint", use_container_width=True):
+            st.info(f"💡 {challenge['hint']}")
+
+    with col_reveal:
+        if st.button("🔊 Reveal Pronunciation", use_container_width=True):
+            st.session_state.revealed = True
+
+    with col_next:
+        if st.button("➡️ Next Name", use_container_width=True):
+            st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
+            st.session_state.revealed = False
+            st.rerun()
+
+    # Reveal section
+    if st.session_state.revealed:
+        st.markdown(
+            f"""
+            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
+                        padding: 20px; text-align: center; margin-top: 16px;">
+                <div style="font-size: 0.85em; color: #059669; text-transform: uppercase; 
+                            letter-spacing: 2px;">It's pronounced:</div>
+                <div style="font-size: 2.2em; font-weight: 700; color: #059669; margin: 8px 0;">
+                    "{challenge['actual']}"
+                </div>
+                <div style="font-size: 0.9em; color: #718096; margin-top: 8px;">
+                    {challenge['hint']}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Audio playback (if audio files exist)
+        audio_path = f"assets/audio/{challenge['name'].lower()}.mp3"
+        if os.path.exists(audio_path):
+            st.audio(audio_path)
+        else:
+            st.caption("🔈 Audio clip coming soon!")
+
+        # Why it matters
+        st.markdown(
+            f"""
+            <div style="background: #FFF5F5; border-radius: 8px; padding: 12px; 
+                        margin-top: 12px; text-align: center;">
+                <span style="color: #e63946; font-weight: 600;">
+                    Countryness: {challenge['countryness']:,}
+                </span>
+                <span style="color: #718096;"> — This is why </span>
+                <span style="font-weight: 600;">{challenge['name']}</span>
+                <span style="color: #718096;"> never left {challenge['country']}</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Progress dots
+    dots = ""
+    for i in range(len(challenges)):
+        if i == st.session_state.challenge_idx:
+            dots += "● "
+        else:
+            dots += "○ "
+    st.caption(f"Name {st.session_state.challenge_idx + 1} of {len(challenges)}:  {dots}")
 
     # Declan vs Niamh comparison
     col_dec, col_niamh = st.columns(2)
