@@ -42,9 +42,7 @@ def render():
             "language": "Irish Gaelic",
             "countryness": 8171,
             "actual": "SIVE (just one syllable!)",
-            "hint": "It's only ONE syllable! 6 letters, 3 sounds.",
-            "letters": 6,
-            "sounds": 3,
+            "hint": "Rhymes with a number between four and six.",
         },
         {
             "name": "Seumas",
@@ -52,9 +50,7 @@ def render():
             "language": "Scottish Gaelic",
             "countryness": 4629,
             "actual": "SHAY-mus",
-            "hint": "It's the Gaelic version of 'James'!",
-            "letters": 6,
-            "sounds": 6,
+            "hint": "A king's name in disguise — think Bond, not bible.",
         },
         {
             "name": "Ffion",
@@ -62,9 +58,7 @@ def render():
             "language": "Welsh",
             "countryness": 1761,
             "actual": "FEE-on",
-            "hint": "Double-F in Welsh = 'F' sound. Single F = 'V' sound!",
-            "letters": 5,
-            "sounds": 4,
+            "hint": "In Welsh, one of these letters is lying to you.",
         },
         {
             "name": "Frédérique",
@@ -72,10 +66,8 @@ def render():
             "language": "French",
             "countryness": 10588,
             "actual": "fray-day-REEK",
-            "hint": "Every accent (é) changes the vowel. It's 4 syllables.",
-            "letters": 10,
-            "sounds": 9,
-            "audio_file": "frederique"
+            "audio_file": "frederique",
+            "hint": "The accents aren't decorative — each one changes a vowel.",
         },
         {
             "name": "Ophélie",
@@ -83,10 +75,8 @@ def render():
             "language": "French",
             "countryness": 3786,
             "actual": "oh-fay-LEE",
-            "hint": "Not 'Ophelia' — the French ending is '-lee' not '-lia'.",
-            "letters": 7,
-            "sounds": 6,
-            "audio_file": "ophelie"
+            "audio_file": "ophelie",
+            "hint": "Shakespeare knew her, but the French say her name differently.",
         },
         {
             "name": "Ngaire",
@@ -94,9 +84,7 @@ def render():
             "language": "Māori",
             "countryness": 11270,
             "actual": "NY-ree",
-            "hint": "'Ng' at the start is one sound — like the 'ng' in 'sing'!",
-            "letters": 6,
-            "sounds": 4,
+            "hint": "The first two letters are actually one sound you already know.",
         },
         {
             "name": "Aroha",
@@ -104,9 +92,7 @@ def render():
             "language": "Māori",
             "countryness": 13713,
             "actual": "ah-ROH-ha",
-            "hint": "It means 'love' in Māori. Every letter is pronounced!",
-            "letters": 5,
-            "sounds": 5,
+            "hint": "What you say at the end of a Hawaiian greeting — but at the start.",
         },
         {
             "name": "Narelle",
@@ -114,9 +100,7 @@ def render():
             "language": "Aboriginal Australian",
             "countryness": 4738,
             "actual": "nah-RELL",
-            "hint": "An Aboriginal name meaning 'woman from the sea'.",
-            "letters": 7,
-            "sounds": 5,
+            "hint": "Stress the ending — think of a bell, not a fairy tale.",
         },
         {
             "name": "Caoimhín",
@@ -124,10 +108,8 @@ def render():
             "language": "Irish Gaelic",
             "countryness": 465,
             "actual": "KEE-veen",
-            "hint": "It's the Irish version of 'Kevin'! The 'aoi'='ee', 'mh'='v'.",
-            "letters": 8,
-            "sounds": 6,
-            "audio_file": "caoimhin"
+            "audio_file": "caoimhin",
+            "hint": "You already know this name — just not in this spelling.",
         },
         {
             "name": "Nikau",
@@ -135,12 +117,9 @@ def render():
             "language": "Māori",
             "countryness": 29620,
             "actual": "NEE-kow",
-            "hint": "Named after the Nikau palm — NZ's only native palm tree.",
-            "letters": 5,
-            "sounds": 4,
+            "hint": "Named after a tree. Rhymes with 'free cow'.",
         },
     ]
-
     # Random challenge selector
     if "challenge_idx" not in st.session_state:
         st.session_state.challenge_idx = 0
@@ -162,8 +141,7 @@ def render():
                 {challenge['name']}
             </div>
             <div style="font-size: 0.9em; color: #718096;">
-                {challenge['country']} · Countryness: <b>{challenge['countryness']:,}</b> · 
-                {challenge['letters']} letters, {challenge['sounds']} sounds
+                {challenge['country']} · Countryness: <b>{challenge['countryness']:,}</b>
             </div>
         </div>
         """,
