@@ -33,17 +33,17 @@ st.sidebar.markdown(
 
 # ─── Page Routing ─────────────────────────────────────────────────
 if page == "🏠 Home":
-    from pages.home import render
+    from views.home import render
     render()
 elif page == "🤝 Convergence":
-    from pages.convergence import render
+    from views.convergence import render
     render()
 elif page == "🧱 Invisible Borders":
-    from pages.borders import render
+    from views.borders import render
     render()
 elif page == "🎉 Discoveries":
-    from pages.discoveries import render
+    from views.discoveries import render
     render()
 elif page == "📋 Methods":
-    from pages.methods import render
+    from views.methods import render
     render()
