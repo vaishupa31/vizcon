@@ -207,9 +207,10 @@ def render():
         )
 
         # Audio playback (if audio files exist)
+        audio_key = challenge.get('audio_file', challenge['name'].lower())
         audio_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "assets", "audio", f"{challenge['name'].lower()}.wav"
+            "assets", "audio", f"{audio_key}.wav"
         )
         if os.path.exists(audio_path):
             st.audio(audio_path)
