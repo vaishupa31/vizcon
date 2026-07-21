@@ -16,34 +16,44 @@ def render():
     total_records = len(df)
 
     # ─── Hero Section ─────────────────────────────────────────────
-    st.markdown(
-        """
-        <div style="text-align:center; padding: 30px 0 20px;">
-            <h1 style="font-size:2.8em; font-weight:800; 
-                       background: linear-gradient(135deg, #667eea, #764ba2);
-                       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-                       margin-bottom: 8px;">
-                What's in a Name?
+    # ─── Hero Header: "Passport for a Name" ─────────────────────────
+st.markdown(
+    """
+    <div style="text-align:center; padding: 40px 20px 30px; position: relative;">
+        <!-- Left baby decoration -->
+        <span style="position:absolute; left: 8%; top: 20%; font-size: 3.5em;">👶</span>
+        <span style="position:absolute; left: 5%; top: 55%; font-size: 2em;">🛂</span>
+        <span style="position:absolute; left: 12%; top: 75%; font-size: 1.5em;">✈️</span>
+        
+        <!-- Right baby decoration -->
+        <span style="position:absolute; right: 8%; top: 20%; font-size: 3.5em;">👶</span>
+        <span style="position:absolute; right: 5%; top: 55%; font-size: 2em;">🛂</span>
+        <span style="position:absolute; right: 12%; top: 75%; font-size: 1.5em;">🌍</span>
+        
+        <!-- Passport stamp decorations -->
+        <span style="position:absolute; left: 20%; top: 10%; font-size: 1.2em; opacity: 0.4; transform: rotate(-15deg);">🇮🇪</span>
+        <span style="position:absolute; right: 20%; top: 10%; font-size: 1.2em; opacity: 0.4; transform: rotate(10deg);">🇦🇺</span>
+        <span style="position:absolute; left: 25%; bottom: 10%; font-size: 1.2em; opacity: 0.4; transform: rotate(5deg);">🇨🇦</span>
+        <span style="position:absolute; right: 25%; bottom: 10%; font-size: 1.2em; opacity: 0.4; transform: rotate(-8deg);">🇺🇸</span>
+        
+        <!-- Main title -->
+        <div style="display: inline-block; border: 3px solid #7C9FD6; border-radius: 12px; 
+                    padding: 20px 50px; background: linear-gradient(135deg, #F0F8FF, #E8F4FD);
+                    box-shadow: 0 4px 20px rgba(124, 159, 214, 0.2);">
+            <div style="font-size: 0.85em; color: #718096; text-transform: uppercase; 
+                        letter-spacing: 3px; margin-bottom: 8px;">VizCon 2026</div>
+            <h1 style="font-size: 2.6em; font-weight: 800; color: #4A5568; margin: 0;
+                       font-family: 'Georgia', serif;">
+                🛂 Passport for a Name
             </h1>
-            <p style="font-size:1.2em; color:#6b7280; max-width:700px; margin:0 auto;">
-                8 countries. 1 language. 27 years of baby names.<br>
-                Do they name babies the same way? The answer is more surprising than you think.
+            <p style="font-size: 1.1em; color: #718096; margin-top: 10px;">
+                8 countries · 1 language · 17,000+ names · 1997–2023
             </p>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # Stats bar — from actual data
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Unique Names", f"{unique_names:,}")
-    with col2:
-        st.metric("Countries", str(num_countries))
-    with col3:
-        st.metric("Time Span", f"{year_min}–{year_max}")
-    with col4:
-        st.metric("Records", f"{total_records:,}")
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
        # ─── The Anglosphere — Globe ──────────────────────────────────
     st.markdown("### 🌍 The Anglosphere")
