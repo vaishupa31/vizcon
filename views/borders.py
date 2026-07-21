@@ -15,8 +15,8 @@ def render():
                 💿 The Local Vinyl
             </h1>
             <p style="font-size: 1.15em; color: #718096; max-width: 700px; margin: 0 auto;">
-                Some names never leave the record shop. Despite sharing a language,<br>
-                cultural walls keep 39% of names locked to a single country.
+                Not every name makes it to the global playlist.<br>
+                Some are pressed on vinyl that only plays in one country.
             </p>
         </div>
         """,
@@ -26,12 +26,16 @@ def render():
 
     df = load_metrics()
     summary = load_summary()
+    data_2023 = df[df["year"] == 2023]
 
-    # ─── Interactive: "Can You Say This?" ─────────────────────────
+    # ══════════════════════════════════════════════════════════════
+    # SECTION 1: QUIZ FIRST (Hook immediately)
+    # ══════════════════════════════════════════════════════════════
+
     st.markdown("### 🎤 Can You Say This?")
     st.markdown(
-        "These names are **cultural passwords** — if you can't say them, "
-        "they'll never leave their home country. Give it a try!"
+        "Before we explain why some names never leave — **try reading these aloud.** "
+        "These are real baby names from the Anglosphere. Can you pronounce them?"
     )
 
     # Pronunciation challenge data
@@ -120,7 +124,8 @@ def render():
             "hint": "Named after a tree. Rhymes with 'free cow'.",
         },
     ]
-    # Random challenge selector
+
+    # Challenge selector
     if "challenge_idx" not in st.session_state:
         st.session_state.challenge_idx = 0
     if "revealed" not in st.session_state:
@@ -176,16 +181,13 @@ def render():
                 <div style="font-size: 2.2em; font-weight: 700; color: #059669; margin: 8px 0;">
                     "{challenge['actual']}"
                 </div>
-                <div style="font-size: 0.9em; color: #718096; margin-top: 8px;">
-                    {challenge['hint']}
-                </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        # Audio playback (if audio files exist)
-        audio_key = challenge.get('audio_file', challenge['name'].lower())
+        # Audio playback
+        audio_key = challenge.get("audio_file", challenge["name"].lower())
         audio_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "assets", "audio", f"{audio_key}.wav"
@@ -222,16 +224,120 @@ def render():
 
     st.markdown("---")
 
-    
-    # ─── Section 1: The Pronunciation Wall ────────────────────────
-    st.markdown("### 🗣️ The Pronunciation Wall")
+    # ══════════════════════════════════════════════════════════════
+    # SECTION 2: INTRO — Why Some Names Never Left
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🏠 Why Some Names Never Left")
     st.markdown(
-        "Two Irish names. Both ancient. Both beautiful. **Completely different fates.**"
+        """
+        Could you pronounce all of those? Probably not — and that's the point.
+        
+        In 2023, **41% of all baby names** in the Anglosphere are at least 5x more 
+        popular in one country than anywhere else. They're culturally locked — 
+        and some countries lock harder than others.
+        """
+    )
+
+    # Bar chart: % of locked names per country
+    st.markdown("#### Which Countries Keep Their Names the Most?")
+
+    country_pct = []
+    for country in data_2023["max_country"].unique():
+        country_data = data_2023[data_2023["max_country"] == country]
+        total = country_data["name"].nunique()
+        locked = country_data[country_data["countryness"] >= 5]["name"].nunique()
+        if total > 0:
+            country_pct.append({"Country": country, "% Locked": round(locked / total * 100, 1)})
+
+    country_pct_df = sorted(country_pct, key=lambda x: x["% Locked"], reverse=True)
+
+    fig_locked = go.Figure()
+    fig_locked.add_trace(go.Bar(
+        x=[c["Country"] for c in country_pct_df],
+        y=[c["% Locked"] for c in country_pct_df],
+        marker_color=[COUNTRY_COLORS.get(c["Country"], "#7C9FD6") for c in country_pct_df],
+        text=[f"{c['% Locked']}%" for c in country_pct_df],
+        textposition="outside",
+        textfont=dict(size=13, color="#4A5568"),
+    ))
+    fig_locked.update_layout(
+        **CHART_LAYOUT,
+        title=None,
+        yaxis_title="% of Names Culturally Locked (countryness ≥ 5)",
+        height=400,
+        showlegend=False,
+    )
+    st.plotly_chart(fig_locked, use_container_width=True)
+
+    # Example names per country
+    st.markdown("#### 🎵 The Local Collection")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(
+            """
+            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🏴 Northern Ireland (65% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Eireann · Roisé · Dáithí · Ruadhán · Cianan</div>
+            </div>
+            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🇮🇪 Ireland (55% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Naoise · Sadhbh · Iarla · Laoise · Aoibhínn</div>
+            </div>
+            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland (52% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Innes · Ruairidh · Munro · Murdo</div>
+            </div>
+            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🇳🇿 New Zealand (36% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Kauri · Manaia · Ardie · Nikau</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with col2:
+        st.markdown(
+            """
+            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🇨🇦 Canada (36% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Édouard · Éloi · Ludovic · Frédérique</div>
+            </div>
+            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🇺🇸 USA (44% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Kaylani · Anahi · Tadeo · Itzel</div>
+            </div>
+            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🏴󠁧󠁢󠁷󠁬󠁳󠁿 England & Wales (35% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Ffion · Barney · Isla-rose · Tommy-lee</div>
+            </div>
+            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-weight: 700;">🇦🇺 Australia (23% locked)</div>
+                <div style="color: #718096; font-size: 0.9em;">Narelle · Zali · Bronte</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        "So **why** do these names stay locked? We found three main reasons:"
     )
 
     st.markdown("---")
-    # ─── Declan vs Niamh comparison ───────────────────────────────
-    st.markdown("### 📊 The Proof: Declan vs Niamh")
+
+    # ══════════════════════════════════════════════════════════════
+    # SECTION 3: REASONS WHY
+    # ══════════════════════════════════════════════════════════════
+
+    # ─── Reason 1: Pronunciation Wall ─────────────────────────────
+    st.markdown("### 🗣️ Reason 1: The Pronunciation Wall")
+    st.markdown(
+        "The most powerful predictor of whether a name stays locked is simple: "
+        "**can outsiders read it?**"
+    )
+
+    # Declan vs Niamh
+    st.markdown("#### Two Irish Names. Two Fates.")
 
     col_dec, col_niamh = st.columns(2)
     with col_dec:
@@ -240,10 +346,9 @@ def render():
             <div style="background: #E8F4FD; border: 2px solid #A8E6C8; border-radius: 12px;
                         padding: 20px; text-align: center;">
                 <div style="font-size: 2em; font-weight: 800; color: #4A5568;">Declan</div>
-                <div style="font-size: 0.9em; color: #718096; margin: 4px 0;">Pronounced: "DECK-lin" ✅</div>
+                <div style="font-size: 0.9em; color: #718096; margin: 4px 0;">"DECK-lin" ✅ Easy to read</div>
                 <div style="font-size: 2.5em; font-weight: 800; color: #A8E6C8; margin: 8px 0;">2.5</div>
-                <div style="font-size: 0.85em; color: #718096;">Countryness (2023)</div>
-                <div style="font-size: 0.8em; color: #A8E6C8; margin-top: 6px;">🌍 Gone global — in all 8 countries</div>
+                <div style="font-size: 0.85em; color: #718096;">countryness → Gone global</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -254,57 +359,137 @@ def render():
             <div style="background: #FFF5F5; border: 2px solid #F5B7C5; border-radius: 12px;
                         padding: 20px; text-align: center;">
                 <div style="font-size: 2em; font-weight: 800; color: #4A5568;">Niamh</div>
-                <div style="font-size: 0.9em; color: #718096; margin: 4px 0;">Pronounced: "NEEV" ❌</div>
+                <div style="font-size: 0.9em; color: #718096; margin: 4px 0;">"NEEV" ❌ Impossible to guess</div>
                 <div style="font-size: 2.5em; font-weight: 800; color: #F5B7C5; margin: 8px 0;">28</div>
-                <div style="font-size: 0.85em; color: #718096;">Countryness (2023)</div>
-                <div style="font-size: 0.8em; color: #F5B7C5; margin-top: 6px;">🏠 Stayed home — locked in Ireland/NI</div>
+                <div style="font-size: 0.85em; color: #718096;">countryness → Stayed home</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
     st.markdown("")
-    st.markdown("**Why?** You can say one. You can't say the other.")
 
-    # 3.2% vs 30.2% chart
-    st.markdown("#### Gaelic Orthography = Cultural Lock")
+    # Orthographic complexity
+    st.markdown("#### It's Not Just Sound — It's How It LOOKS")
+    st.markdown(
+        "If a name *looks* impossible on paper, parents in other countries won't even attempt it. "
+        "The letter-to-sound mismatch creates a visual wall:"
+    )
 
-    fig_gaelic = go.Figure()
-    fig_gaelic.add_trace(go.Bar(
-        x=["Names that ESCAPED Ireland", "Names that STAYED"],
-        y=[3.2, 30.2],
-        marker_color=["#A8E6C8", "#F5B7C5"],
-        text=["3.2%", "30.2%"],
+    complexity_data = {
+        "Name": ["Liam", "Declan", "Niamh", "Sadhbh", "Caoilfhionn"],
+        "Letters": [4, 6, 5, 6, 11],
+        "Actual Sounds": [4, 6, 3, 3, 5],
+        "Mismatch": ["None — what you see is what you say", "None — readable", "5 letters → 3 sounds", "6 letters → 3 sounds!", "11 letters → 5 sounds!!"],
+        "Countryness": [1.5, 2.5, 28, 905, 2974],
+        "Fate": ["🌍 Global", "🌍 Global", "🏠 Locked", "🔒 Very locked", "🔒 Extremely locked"],
+    }
+    st.dataframe(complexity_data, use_container_width=True, hide_index=True)
+
+    st.markdown(
+        """
+        **The pattern:** Names where letters = sounds (Liam, Declan) go global.
+        Names where letters ≠ sounds (Sadhbh, Caoilfhionn) stay locked.
+        The bigger the mismatch, the higher the countryness.
+        """
+    )
+
+    # Name length vs countryness
+    st.markdown("#### Longer Names = More Locked")
+
+    fig_length = go.Figure()
+    fig_length.add_trace(go.Bar(
+        x=["3-4 letters", "5-6 letters", "7-8 letters", "9-10 letters", "11+ letters"],
+        y=[64, 81, 82, 122, 205],
+        marker_color=["#A8E6C8", "#A8D8F0", "#F5D68A", "#F5C878", "#F5B7C5"],
+        text=["64", "81", "82", "122", "205"],
         textposition="outside",
-        textfont=dict(size=16, color="#4A5568"),
+        textfont=dict(size=13, color="#4A5568"),
     ))
-    fig_gaelic.update_layout(
+    fig_length.update_layout(
         **CHART_LAYOUT,
         title=None,
-        yaxis_title="% with Gaelic spelling (bh, dh, gh, mh, aoi)",
+        yaxis_title="Avg Countryness Score",
+        xaxis_title="Name Length",
         height=350,
         showlegend=False,
     )
-    st.plotly_chart(fig_gaelic, use_container_width=True)
+    st.plotly_chart(fig_length, use_container_width=True)
 
-    st.info("💡 **10x difference.** Gaelic spelling is literally a cultural lock. Names with 'bh', 'dh', 'gh', 'mh', or 'aoi' are **7.4x more culturally locked** than names without.")
-
-    # Three borders table
-    st.markdown("#### Three Borders Within One Language")
-    border_data = {
-        "Border": ["🟣 Gaelic ↔ Anglophone", "🔵 Francophone ↔ Anglophone", "🟢 Hispanic ↔ Anglophone"],
-        "Locked (can't cross)": ["Sadhbh, Caoilfhionn, Niamh, Aoife", "Frédérique, Océanne, Laurianne", "Almost none!"],
-        "Escaped (crossed)": ["Declan, Ronan, Connor, Liam", "Very few escape", "Santiago, Diego, Carlos, Isabella"],
-        "Verdict": ["Hard wall 🧱", "Hard wall (but fading) 📉", "No wall! 🌍"],
-    }
-    st.dataframe(border_data, use_container_width=True, hide_index=True)
+    st.info(
+        "💡 Names with 11+ letters have **3x higher countryness** than short names. "
+        "Complexity = barrier."
+    )
 
     st.markdown("---")
 
-    # ─── Section 2: Political Identity — NI Resistance ────────────
-    st.markdown("### 🏴 Political Identity — Northern Ireland Goes Opposite")
+    # ─── Reason 2: Culture & Tradition ────────────────────────────
+    st.markdown("### ✝️ Reason 2: Culture & Tradition")
     st.markdown(
-        "While the entire Anglosphere converges, **Northern Ireland is going the other direction.**"
+        "Even when a name has a perfectly pronounceable equivalent in English, "
+        "communities choose the **local form** — because the form IS the identity."
+    )
+
+    # Patrick vs Pádraig
+    st.markdown("#### Same Saint. Different Name. Different Fate.")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(
+            """
+            <div style="background: #F0F8FF; border-radius: 10px; padding: 16px; text-align: center;">
+                <div style="color: #A8E6C8; font-size: 0.8em; font-weight: 600;">GLOBAL VERSION</div>
+                <div style="font-size: 1.4em; font-weight: 700; margin: 6px 0;">Patrick</div>
+                <div style="font-size: 1.8em; font-weight: 800; color: #A8E6C8;">~2</div>
+                <div style="color: #718096; font-size: 0.8em;">countryness — everywhere</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with col2:
+        st.markdown(
+            """
+            <div style="text-align: center; padding-top: 25px;">
+                <div style="font-size: 2.5em;">⚡</div>
+                <div style="font-size: 0.85em; color: #718096; margin-top: 4px;">Same person.<br>Same meaning.<br>Different identity.</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with col3:
+        st.markdown(
+            """
+            <div style="background: #FFF5F5; border-radius: 10px; padding: 16px; text-align: center;">
+                <div style="color: #F5B7C5; font-size: 0.8em; font-weight: 600;">LOCAL VERSION</div>
+                <div style="font-size: 1.4em; font-weight: 700; margin: 6px 0;">Pádraig</div>
+                <div style="font-size: 1.8em; font-weight: 800; color: #F5B7C5;">343</div>
+                <div style="color: #718096; font-size: 0.8em;">countryness — locked in Ireland</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("")
+
+    more_saints = {
+        "English (Global)": ["Patrick (~2)", "Kieran (1.4)", "Brendan (4.7)", "Bridget (~3)"],
+        "Gaelic (Locked)": ["Pádraig (343)", "Ciarán (24)", "Breandán (—)", "Brigid (6)"],
+    }
+    st.dataframe(more_saints, use_container_width=True, hide_index=True)
+
+    st.markdown(
+        "**Choosing Pádraig over Patrick is a cultural statement.** "
+        "It says: *I belong to this place, this language, this tradition.* "
+        "The pronunciation wall is real — but sometimes staying locked is a **choice**."
+    )
+
+    st.markdown("---")
+
+    # ─── Reason 3: Political Identity ─────────────────────────────
+    st.markdown("### 🏴 Reason 3: Political Identity")
+    st.markdown(
+        "If pronunciation and tradition were the only factors, all Celtic countries "
+        "would behave the same. But they don't. Look at **Northern Ireland vs Ireland**:"
     )
 
     # NI vs Ireland divergence chart
@@ -367,15 +552,19 @@ def render():
             unsafe_allow_html=True,
         )
 
-    st.markdown("")
-    st.info("💡 **Same Gaelic heritage. Opposite response.** In NI, naming a child in Gaelic is a political and cultural statement tied to the Irish language movement.")
+    st.info(
+        "💡 **Same Gaelic heritage. Opposite response.** In Northern Ireland, "
+        "naming a child in Gaelic is tied to the Irish language movement and "
+        "post-Troubles cultural identity. It's not just tradition — it's a political act."
+    )
 
     st.markdown("---")
 
-    # ─── Section 3: Active Cultural Revival ───────────────────────
-    st.markdown("### 📜 Active Cultural Revival — Creating NEW Locked Names")
+    # ─── Reason 3b: Active Cultural Revival ───────────────────────
+    st.markdown("### 📜 Reason 4: Active Cultural Revival")
     st.markdown(
-        "These aren't old names surviving — they're **brand new**, invented since 2010."
+        "It's not just old names surviving — communities are actively **inventing** "
+        "brand-new names designed to never leave."
     )
 
     revival_data = {
@@ -386,57 +575,66 @@ def render():
     }
     st.dataframe(revival_data, use_container_width=True, hide_index=True)
 
-    st.markdown("**85 brand-new high-identity Celtic names** since 2010. Communities are inventing names *designed* to be unpronounceable by outsiders.")
+    st.markdown(
+        "**85 brand-new high-identity Celtic names** created since 2010. "
+        "None of these existed in the data before — they're freshly minted "
+        "cultural markers, designed with Gaelic orthography that outsiders can't read."
+    )
 
     st.markdown("---")
 
-    # ─── Section 4: Religious Tradition ───────────────────────────
-    st.markdown("### ✝️ Same Saint, Different Fate")
-    st.markdown("The **local form** carries identity that the English translation strips away.")
+    # ══════════════════════════════════════════════════════════════
+    # SECTION 4: DATA FACTS
+    # ══════════════════════════════════════════════════════════════
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(
-            """
-            <div style="background: #F0F8FF; border-radius: 10px; padding: 16px; text-align: center;">
-                <div style="color: #A8E6C8; font-size: 0.8em;">GLOBAL</div>
-                <div style="font-size: 1.3em; font-weight: 700;">Patrick</div>
-                <div style="font-size: 1.6em; font-weight: 800; color: #A8E6C8;">~2</div>
-                <div style="color: #718096; font-size: 0.8em;">countryness</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col2:
-        st.markdown(
-            """
-            <div style="text-align: center; padding-top: 30px;">
-                <div style="font-size: 2em;">⚡</div>
-                <div style="font-size: 0.85em; color: #718096;">Same saint.<br>Different name.</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col3:
-        st.markdown(
-            """
-            <div style="background: #FFF5F5; border-radius: 10px; padding: 16px; text-align: center;">
-                <div style="color: #F5B7C5; font-size: 0.8em;">LOCKED</div>
-                <div style="font-size: 1.3em; font-weight: 700;">Pádraig</div>
-                <div style="font-size: 1.6em; font-weight: 800; color: #F5B7C5;">343</div>
-                <div style="color: #718096; font-size: 0.8em;">countryness</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown("### 📊 The Numbers Behind the Wall")
+
+    # 3.2% vs 30.2% chart
+    st.markdown("#### Gaelic Spelling = Cultural Lock")
+
+    fig_gaelic = go.Figure()
+    fig_gaelic.add_trace(go.Bar(
+        x=["Names that ESCAPED Ireland", "Names that STAYED"],
+        y=[3.2, 30.2],
+        marker_color=["#A8E6C8", "#F5B7C5"],
+        text=["3.2%", "30.2%"],
+        textposition="outside",
+        textfont=dict(size=16, color="#4A5568"),
+    ))
+    fig_gaelic.update_layout(
+        **CHART_LAYOUT,
+        title="% of Names with Gaelic Orthography (bh, dh, gh, mh, aoi)",
+        yaxis_title="Percentage",
+        height=350,
+        showlegend=False,
+    )
+    st.plotly_chart(fig_gaelic, use_container_width=True)
+
+    st.markdown(
+        "Of **126** Irish names that escaped to other countries, only **3.2%** had Gaelic spelling. "
+        "Of **86** that stayed locked, **30.2%** did. A **10x difference** — and a **7.4x cultural lock factor**."
+    )
+
+    # Three borders table
+    st.markdown("#### Three Linguistic Borders Within One Language")
+    border_data = {
+        "Border": ["🟣 Gaelic ↔ Anglophone", "🔵 Francophone ↔ Anglophone", "🟢 Hispanic ↔ Anglophone"],
+        "Locked (can't cross)": ["Sadhbh, Caoilfhionn, Niamh, Aoife", "Frédérique, Océanne, Laurianne", "Almost none!"],
+        "Escaped (crossed)": ["Declan, Ronan, Connor, Liam", "Very few escape", "Santiago, Diego, Carlos, Isabella"],
+        "Wall Strength": ["Hard wall 🧱 (7.4x lock)", "Hard wall but fading 📉 (−79% since 1997)", "No wall! 🌍 (phonetically accessible)"],
+    }
+    st.dataframe(border_data, use_container_width=True, hide_index=True)
 
     st.markdown("---")
 
-    # ─── Section 5: Geographic Isolation ──────────────────────────
-    st.markdown("### 🏝️ Culture > Geography")
+    # Culture > Geography
+    st.markdown("#### Culture > Geography")
+    st.markdown(
+        "If distance were the barrier, Australia would be the most distinct. "
+        "It's not. **Cultural tradition trumps physical isolation.**"
+    )
 
-    # Horizontal bar: avg countryness by country 2023
-    country_cn = df[df["year"] == 2023].groupby("max_country")["countryness"].mean().sort_values(ascending=True).reset_index()
+    country_cn = data_2023.groupby("max_country")["countryness"].mean().sort_values(ascending=True).reset_index()
 
     fig_geo = go.Figure()
     fig_geo.add_trace(go.Bar(
@@ -449,14 +647,14 @@ def render():
     ))
     fig_geo.update_layout(
         **CHART_LAYOUT,
-        title="Avg Countryness by Country (2023) — Higher = More Culturally Distinct",
+        title="Avg Countryness by Country (2023)",
         height=350,
-        xaxis_title="Avg Countryness Score",
+        xaxis_title="Avg Countryness Score (Higher = More Distinct)",
     )
     st.plotly_chart(fig_geo, use_container_width=True)
 
     st.info(
-        "💡 **Ireland** (close to UK) remains 5x more distinct than **Australia** "
-        "(geographically isolated but culturally connected via media). "
-        "Culture > Geography."
+        "💡 **Ireland** (right next to the UK) remains 5x more distinct than **Australia** "
+        "(on the other side of the planet but culturally connected via media). "
+        "A non-English linguistic tradition matters more than distance."
     )
