@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
+import os
 from utils.data_loader import load_metrics, load_summary
 from utils.charts import CHART_LAYOUT, COLORS, COUNTRY_COLORS
 
