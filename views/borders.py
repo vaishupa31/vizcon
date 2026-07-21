@@ -32,11 +32,9 @@ def render():
     st.markdown(
         "Two Irish names. Both ancient. Both beautiful. **Completely different fates.**"
     )
-    # Add this section inside views/borders.py render() function
-# Place it after the Pronunciation Wall section
 
     st.markdown("---")
-    
+
     # ─── Interactive: "Can You Say This?" ─────────────────────────
     st.markdown("### 🎤 Can You Say This?")
     st.markdown(
@@ -45,7 +43,7 @@ def render():
     )
 
     # Pronunciation challenge data
-        challenges = [
+    challenges = [
         {
             "name": "Sadhbh",
             "country": "🇮🇪 Ireland",
@@ -214,7 +212,10 @@ def render():
         )
 
         # Audio playback (if audio files exist)
-        audio_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "audio", f"{challenge['name'].lower()}.wav")
+        audio_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "assets", "audio", f"{challenge['name'].lower()}.wav"
+        )
         if os.path.exists(audio_path):
             st.audio(audio_path)
         else:
@@ -245,7 +246,11 @@ def render():
             dots += "○ "
     st.caption(f"Name {st.session_state.challenge_idx + 1} of {len(challenges)}:  {dots}")
 
-    # Declan vs Niamh comparison
+    st.markdown("---")
+
+    # ─── Declan vs Niamh comparison ───────────────────────────────
+    st.markdown("### 📊 The Proof: Declan vs Niamh")
+
     col_dec, col_niamh = st.columns(2)
     with col_dec:
         st.markdown(
