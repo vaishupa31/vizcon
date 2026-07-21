@@ -83,6 +83,7 @@ def render():
             "hint": "Every accent (é) changes the vowel. It's 4 syllables.",
             "letters": 10,
             "sounds": 9,
+            "audio_file": "frederique"
         },
         {
             "name": "Ophélie",
@@ -93,6 +94,7 @@ def render():
             "hint": "Not 'Ophelia' — the French ending is '-lee' not '-lia'.",
             "letters": 7,
             "sounds": 6,
+            "audio_file": "ophelie"
         },
         {
             "name": "Ngaire",
@@ -133,6 +135,7 @@ def render():
             "hint": "It's the Irish version of 'Kevin'! The 'aoi'='ee', 'mh'='v'.",
             "letters": 8,
             "sounds": 6,
+            "audio_file": "caoimhin"
         },
         {
             "name": "Nikau",
