@@ -3,6 +3,8 @@ import pandas as pd
 import os
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+st.write("Looking for data in:", DATA_DIR)
+st.write("Files there:", os.listdir(DATA_DIR) if os.path.exists(DATA_DIR) else "FOLDER DOES NOT EXIST")
 
 
 @st.cache_data
