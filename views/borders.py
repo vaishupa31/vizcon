@@ -214,7 +214,7 @@ def render():
         )
 
         # Audio playback (if audio files exist)
-        audio_path = f"assets/audio/{challenge['name'].lower()}.mp3"
+        audio_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "audio", f"{challenge['name'].lower()}.wav")
         if os.path.exists(audio_path):
             st.audio(audio_path)
         else:
