@@ -245,95 +245,111 @@ def render():
         "But before we explore *why*, we need a way to **measure** how locked a name is."
     )
 
-    # ─── Countryness Formula ──────────────────────────────────────
+    # ─── Formula + Classification side by side ────────────────────
+    col_formula, col_class = st.columns([1, 1])
+
+    with col_formula:
+        st.markdown(
+            """
+            <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
+                        border-radius: 12px; padding: 24px; margin: 0;
+                        border: 1px solid #E2E8F0; text-align: center; height: 100%;">
+                <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
+                            letter-spacing: 2px; margin-bottom: 8px;">HOW WE MEASURED IT</div>
+                <div style="font-size: 1.4em; font-weight: 800; color: #2D3748; margin-bottom: 4px;">
+                    The Countryness Score
+                </div>
+                <div style="font-size: 0.88em; color: #4A5568; margin-bottom: 12px; font-style: italic;">
+                    How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 14px; margin: 10px auto;
+                            max-width: 400px; border: 1px solid #E2E8F0;">
+                    <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace;
+                                border-bottom: 2px solid #2D3748; padding-bottom: 8px; margin-bottom: 8px;">
+                        proportion in top country
+                    </div>
+                    <div style="font-size: 0.95em; color: #718096; font-family: 'Courier New', monospace;">
+                        avg proportion in other countries
+                    </div>
+                </div>
+                <div style="background: rgba(124,159,214,0.08); border-radius: 8px; padding: 10px; 
+                            margin: 12px auto 0; max-width: 400px; text-align: left;">
+                    <div style="font-size: 0.8em; color: #4A5568; line-height: 1.5;">
+                        <strong style="color: #7C9FD6;">Proportion</strong> = how many babies out of ALL babies 
+                        born that year got this name.<br>
+                        <span style="color: #718096;">e.g., 2,450 Niamhs out of 100,000 Irish babies = <strong>0.0245</strong> (or 2.45%)</span>
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_class:
+        st.markdown("#### How We Classified Them")
+        st.markdown("Not all locked names are locked equally:")
+        st.markdown(
+            """
+            <div style="margin: 8px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #E2E8F0;">
+                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Label</th>
+                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Score</th>
+                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #F0FFF4;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #059669;">✅ Global</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">< 5</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Shared — no single home</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFFF0;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">5 – 10</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Concentrating in one place</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF5F5;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #C53030;">🔒 Locked</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">10 – 100</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Clearly belongs to one country</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF0F0;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">100 – 1,000</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Barely exists elsewhere</td>
+                        </tr>
+                        <tr style="background: #FFE8E8;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">1,000+</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">A cultural password</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # ─── Paragraph explanation (full width below) ─────────────────
     st.markdown(
         """
-        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                    border-radius: 12px; padding: 24px; margin: 20px 0;
-                    border: 1px solid #E2E8F0; text-align: center;">
-            <div style="font-size: 0.75em; color: #7C9FD6; text-transform: uppercase; 
-                        letter-spacing: 2px; margin-bottom: 10px;">HOW WE MEASURED IT</div>
-            <div style="font-size: 1.6em; font-weight: 800; color: #2D3748; margin-bottom: 4px;">
-                The Countryness Score
-            </div>
-            <div style="font-size: 0.95em; color: #4A5568; margin-bottom: 14px; font-style: italic;">
-                How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?
-            </div>
-            <div style="background: white; border-radius: 8px; padding: 18px; margin: 12px auto;
-                        max-width: 500px; border: 1px solid #E2E8F0;">
-                <div style="font-size: 1.05em; color: #7C9FD6; font-family: 'Courier New', monospace;
-                            border-bottom: 2px solid #2D3748; padding-bottom: 10px; margin-bottom: 10px;">
-                    proportion in top country
-                </div>
-                <div style="font-size: 1.05em; color: #718096; font-family: 'Courier New', monospace;">
-                    avg proportion in other countries
-                </div>
-            </div>
-            <div style="background: rgba(124,159,214,0.08); border-radius: 8px; padding: 14px; 
-                        margin: 16px auto 0; max-width: 520px; text-align: left;">
-                <div style="font-size: 0.85em; color: #4A5568; line-height: 1.6;">
-                    <strong style="color: #7C9FD6;">Proportion</strong> = how many babies out of ALL babies 
-                    born that year got this name.<br>
-                    <span style="color: #718096;">e.g., 2,450 Niamhs out of 100,000 Irish babies = <strong>0.0245</strong> (or 2.45%)</span>
-                </div>
-            </div>
+        <div style="font-size: 0.92em; color: #4A5568; line-height: 1.7; margin: 12px 0 16px 0;">
+            <p style="margin: 0 0 8px 0;">A score below <strong>5</strong> means a name is genuinely shared — it's roughly equally popular 
+            across all countries. Think <em>Liam</em>, <em>Thomas</em>, <em>Emily</em>. No single country owns them.</p>
+            <p style="margin: 0 0 8px 0;">Once a name crosses <strong>5</strong>, something shifts. Over <strong>62%</strong> of all babies with that name 
+            are concentrated in a single country. It's no longer shared — it's <em>leaning</em>.</p>
+            <p style="margin: 0 0 8px 0;">By the time you hit <strong>50–100</strong>, nearly <strong>88%</strong> of the name's usage is in one place. 
+            These names — like <em>Siobhan</em> or <em>Conor</em> — are clearly Irish, clearly Scottish, clearly somewhere specific.</p>
+            <p style="margin: 0 0 8px 0;">And at <strong>1,000+</strong>? Over <strong>97%</strong> of all babies with that name live in one country. 
+            These are cultural passwords — names like <em>Narelle</em> (Australia) or <em>Sadhbh</em> (Ireland) 
+            that effectively don't exist anywhere else on Earth.</p>
+            <p style="margin: 0;">We drew the line at <strong>5</strong> because that's the tipping point: 
+            below it, a name belongs to everyone. Above it, one country <strong>owns</strong> it.</p>
         </div>
         """,
         unsafe_allow_html=True,
-    )
-
-    # ─── Classification: Table + Paragraph side by side ───────────
-    st.markdown("#### How We Classified Them")
-
-    st.markdown("Not all locked names are locked equally. We split them into five levels:")
-
-    st.markdown(
-        """
-        <div style="margin: 16px 0;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; max-width: 650px;">
-                <thead>
-                    <tr style="border-bottom: 2px solid #E2E8F0;">
-                        <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Label</th>
-                        <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Score</th>
-                        <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Meaning</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom: 1px solid #E2E8F0; background: #F0FFF4;">
-                        <td style="padding: 10px 8px; font-weight: 600; color: #059669;">✅ Global</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">< 5</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">Shared across countries — no single home</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFFF0;">
-                        <td style="padding: 10px 8px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">5 – 10</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">Starting to concentrate in one place</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF5F5;">
-                        <td style="padding: 10px 8px; font-weight: 600; color: #C53030;">🔒 Locked</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">10 – 100</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">Clearly belongs to one country</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF0F0;">
-                        <td style="padding: 10px 8px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">100 – 1,000</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">Barely exists outside its home</td>
-                    </tr>
-                    <tr style="background: #FFE8E8;">
-                        <td style="padding: 10px 8px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">1,000+</td>
-                        <td style="padding: 10px 8px; color: #4A5568;">Effectively a cultural password</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown(
-        "> We drew the line at **5** because that's where over **62%** of babies with a name "
-        "are concentrated in one country. Below it, shared. Above it, **owned**."
     )
 
     # ─── See it in action: Staircase Cards ────────────────────────
@@ -366,22 +382,6 @@ def render():
         )
     staircase_html += '</div>'
     st.markdown(staircase_html, unsafe_allow_html=True)
-
-    # ─── Classification + Why 5 (paragraph) ──────────────────────
-    st.markdown("#### How We Classified Them")
-    st.markdown(
-        "A score below **5** means a name is genuinely shared — it's roughly equally popular "
-        "across all countries. Think *Liam*, *Thomas*, *Emily*. No single country owns them.\n\n"
-        "Once a name crosses **5**, something shifts. Over **62%** of all babies with that name "
-        "are concentrated in a single country. It's no longer shared — it's *leaning*.\n\n"
-        "By the time you hit **50–100**, nearly **88%** of the name's usage is in one place. "
-        "These names — like *Siobhan* or *Conor* — are clearly Irish, clearly Scottish, clearly somewhere specific.\n\n"
-        "And at **1,000+**? Over **97%** of all babies with that name live in one country. "
-        "These are cultural passwords — names like *Narelle* (Australia) or *Sadhbh* (Ireland) "
-        "that effectively don't exist anywhere else on Earth.\n\n"
-        "We drew the line at **5** because that's the tipping point: "
-        "below it, a name belongs to everyone. Above it, one country **owns** it."
-    )
 
     # ─── The Local Collection: CD Cases (HTML) ────────────────────
     st.markdown("#### 🎵 The Local Collection")
@@ -456,7 +456,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
