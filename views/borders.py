@@ -340,13 +340,13 @@ def render():
             "color": "#742A2A",
             "icon": "🚫",
             "desc": "4,738x — exists almost nowhere else on Earth.",
-        },
+    },
     ]
 
-    selected = st.segmented_control(
+    selected = st.pills(
         "Pick a name to see its score:",
         options=[s["name"] for s in scale_names],
-        default="Liam",
+        default="Liam", 
         key="countryness_seg",
     )
 
@@ -423,43 +423,43 @@ def render():
     for t_country, t_flag, t_pct, t_color, t_names in tapes:
         tracks = ""
         for i, n in enumerate(t_names):
-            tracks += '<div style="font-size: 0.8em; color: #CBD5E0; padding: 2px 0;">' + str(i + 1) + ". " + n + "</div>"
+            tracks += '<div style="font-size: 0.8em; color: #4A5568; padding: 2px 0;">' + str(i + 1) + ". " + n + "</div>"
 
         tape_html += (
-            # Outer case — dark plastic with subtle transparency
-            '<div style="background: linear-gradient(145deg, #1A1F2E, #141820); border-radius: 6px;'
-            ' padding: 0; overflow: hidden; border: 1px solid #2A3040;'
-            ' box-shadow: 0 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03);'
+            # Outer case — colorful but darker shade
+            '<div style="background: linear-gradient(145deg, ' + t_color + '35, ' + t_color + '20); border-radius: 6px;'
+            ' padding: 0; overflow: hidden; border: 1px solid ' + t_color + '60;'
+            ' box-shadow: 0 4px 12px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.05);'
             ' position: relative;">'
-            # Spine (left edge)
+            # Spine (left edge — full color)
             '<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 7px;'
-            ' background: linear-gradient(180deg, ' + t_color + ', ' + t_color + '99);'
+            ' background: ' + t_color + ';'
             ' box-shadow: 1px 0 4px rgba(0,0,0,0.4);"></div>'
-            # Top section — CD artwork area
-            '<div style="padding: 14px 14px 10px 22px; border-bottom: 1px solid #2A3040;'
+            # Top section
+            '<div style="padding: 14px 14px 10px 22px; border-bottom: 1px solid ' + t_color + '40;'
             ' position: relative; min-height: 60px;">'
             # CD disc (top right)
             '<div style="position: absolute; top: 10px; right: 12px; width: 52px; height: 52px;'
             ' border-radius: 50%;'
             ' background: conic-gradient(from 0deg, #888 0%, #ccc 15%, #999 30%, #ddd 45%, #aaa 60%, #ccc 75%, #888 90%, #bbb 100%);'
-            ' box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.2);'
+            ' box-shadow: 0 2px 8px rgba(0,0,0,0.25), inset 0 0 10px rgba(0,0,0,0.15);'
             ' display: flex; align-items: center; justify-content: center;">'
             '<div style="width: 14px; height: 14px; border-radius: 50%;'
-            ' background: #141820; border: 2px solid #333;"></div>'
+            ' background: ' + t_color + '30; border: 2px solid ' + t_color + '80;"></div>'
             '</div>'
             # Country title
-            '<div style="font-weight: 700; font-size: 0.9em; color: #F0F8FF;">'
+            '<div style="font-weight: 700; font-size: 0.9em; color: #2D3748;">'
             + t_flag + " " + t_country +
             "</div>"
-            '<div style="font-size: 0.72em; color: ' + t_color + '; margin-top: 3px; font-weight: 600;">'
+            '<div style="font-size: 0.72em; color: #4A5568; margin-top: 3px; font-weight: 600;">'
             + t_pct + ' locked'
             "</div>"
             "</div>"
             # Track listing
-            '<div style="padding: 10px 14px 12px 22px; background: #12161E;">'
-            '<div style="font-size: 0.6em; color: #4A5568; text-transform: uppercase;'
+            '<div style="padding: 10px 14px 12px 22px; background: ' + t_color + '15;">'
+            '<div style="font-size: 0.6em; color: #718096; text-transform: uppercase;'
             ' letter-spacing: 1.5px; margin-bottom: 5px; font-weight: 600;">TRACKLIST</div>'
-            + tracks +
+            + tracks.replace("color: #CBD5E0", "color: #4A5568") +
             "</div>"
             "</div>"
         )
