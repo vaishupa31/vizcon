@@ -36,97 +36,50 @@ def render():
 
     st.markdown("### 🎤 Can You Say This?")
     st.markdown(
-        "Before we explain why some names never leave — **try reading these aloud.** "
-        "These are real baby names from the Anglosphere. Can you pronounce them?"
+        "These names are **cultural passwords** — if you can't say them, "
+        "they'll never leave their home country. Give it a try!"
     )
 
     # Pronunciation challenge data
-    challenges = [
+        challenges = [
         {
             "name": "Sadhbh",
             "country": "🇮🇪 Ireland",
-            "language": "Irish Gaelic",
             "countryness": 8171,
             "actual": "SIVE (just one syllable!)",
             "hint": "Rhymes with a number between four and six.",
         },
         {
-            "name": "Seumas",
-            "country": "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland",
-            "language": "Scottish Gaelic",
-            "countryness": 4629,
-            "actual": "SHAY-mus",
-            "hint": "A king's name in disguise — think Bond, not bible.",
-        },
-        {
-            "name": "Ffion",
-            "country": "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales",
-            "language": "Welsh",
-            "countryness": 1761,
-            "actual": "FEE-on",
-            "hint": "In Welsh, one of these letters is lying to you.",
+            "name": "Ngaire",
+            "country": "🇳🇿 New Zealand",
+            "countryness": 11270,
+            "actual": "NY-ree",
+            "hint": "The first two letters are actually one sound you already know.",
         },
         {
             "name": "Frédérique",
             "country": "🇨🇦 Canada",
-            "language": "French",
             "countryness": 10588,
             "actual": "fray-day-REEK",
             "audio_file": "frederique",
             "hint": "The accents aren't decorative — each one changes a vowel.",
         },
         {
-            "name": "Ophélie",
-            "country": "🇨🇦 Canada",
-            "language": "French",
-            "countryness": 3786,
-            "actual": "oh-fay-LEE",
-            "audio_file": "ophelie",
-            "hint": "Shakespeare knew her, but the French say her name differently.",
-        },
-        {
-            "name": "Ngaire",
-            "country": "🇳🇿 New Zealand",
-            "language": "Māori",
-            "countryness": 11270,
-            "actual": "NY-ree",
-            "hint": "The first two letters are actually one sound you already know.",
-        },
-        {
-            "name": "Aroha",
-            "country": "🇳🇿 New Zealand",
-            "language": "Māori",
-            "countryness": 13713,
-            "actual": "ah-ROH-ha",
-            "hint": "What you say at the end of a Hawaiian greeting — but at the start.",
-        },
-        {
-            "name": "Narelle",
-            "country": "🇦🇺 Australia",
-            "language": "Aboriginal Australian",
-            "countryness": 4738,
-            "actual": "nah-RELL",
-            "hint": "Stress the ending — think of a bell, not a fairy tale.",
-        },
-        {
             "name": "Caoimhín",
             "country": "🏴 N. Ireland",
-            "language": "Irish Gaelic",
             "countryness": 465,
             "actual": "KEE-veen",
             "audio_file": "caoimhin",
             "hint": "You already know this name — just not in this spelling.",
         },
         {
-            "name": "Nikau",
-            "country": "🇳🇿 New Zealand",
-            "language": "Māori",
-            "countryness": 29620,
-            "actual": "NEE-kow",
-            "hint": "Named after a tree. Rhymes with 'free cow'.",
+            "name": "Ffion",
+            "country": "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales",
+            "countryness": 1761,
+            "actual": "FEE-on",
+            "hint": "In Welsh, one of these letters is lying to you.",
         },
     ]
-
     # Challenge selector
     if "challenge_idx" not in st.session_state:
         st.session_state.challenge_idx = 0
@@ -136,7 +89,7 @@ def render():
     challenge = challenges[st.session_state.challenge_idx]
 
     # Display the challenge card
-    st.markdown(
+        st.markdown(
         f"""
         <div style="background: linear-gradient(135deg, #F0F8FF, #E8F4FD); 
                     border: 2px solid #7C9FD6; border-radius: 16px; 
@@ -148,7 +101,7 @@ def render():
                 {challenge['name']}
             </div>
             <div style="font-size: 0.9em; color: #718096;">
-                {challenge['country']} · Countryness: <b>{challenge['countryness']:,}</b>
+                {challenge['country']}
             </div>
         </div>
         """,
@@ -176,13 +129,14 @@ def render():
     if st.session_state.revealed:
         st.markdown(
             f"""
-            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 20px; text-align: center; margin-top: 16px;">
-                <div style="font-size: 0.85em; color: #059669; text-transform: uppercase; 
-                            letter-spacing: 2px;">It's pronounced:</div>
-                <div style="font-size: 2.2em; font-weight: 700; color: #059669; margin: 8px 0;">
-                    "{challenge['actual']}"
-                </div>
+            <div style="background: #FFF5F5; border-radius: 8px; padding: 12px; 
+                        margin-top: 12px; text-align: center;">
+                <span style="color: #e63946; font-weight: 600;">
+                    Countryness: {challenge['countryness']:,}
+                </span>
+                <span style="color: #718096;"> — A name {challenge['countryness']:,}x more popular in </span>
+                <span style="font-weight: 600;">{challenge['country']}</span>
+                <span style="color: #718096;"> than anywhere else</span>
             </div>
             """,
             unsafe_allow_html=True,
