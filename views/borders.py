@@ -540,68 +540,64 @@ def render():
         "That single difference determined their fate."
     )
 
-    # ─── Part 2: It's not just Irish ─────────────────────────────
+       # ─── Part 2: It's not just Irish ─────────────────────────────
     st.markdown("")
     st.markdown("**It's not just Irish.**")
     st.markdown(
-        "Every country in the Anglosphere has its own phonetic code that outsiders can't crack."
+        "Every country in the Anglosphere has its own phonetic code that outsiders can't crack. "
+        "Here are the rules that lock names in place:"
     )
 
-    # Jukebox station data
+    # Jukebox — just the phonetic rules
     stations = {
         "Gaeilge": {
             "subtitle": "Irish Gaelic",
             "color": "#A8E6C8",
-            "key": "bh/mh → v · dh/gh → silent · aoi → ee · fh → silent",
-            "names": [
-                ("Sadhbh", "/SIVE/", "dh + bh both silent between vowels", "8,171"),
-                ("Caoimhín", "/KEE-veen/", "aoi = ee, mh = v, ín = een", "465"),
-                ("Gearóid", "/GAR-ohd/", "G hard, eá = ah, óid = ohd", "6,896"),
-                ("Aoibhínn", "/EE-veen/", "aoi = ee, bh = v, ínn = een", "2,774"),
+            "rules": [
+                ("bh / mh", "→ 'v'"),
+                ("dh / gh", "→ silent"),
+                ("aoi", "→ 'ee'"),
+                ("fh", "→ silent"),
             ]
         },
         "Gàidhlig": {
             "subtitle": "Scottish Gaelic",
             "color": "#C8A8E8",
-            "key": "idh/aidh → silent ee · eo → aw · gh → silent",
-            "names": [
-                ("Ruaraidh", "/ROO-ah-ree/", "aidh ending = silent 'ee'", "2,219"),
-                ("Eilidh", "/AY-lee/", "idh = silent 'ee' sound", "78"),
-                ("Breagha", "/BREE-ah/", "gh is silent between vowels", "2,931"),
-                ("Seonaid", "/SHAW-natch/", "eo = aw, aid = atch", "1,492"),
+            "rules": [
+                ("idh / aidh", "→ silent 'ee'"),
+                ("eo", "→ 'aw'"),
+                ("gh", "→ silent"),
+                ("mh", "→ 'v'"),
             ]
         },
         "Français": {
             "subtitle": "Canadian French",
             "color": "#F5B7C5",
-            "key": "é → ay · ç → s · -ique → eek · oi → wa",
-            "names": [
-                ("Frédérique", "/fray-day-REEK/", "é = ay, -ique = eek", "10,588"),
-                ("Ophélie", "/oh-fay-LEE/", "é = ay, ie = ee", "3,786"),
-                ("Océanne", "/oh-say-ANN/", "é = ay, double n = nasal", "3,781"),
-                ("Éloi", "/ay-LWA/", "É = ay, oi = wa", "1,940"),
+            "rules": [
+                ("é / è", "→ 'ay'"),
+                ("-ique", "→ 'eek'"),
+                ("oi", "→ 'wa'"),
+                ("ç", "→ 's'"),
             ]
         },
         "Te Reo": {
             "subtitle": "Māori",
             "color": "#F5C878",
-            "key": "ng → one sound · wh → f · every vowel spoken · au → ow",
-            "names": [
-                ("Ngaire", "/NY-ree/", "Ng is one consonant in Māori", "11,270"),
-                ("Aroha", "/ah-ROH-ha/", "Every vowel pronounced separately", "13,713"),
-                ("Nikau", "/NEE-kow/", "au = ow (named after a palm tree)", "29,620"),
-                ("Manaia", "/mah-NY-ah/", "ai = eye sound", "8,319"),
+            "rules": [
+                ("ng-", "→ one sound (ŋ)"),
+                ("wh", "→ 'f'"),
+                ("au", "→ 'ow'"),
+                ("vowels", "→ all pronounced"),
             ]
         },
         "Cymraeg": {
             "subtitle": "Welsh",
             "color": "#F5D68A",
-            "key": "ff → f · f → v · ll → lateral fricative · dd → th",
-            "names": [
-                ("Ffion", "/FEE-on/", "ff = f (single f = v in Welsh)", "1,761"),
-                ("Osian", "/OSH-an/", "si = sh in Welsh", "1,462"),
-                ("Iwan", "/ee-WAN/", "I is always 'ee' in Welsh", "1,383"),
-                ("Llŷr", "/SHLEER/", "ll = voiceless lateral fricative", "500"),
+            "rules": [
+                ("ff", "→ 'f'"),
+                ("f", "→ 'v'"),
+                ("ll", "→ breathy 'l'"),
+                ("dd", "→ 'th'"),
             ]
         },
     }
@@ -619,66 +615,41 @@ def render():
         station = stations[selected_station]
         subtitle = station["subtitle"]
         color = station["color"]
-        key_text = station["key"]
-        names = station["names"]
+        rules = station["rules"]
 
-        # Jukebox card — lighter than the radio, pastel background
-        jukebox_top = (
+        # Compact phonetic rules card
+        card_html = (
             '<div style="background: linear-gradient(135deg, #F8FAFC, #EEF2FF, #F0FFF4);'
             'border-radius: 12px; padding: 24px; border: 1px solid #E2E8F0;'
             'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
-            # Header row: language name + decryption key
-            '<div style="display: flex; justify-content: space-between; align-items: center;'
-            'margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">'
-            '<div>'
-            '<span style="font-size: 1.2rem; font-weight: 700; color: #2D3748;">'
+            # Header
+            '<div style="margin-bottom: 16px;">'
+            '<span style="font-size: 1.1rem; font-weight: 700; color: #2D3748;">'
             + selected_station + '</span>'
             '<span style="font-size: .8rem; color: #718096; margin-left: 10px;">'
             + subtitle + '</span>'
             '</div>'
-            '<div style="padding: 6px 12px; background: ' + color + '20;'
-            'border-radius: 6px; border: 1px solid ' + color + '40;">'
-            '<span style="font-size: .65rem; letter-spacing: 1px; color: #4A5568;'
-            'font-weight: 600;">KEY: </span>'
-            '<span style="font-size: .7rem; color: #2D3748; font-family: monospace;">'
-            + key_text + '</span>'
-            '</div>'
-            '</div>'
+            # Rules table
+            '<div style="display: grid; grid-template-columns: auto 1fr; gap: 0; '
+            'background: white; border-radius: 8px; border: 1px solid #E2E8F0; overflow: hidden;">'
         )
 
-        # Track rows
-        tracks_html = ''
-        for i, (name, pron, rule, score) in enumerate(names):
-            track_num = str(i + 1).zfill(2)
-            tracks_html += (
-                '<div style="display: flex; align-items: center; padding: 14px 16px;'
-                'background: white; border-radius: 8px; margin-bottom: 8px;'
-                'border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,.04);">'
-                # Track number
-                '<div style="font-size: .75rem; color: #A0AEC0; font-weight: 700;'
-                'min-width: 30px; font-family: monospace;">' + track_num + '</div>'
-                # Name + pronunciation
-                '<div style="flex: 1;">'
-                '<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">'
-                '<span style="font-size: 1.15rem; font-weight: 700; color: #2D3748;'
-                'font-family: Georgia, serif;">' + name + '</span>'
-                '<span style="font-size: .8rem; color: ' + color + '; font-weight: 600;">'
-                + pron + '</span>'
-                '</div>'
-                '<div style="font-size: .72rem; color: #718096; margin-top: 4px;">' + rule + '</div>'
-                '</div>'
-                # Countryness badge
-                '<div style="background: ' + color + '15; border: 1px solid ' + color + '40;'
-                'border-radius: 6px; padding: 6px 12px; text-align: center; min-width: 70px;">'
-                '<div style="font-size: .55rem; color: #718096; letter-spacing: 1px;">LOCKED</div>'
-                '<div style="font-size: .9rem; font-weight: 800; color: #2D3748;">' + score + 'x</div>'
-                '</div>'
-                '</div>'
+        for i, (pattern, result) in enumerate(rules):
+            border_bottom = 'border-bottom: 1px solid #E2E8F0;' if i < len(rules) - 1 else ''
+            card_html += (
+                # Pattern column
+                '<div style="padding: 14px 18px; font-family: monospace; font-size: 1rem;'
+                'font-weight: 700; color: #2D3748; background: ' + color + '12; ' + border_bottom + '">'
+                + pattern + '</div>'
+                # Result column
+                '<div style="padding: 14px 18px; font-size: .95rem; font-weight: 600;'
+                'color: #4A5568; ' + border_bottom + '">'
+                + result + '</div>'
             )
 
-        jukebox_bottom = '</div>'
+        card_html += '</div></div>'
+        st.markdown(card_html, unsafe_allow_html=True)
 
-        st.markdown(jukebox_top + tracks_html + jukebox_bottom, unsafe_allow_html=True)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
