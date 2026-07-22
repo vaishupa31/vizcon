@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -263,7 +263,7 @@ def render():
                     How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?
                 </div>
                 <div style="background: white; border-radius: 8px; padding: 14px; margin: 10px auto;
-                            max-width: 400px; border: 1px solid #E2E8F0;">
+                            border: 1px solid #E2E8F0;">
                     <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace; font-weight: 700;
                                 border-bottom: 2px solid #2D3748; padding-bottom: 8px; margin-bottom: 8px;">
                         proportion in top country
@@ -272,9 +272,9 @@ def render():
                         avg proportion in other countries
                     </div>
                 </div>
-                <div style="background: rgba(124,159,214,0.08); border-radius: 8px; padding: 10px; 
-                            margin: 12px auto 0; max-width: 400px; text-align: left;">
-                    <div style="font-size: 0.8em; color: #4A5568; line-height: 1.5;">
+                <div style="background: rgba(124,159,214,0.08); border-radius: 8px; padding: 10px;
+                            margin: 12px auto 0; text-align: left;">
+                    <div style="font-size: 0.78em; color: #4A5568; line-height: 1.5;">
                         <strong style="color: #7C9FD6;">Proportion</strong> = how many babies out of ALL babies 
                         born that year got this name.<br>
                         <span style="color: #718096;">e.g., 2,450 Niamhs out of 100,000 Irish babies = <strong>0.0245</strong> (or 2.45%)</span>
@@ -294,7 +294,7 @@ def render():
                 <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
                             letter-spacing: 2px; margin-bottom: 8px;">HOW WE CLASSIFIED THEM</div>
                 <div style="font-size: 1.4em; font-weight: 800; color: #2D3748; margin-bottom: 4px;">
-                    Five Levels of Locked
+                    The Classification
                 </div>
                 <div style="font-size: 0.88em; color: #4A5568; margin-bottom: 12px;">Not all locked names are locked equally:</div>
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.82em; text-align: left;">
@@ -340,22 +340,17 @@ def render():
 
     # ─── Paragraph explanation (full width below) ─────────────────
     st.markdown(
-        """
-        <div style="font-size: 0.9em; color: #4A5568; line-height: 1.65; margin: 16px 0;">
-            <p style="margin: 0 0 6px 0;">A score below <strong>5</strong> means a name is genuinely shared — it's roughly equally popular 
-            across all countries. Think <em>Liam</em>, <em>Thomas</em>, <em>Emily</em>. No single country owns them.</p>
-            <p style="margin: 0 0 6px 0;">Once a name crosses <strong>5</strong>, something shifts. Over <strong>62%</strong> of all babies with that name 
-            are concentrated in a single country. It's no longer shared — it's <em>leaning</em>.</p>
-            <p style="margin: 0 0 6px 0;">By the time you hit <strong>50–100</strong>, nearly <strong>88%</strong> of the name's usage is in one place. 
-            These names — like <em>Siobhan</em> or <em>Conor</em> — are clearly Irish, clearly Scottish, clearly somewhere specific.</p>
-            <p style="margin: 0 0 6px 0;">And at <strong>1,000+</strong>? Over <strong>97%</strong> of all babies with that name live in one country. 
-            These are cultural passwords — names like <em>Narelle</em> (Australia) or <em>Sadhbh</em> (Ireland) 
-            that effectively don't exist anywhere else on Earth.</p>
-            <p style="margin: 0;">We drew the line at <strong>5</strong> because that's the tipping point: 
-            below it, a name belongs to everyone. Above it, one country <strong>owns</strong> it.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
+        "A score below **5** means a name is genuinely shared — it's roughly equally popular "
+        "across all countries. Think *Liam*, *Thomas*, *Emily*. No single country owns them. "
+        "Once a name crosses **5**, something shifts. Over **62%** of all babies with that name "
+        "are concentrated in a single country. It's no longer shared — it's *leaning*. "
+        "By the time you hit **50–100**, nearly **88%** of the name's usage is in one place. "
+        "These names — like *Siobhan* or *Conor* — are clearly Irish, clearly Scottish, clearly somewhere specific. "
+        "And at **1,000+**? Over **97%** of all babies with that name live in one country. "
+        "These are cultural passwords — names like *Narelle* (Australia) or *Sadhbh* (Ireland) "
+        "that effectively don't exist anywhere else on Earth. "
+        "We drew the line at **5** because that's the tipping point: "
+        "below it, a name belongs to everyone. Above it, one country **owns** it."
     )
 
     # ─── See it in action: Staircase Cards ────────────────────────
