@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -252,18 +252,21 @@ def render():
                     border-radius: 12px; padding: 24px; margin: 20px 0;
                     border: 1px solid #E2E8F0; text-align: center;">
             <div style="font-size: 0.75em; color: #7C9FD6; text-transform: uppercase; 
-                        letter-spacing: 2px; margin-bottom: 10px;">We invented a metric</div>
+                        letter-spacing: 2px; margin-bottom: 10px;">HOW WE MEASURED IT</div>
             <div style="font-size: 1.6em; font-weight: 800; color: #2D3748; margin-bottom: 8px;">
                 The Countryness Score
             </div>
-            <div style="font-size: 1.1em; color: #4A5568; font-family: 'Courier New', monospace;
-                        background: white; border-radius: 8px; padding: 14px; margin: 12px auto;
-                        max-width: 500px; border: 1px solid #E2E8F0;">
-                <span style="color: #7C9FD6;">popularity in top country</span><br>
-                ────────────────────────────── = <strong style="color: #2D3748;">countryness</strong><br>
-                <span style="color: #718096;">avg popularity everywhere else</span>
+            <div style="background: white; border-radius: 8px; padding: 18px; margin: 12px auto;
+                        max-width: 480px; border: 1px solid #E2E8F0;">
+                <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace;
+                            border-bottom: 2px solid #2D3748; padding-bottom: 8px; margin-bottom: 8px;">
+                    % of babies with this name in its TOP country
+                </div>
+                <div style="font-size: 0.95em; color: #718096; font-family: 'Courier New', monospace;">
+                    avg % of babies with this name in OTHER countries
+                </div>
             </div>
-            <div style="font-size: 0.95em; color: #4A5568; margin-top: 12px; font-style: italic;">
+            <div style="font-size: 0.95em; color: #4A5568; margin-top: 14px; font-style: italic;">
                 "How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?"
             </div>
         </div>
@@ -271,73 +274,90 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # ─── Worked Example: Niamh vs Liam ───────────────────────────
+    # ─── Interactive Scale with Slider ────────────────────────────
     st.markdown("#### See it in action:")
 
-    col_liam, col_vs, col_niamh = st.columns([5, 1, 5])
+    scale_names = [
+        {
+            "name": "Liam",
+            "score": 2.8,
+            "country": "Scotland",
+            "pop_home": "1.84%",
+            "pop_abroad": "0.66%",
+            "label": "Global",
+            "color": "#059669",
+            "icon": "✅",
+            "desc": "Less than 3x difference — it belongs to everyone!",
+        },
+        {
+            "name": "Joseph",
+            "score": 5.0,
+            "country": "USA",
+            "pop_home": "4.80%",
+            "pop_abroad": "0.96%",
+            "label": "Threshold",
+            "color": "#B7791F",
+            "icon": "⚠️",
+            "desc": "Right at 5x — starting to lean American.",
+        },
+        {
+            "name": "Siobhan",
+            "score": 71,
+            "country": "Ireland",
+            "pop_home": "0.14%",
+            "pop_abroad": "0.002%",
+            "label": "Locked",
+            "color": "#C53030",
+            "icon": "🔒",
+            "desc": "71x more popular in Ireland — clearly locked.",
+        },
+        {
+            "name": "Innes",
+            "score": 861,
+            "country": "Scotland",
+            "pop_home": "0.22%",
+            "pop_abroad": "0.00026%",
+            "label": "Very Locked",
+            "color": "#9B2C2C",
+            "icon": "🔐",
+            "desc": "861x — practically unknown outside Scotland.",
+        },
+        {
+            "name": "Narelle",
+            "score": 4738,
+            "country": "Australia",
+            "pop_home": "0.05%",
+            "pop_abroad": "0.00001%",
+            "label": "Extreme",
+            "color": "#742A2A",
+            "icon": "🚫",
+            "desc": "4,738x — exists almost nowhere else on Earth.",
+        },
+    ]
 
-    with col_liam:
-        st.markdown(
-            """
-            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 20px; text-align: center;">
-                <div style="font-size: 0.7em; color: #059669; text-transform: uppercase; 
-                            letter-spacing: 2px;">GLOBAL NAME</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Liam</div>
-                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
-                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
-                    Top country: Scotland<br>
-                    Popularity there: <strong>1.84%</strong><br>
-                    Avg elsewhere: <strong>0.66%</strong><br><br>
-                    1.84 ÷ 0.66 = <span style="font-size: 1.3em; color: #059669; font-weight: 800;">2.8</span>
-                </div>
-                <div style="margin-top: 10px; font-size: 0.85em; color: #059669;">
-                    ✅ Less than 3x difference — it's everywhere!
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    selected = st.select_slider(
+        "Move the slider to explore the scale:",
+        options=[s["name"] for s in scale_names],
+        value="Liam",
+        key="countryness_scale_slider",
+    )
 
-    with col_vs:
-        st.markdown(
-            """
-            <div style="text-align: center; padding-top: 60px;">
-                <div style="font-size: 1.8em; color: #718096;">vs</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    # Find selected name data
+    sel = next(s for s in scale_names if s["name"] == selected)
+    sel_name = sel["name"]
+    sel_score = sel["score"]
+    sel_country = sel["country"]
+    sel_pop_home = sel["pop_home"]
+    sel_pop_abroad = sel["pop_abroad"]
+    sel_label = sel["label"]
+    sel_color = sel["color"]
+    sel_icon = sel["icon"]
+    sel_desc = sel["desc"]
+    sel_score_fmt = f"{sel_score:,.0f}" if sel_score >= 10 else str(sel_score)
 
-    with col_niamh:
-        st.markdown(
-            """
-            <div style="background: #FFF5F5; border: 2px solid #F5B7C5; border-radius: 12px;
-                        padding: 20px; text-align: center;">
-                <div style="font-size: 0.7em; color: #e63946; text-transform: uppercase; 
-                            letter-spacing: 2px;">LOCKED NAME</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Niamh</div>
-                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
-                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
-                    Top country: Ireland<br>
-                    Popularity there: <strong>2.45%</strong><br>
-                    Avg elsewhere: <strong>0.04%</strong><br><br>
-                    2.45 ÷ 0.04 = <span style="font-size: 1.3em; color: #e63946; font-weight: 800;">60</span>
-                </div>
-                <div style="margin-top: 10px; font-size: 0.85em; color: #e63946;">
-                    🔒 60x more popular in Ireland — locked!
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    # ─── The Scale ────────────────────────────────────────────────
-    st.markdown("")
-    st.markdown("#### The Countryness Scale:")
     st.markdown(
-        """
-        <div style="background: white; border-radius: 12px; padding: 20px; margin: 15px 0;
+        f"""
+        <div style="background: white; border-radius: 12px; padding: 20px; margin: 10px 0;
                     border: 1px solid #E2E8F0;">
             <div style="position: relative; height: 40px; border-radius: 20px; margin: 10px 0 30px;
                         background: linear-gradient(to right, #A8E6C8, #F5D68A, #F5B7C5, #e63946);">
@@ -351,26 +371,25 @@ def render():
                 <div style="position: absolute; top: 48px; left: 12%; font-size: 0.75em; font-weight: 700; 
                             color: #2D3748; white-space: nowrap;">↑ Our threshold</div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 35px; flex-wrap: wrap; gap: 8px;">
-                <div style="text-align: center; flex: 1; min-width: 80px;">
-                    <div style="font-weight: 700; color: #059669;">Liam</div>
-                    <div style="font-size: 0.75em; color: #718096;">2.8 — Global</div>
+            <div style="text-align: center; margin-top: 35px;">
+                <div style="font-size: 0.75em; color: {sel_color}; text-transform: uppercase; 
+                            letter-spacing: 2px;">{sel_label}</div>
+                <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; margin: 4px 0;">
+                    {sel_icon} {sel_name}
                 </div>
-                <div style="text-align: center; flex: 1; min-width: 80px;">
-                    <div style="font-weight: 700; color: #B7791F;">Joseph</div>
-                    <div style="font-size: 0.75em; color: #718096;">5 — Threshold</div>
+                <div style="font-size: 0.9em; color: #718096; margin-bottom: 12px;">
+                    Most popular in: {sel_country}
                 </div>
-                <div style="text-align: center; flex: 1; min-width: 80px;">
-                    <div style="font-weight: 700; color: #C53030;">Niamh</div>
-                    <div style="font-size: 0.75em; color: #718096;">60 — Locked</div>
+                <div style="background: #F7FAFC; border-radius: 8px; padding: 12px; 
+                            max-width: 350px; margin: 0 auto; font-family: monospace; font-size: 0.9em;">
+                    <span style="color: #4A5568;">Home: </span><strong>{sel_pop_home}</strong>
+                    <span style="color: #718096;"> ÷ </span>
+                    <span style="color: #4A5568;">Abroad: </span><strong>{sel_pop_abroad}</strong>
+                    <span style="color: #718096;"> = </span>
+                    <span style="font-size: 1.4em; font-weight: 800; color: {sel_color};">{sel_score_fmt}</span>
                 </div>
-                <div style="text-align: center; flex: 1; min-width: 80px;">
-                    <div style="font-weight: 700; color: #9B2C2C;">Pádraig</div>
-                    <div style="font-size: 0.75em; color: #718096;">343 — Very locked</div>
-                </div>
-                <div style="text-align: center; flex: 1; min-width: 80px;">
-                    <div style="font-weight: 700; color: #742A2A;">Sadhbh</div>
-                    <div style="font-size: 0.75em; color: #718096;">8,171 — Extreme</div>
+                <div style="font-size: 0.85em; color: #4A5568; margin-top: 10px;">
+                    {sel_desc}
                 </div>
             </div>
         </div>
@@ -388,100 +407,58 @@ def render():
     st.markdown("Each country has its own collection of names that never made it out:")
 
     tapes = [
-        {
-            "country": "Northern Ireland",
-            "flag": "🏴",
-            "pct": "65%",
-            "color": "#9FE6C8",
-            "names": ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"],
-        },
-        {
-            "country": "Ireland",
-            "flag": "🇮🇪",
-            "pct": "55%",
-            "color": "#A8E6C8",
-            "names": ["Naoise", "Sadhbh", "Iarla", "Laoise", "Aoibhínn"],
-        },
-        {
-            "country": "Scotland",
-            "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-            "pct": "52%",
-            "color": "#C8A8E8",
-            "names": ["Innes", "Ruairidh", "Munro", "Murdo", "Breagha"],
-        },
-        {
-            "country": "USA",
-            "flag": "🇺🇸",
-            "pct": "44%",
-            "color": "#A8D8F0",
-            "names": ["Kaylani", "Anahi", "Tadeo", "Itzel", "Malani"],
-        },
-        {
-            "country": "Canada",
-            "flag": "🇨🇦",
-            "pct": "36%",
-            "color": "#F5B7C5",
-            "names": ["Édouard", "Éloi", "Ludovic", "Frédérique", "Noélie"],
-        },
-        {
-            "country": "New Zealand",
-            "flag": "🇳🇿",
-            "pct": "36%",
-            "color": "#C8A8E8",
-            "names": ["Kauri", "Manaia", "Ardie", "Nikau", "Amarni"],
-        },
-        {
-            "country": "England & Wales",
-            "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-            "pct": "35%",
-            "color": "#F5D68A",
-            "names": ["Barney", "Isla-rose", "Delilah-rose", "Tommy-lee", "Ffion"],
-        },
-        {
-            "country": "Australia",
-            "flag": "🇦🇺",
-            "pct": "23%",
-            "color": "#F5C878",
-            "names": ["Darcy", "Pippa", "Billie", "Harvey", "Matilda"],
-        },
+        ("Northern Ireland", "🏴", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
+        ("Ireland", "🇮🇪", "55%", "#A8E6C8", ["Naoise", "Sadhbh", "Iarla", "Laoise", "Aoibhínn"]),
+        ("Scotland", "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "52%", "#C8A8E8", ["Innes", "Ruairidh", "Munro", "Murdo", "Breagha"]),
+        ("USA", "🇺🇸", "44%", "#A8D8F0", ["Kaylani", "Anahi", "Tadeo", "Itzel", "Malani"]),
+        ("Canada", "🇨🇦", "36%", "#F5B7C5", ["Édouard", "Éloi", "Ludovic", "Frédérique", "Noélie"]),
+        ("New Zealand", "🇳🇿", "36%", "#C8A8E8", ["Kauri", "Manaia", "Ardie", "Nikau", "Amarni"]),
+        ("England & Wales", "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "35%", "#F5D68A", ["Barney", "Isla-rose", "Delilah-rose", "Tommy-lee", "Ffion"]),
+        ("Australia", "🇦🇺", "23%", "#F5C878", ["Darcy", "Pippa", "Billie", "Harvey", "Matilda"]),
     ]
 
     tape_html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 16px 0;">'
 
-    for tape in tapes:
-        tracks = "".join([f'<div style="font-size: 0.8em; color: #4A5568;">{i+1}. {n}</div>' for i, n in enumerate(tape["names"])])
-        tape_html += f"""
-        <div style="background: #FAFAFA; border-radius: 10px; padding: 0; overflow: hidden;
-                    border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-            <div style="background: {tape['color']}; padding: 10px 14px; display: flex; 
-                        align-items: center; justify-content: space-between;">
-                <div style="font-weight: 700; font-size: 0.85em; color: #2D3748;">
-                    {tape['flag']} {tape['country']}
-                </div>
-                <div style="font-size: 0.7em; color: #2D3748; font-weight: 600;
-                            background: rgba(255,255,255,0.5); border-radius: 4px; padding: 2px 6px;">
-                    {tape['pct']} locked
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 20px;
-                        padding: 10px; background: #F7FAFC;">
-                <div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;
-                            background: white; display: flex; align-items: center; justify-content: center;">
-                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>
-                </div>
-                <div style="width: 50px; height: 6px; background: #A0AEC0; border-radius: 3px;"></div>
-                <div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;
-                            background: white; display: flex; align-items: center; justify-content: center;">
-                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>
-                </div>
-            </div>
-            <div style="padding: 10px 14px; border-top: 1px solid #E2E8F0;">
-                <div style="font-size: 0.65em; color: #A0AEC0; text-transform: uppercase; 
-                            letter-spacing: 1.5px; margin-bottom: 4px;">TOP TRACKS</div>
-                {tracks}
-            </div>
-        </div>
-        """
+    for t_country, t_flag, t_pct, t_color, t_names in tapes:
+        tracks = ""
+        for i, n in enumerate(t_names):
+            tracks += '<div style="font-size: 0.8em; color: #4A5568;">' + str(i + 1) + ". " + n + "</div>"
+
+        tape_html += (
+            '<div style="background: #FAFAFA; border-radius: 10px; padding: 0; overflow: hidden;'
+            ' border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">'
+            # Header
+            '<div style="background: ' + t_color + '; padding: 10px 14px; display: flex;'
+            ' align-items: center; justify-content: space-between;">'
+            '<div style="font-weight: 700; font-size: 0.85em; color: #2D3748;">'
+            + t_flag + " " + t_country +
+            "</div>"
+            '<div style="font-size: 0.7em; color: #2D3748; font-weight: 600;'
+            ' background: rgba(255,255,255,0.5); border-radius: 4px; padding: 2px 6px;">'
+            + t_pct + " locked"
+            "</div>"
+            "</div>"
+            # Tape reels
+            '<div style="display: flex; align-items: center; justify-content: center; gap: 20px;'
+            ' padding: 10px; background: #F7FAFC;">'
+            '<div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;'
+            ' background: white; display: flex; align-items: center; justify-content: center;">'
+            '<div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>'
+            "</div>"
+            '<div style="width: 50px; height: 6px; background: #A0AEC0; border-radius: 3px;"></div>'
+            '<div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;'
+            ' background: white; display: flex; align-items: center; justify-content: center;">'
+            '<div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>'
+            "</div>"
+            "</div>"
+            # Track list
+            '<div style="padding: 10px 14px; border-top: 1px solid #E2E8F0;">'
+            '<div style="font-size: 0.65em; color: #A0AEC0; text-transform: uppercase;'
+            ' letter-spacing: 1.5px; margin-bottom: 4px;">TOP TRACKS</div>'
+            + tracks +
+            "</div>"
+            "</div>"
+        )
 
     tape_html += "</div>"
     st.markdown(tape_html, unsafe_allow_html=True)
