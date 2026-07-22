@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -282,66 +282,36 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # ─── See it in action: Static Cards ───────────────────────────
+    # ─── See it in action: Staircase Cards ────────────────────────
     st.markdown("#### See it in action:")
 
-    col_liam, col_vs, col_niamh = st.columns([5, 1, 5])
+    staircase = [
+        ("Liam", "Scotland", "1.84%", "0.66%", "2.8", "✅ Global", "#059669", "#F0FFF4"),
+        ("Joseph", "USA", "4.80%", "0.96%", "5", "⚠️ Threshold", "#B7791F", "#FFFFF0"),
+        ("Siobhan", "Ireland", "0.14%", "0.002%", "71", "🔒 Locked", "#C53030", "#FFF5F5"),
+        ("Innes", "Scotland", "0.22%", "0.00026%", "861", "🔐 Very Locked", "#9B2C2C", "#FFF0F0"),
+        ("Narelle", "Australia", "0.05%", "0.00001%", "4,738", "🚫 Extreme", "#742A2A", "#FFE8E8"),
+    ]
 
-    with col_liam:
-        st.markdown(
-            """
-            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 20px; text-align: center;">
-                <div style="font-size: 0.7em; color: #059669; text-transform: uppercase; 
-                            letter-spacing: 2px;">GLOBAL NAME</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Liam</div>
-                <div style="font-size: 0.85em; color: #718096;">Most popular in: Scotland</div>
-                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
-                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
-                    Home: <strong>1.84%</strong> of babies<br>
-                    Abroad: <strong>0.66%</strong> of babies<br><br>
-                    1.84 ÷ 0.66 = <span style="font-size: 1.3em; color: #059669; font-weight: 800;">2.8</span>
-                </div>
-                <div style="margin-top: 10px; font-size: 0.85em; color: #059669;">
-                    ✅ Less than 3x difference — it's everywhere!
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+    staircase_html = '<div style="display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0;">'
+    for s_name, s_country, s_home, s_abroad, s_score, s_verdict, s_color, s_bg in staircase:
+        staircase_html += (
+            '<div style="flex: 1; min-width: 140px; background: ' + s_bg + ';'
+            ' border: 2px solid ' + s_color + '40; border-radius: 10px;'
+            ' padding: 14px 10px; text-align: center;">'
+            '<div style="font-size: 0.65em; color: ' + s_color + '; text-transform: uppercase;'
+            ' letter-spacing: 1.5px; font-weight: 600;">' + s_verdict + '</div>'
+            '<div style="font-size: 1.3em; font-weight: 800; color: #2D3748; margin: 6px 0;">'
+            + s_name + '</div>'
+            '<div style="font-size: 0.7em; color: #718096; margin-bottom: 8px;">' + s_country + '</div>'
+            '<div style="font-size: 2em; font-weight: 800; color: ' + s_color + ';">'
+            + s_score + '</div>'
+            '<div style="font-size: 0.6em; color: #718096; margin-top: 4px; font-family: monospace;">'
+            + s_home + ' ÷ ' + s_abroad + '</div>'
+            '</div>'
         )
-
-    with col_vs:
-        st.markdown(
-            """
-            <div style="text-align: center; padding-top: 60px;">
-                <div style="font-size: 1.8em; color: #718096;">vs</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with col_niamh:
-        st.markdown(
-            """
-            <div style="background: #FFF5F5; border: 2px solid #F5B7C5; border-radius: 12px;
-                        padding: 20px; text-align: center;">
-                <div style="font-size: 0.7em; color: #e63946; text-transform: uppercase; 
-                            letter-spacing: 2px;">LOCKED NAME</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Niamh</div>
-                <div style="font-size: 0.85em; color: #718096;">Most popular in: Ireland</div>
-                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
-                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
-                    Home: <strong>2.45%</strong> of babies<br>
-                    Abroad: <strong>0.04%</strong> of babies<br><br>
-                    2.45 ÷ 0.04 = <span style="font-size: 1.3em; color: #e63946; font-weight: 800;">60</span>
-                </div>
-                <div style="margin-top: 10px; font-size: 0.85em; color: #e63946;">
-                    🔒 60x more popular in Ireland — locked!
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    staircase_html += '</div>'
+    st.markdown(staircase_html, unsafe_allow_html=True)
 
     st.markdown(
         "> **Why 5?** A name with countryness ≥ 5 is at least **5x more popular** in its home country "
@@ -353,19 +323,19 @@ def render():
     st.markdown("Each country has its own collection of names that never made it out:")
 
     tapes = [
-        ("Northern Ireland", "🏴", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
-        ("Ireland", "🇮🇪", "55%", "#A8E6C8", ["Naoise", "Sadhbh", "Iarla", "Laoise", "Aoibhínn"]),
-        ("Scotland", "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "52%", "#C8A8E8", ["Innes", "Ruairidh", "Munro", "Murdo", "Breagha"]),
-        ("USA", "🇺🇸", "44%", "#A8D8F0", ["Kaylani", "Anahi", "Tadeo", "Itzel", "Malani"]),
-        ("Canada", "🇨🇦", "36%", "#F5B7C5", ["Édouard", "Éloi", "Ludovic", "Frédérique", "Noélie"]),
-        ("New Zealand", "🇳🇿", "36%", "#C8A8E8", ["Kauri", "Manaia", "Ardie", "Nikau", "Amarni"]),
-        ("England & Wales", "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "35%", "#F5D68A", ["Barney", "Isla-rose", "Delilah-rose", "Tommy-lee", "Ffion"]),
-        ("Australia", "🇦🇺", "23%", "#F5C878", ["Darcy", "Pippa", "Billie", "Harvey", "Matilda"]),
+        ("Northern Ireland", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
+        ("Ireland", "55%", "#A8E6C8", ["Naoise", "Sadhbh", "Iarla", "Laoise", "Aoibhínn"]),
+        ("Scotland", "52%", "#C8A8E8", ["Innes", "Ruairidh", "Munro", "Murdo", "Breagha"]),
+        ("USA", "44%", "#A8D8F0", ["Kaylani", "Anahi", "Tadeo", "Itzel", "Malani"]),
+        ("Canada", "36%", "#F5B7C5", ["Édouard", "Éloi", "Ludovic", "Frédérique", "Noélie"]),
+        ("New Zealand", "36%", "#C8A8E8", ["Kauri", "Manaia", "Ardie", "Nikau", "Amarni"]),
+        ("England & Wales", "35%", "#F5D68A", ["Barney", "Isla-rose", "Delilah-rose", "Tommy-lee", "Ffion"]),
+        ("Australia", "23%", "#F5C878", ["Darcy", "Pippa", "Billie", "Harvey", "Matilda"]),
     ]
 
     tape_html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 16px 0;">'
 
-    for t_country, t_flag, t_pct, t_color, t_names in tapes:
+    for t_country, t_pct, t_color, t_names in tapes:
         tracks = ""
         for i, n in enumerate(t_names):
             tracks += '<div style="font-size: 0.8em; color: #4A5568; padding: 2px 0;">' + str(i + 1) + ". " + n + "</div>"
@@ -398,7 +368,7 @@ def render():
             '</div>'
             # Country title
             '<div style="font-weight: 700; font-size: 0.9em; color: #2D3748;">'
-            + t_flag + " " + t_country +
+            + t_country +
             "</div>"
             '<div style="font-size: 0.72em; color: #4A5568; margin-top: 3px; font-weight: 600;">'
             + t_pct + ' locked'
