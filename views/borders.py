@@ -239,7 +239,7 @@ def render():
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
-    st.markdown("### 💿 What Stayed in the Shop?")
+    st.markdown("### 🏪 What Stayed in the Shop?")
     st.markdown(
         "Could you read all of those? Probably not — and that's the point. "
         "But before we explore *why*, we need a way to **measure** how locked a name is."
@@ -253,17 +253,25 @@ def render():
                     border: 1px solid #E2E8F0; text-align: center;">
             <div style="font-size: 0.75em; color: #7C9FD6; text-transform: uppercase; 
                         letter-spacing: 2px; margin-bottom: 10px;">HOW WE MEASURED IT</div>
-            <div style="font-size: 1.6em; font-weight: 800; color: #2D3748; margin-bottom: 8px;">
+            <div style="font-size: 1.6em; font-weight: 800; color: #2D3748; margin-bottom: 12px;">
                 The Countryness Score
             </div>
             <div style="background: white; border-radius: 8px; padding: 18px; margin: 12px auto;
-                        max-width: 480px; border: 1px solid #E2E8F0;">
-                <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace;
-                            border-bottom: 2px solid #2D3748; padding-bottom: 8px; margin-bottom: 8px;">
-                    % of babies with this name in its TOP country
+                        max-width: 500px; border: 1px solid #E2E8F0;">
+                <div style="font-size: 1.05em; color: #7C9FD6; font-family: 'Courier New', monospace;
+                            border-bottom: 2px solid #2D3748; padding-bottom: 10px; margin-bottom: 10px;">
+                    proportion in top country
                 </div>
-                <div style="font-size: 0.95em; color: #718096; font-family: 'Courier New', monospace;">
-                    avg % of babies with this name in OTHER countries
+                <div style="font-size: 1.05em; color: #718096; font-family: 'Courier New', monospace;">
+                    avg proportion in other countries
+                </div>
+            </div>
+            <div style="background: rgba(124,159,214,0.08); border-radius: 8px; padding: 14px; 
+                        margin: 16px auto 0; max-width: 520px; text-align: left;">
+                <div style="font-size: 0.85em; color: #4A5568; line-height: 1.6;">
+                    <strong style="color: #7C9FD6;">Proportion</strong> = how many babies out of ALL babies 
+                    born that year got this name.<br>
+                    <span style="color: #718096;">e.g., 2,450 Niamhs out of 100,000 Irish babies = <strong>0.0245</strong> (or 2.45%)</span>
                 </div>
             </div>
             <div style="font-size: 0.95em; color: #4A5568; margin-top: 14px; font-style: italic;">
@@ -274,7 +282,7 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # ─── Interactive Scale with Slider ────────────────────────────
+    # ─── Interactive Scale with Radio Buttons ─────────────────────
     st.markdown("#### See it in action:")
 
     scale_names = [
@@ -335,11 +343,11 @@ def render():
         },
     ]
 
-    selected = st.select_slider(
-        "Move the slider to explore the scale:",
+    selected = st.radio(
+        "Pick a name to see its score:",
         options=[s["name"] for s in scale_names],
-        value="Liam",
-        key="countryness_scale_slider",
+        horizontal=True,
+        key="countryness_radio",
     )
 
     # Find selected name data
@@ -357,38 +365,31 @@ def render():
 
     st.markdown(
         f"""
-        <div style="background: white; border-radius: 12px; padding: 20px; margin: 10px 0;
-                    border: 1px solid #E2E8F0;">
-            <div style="position: relative; height: 40px; border-radius: 20px; margin: 10px 0 30px;
-                        background: linear-gradient(to right, #A8E6C8, #F5D68A, #F5B7C5, #e63946);">
-                <div style="position: absolute; top: -18px; left: 2%; font-size: 0.7em; color: #718096;">1</div>
-                <div style="position: absolute; top: -18px; left: 18%; font-size: 0.7em; color: #718096;">5</div>
-                <div style="position: absolute; top: -18px; left: 45%; font-size: 0.7em; color: #718096;">50</div>
-                <div style="position: absolute; top: -18px; left: 70%; font-size: 0.7em; color: #718096;">500</div>
-                <div style="position: absolute; top: -18px; left: 92%; font-size: 0.7em; color: #718096;">10,000+</div>
-                <div style="position: absolute; top: -5px; left: 18%; width: 3px; height: 50px; 
-                            background: #2D3748; border-radius: 2px;"></div>
-                <div style="position: absolute; top: 48px; left: 12%; font-size: 0.75em; font-weight: 700; 
-                            color: #2D3748; white-space: nowrap;">↑ Our threshold</div>
-            </div>
-            <div style="text-align: center; margin-top: 35px;">
+        <div style="background: white; border-radius: 12px; padding: 24px; margin: 10px 0;
+                    border: 2px solid {sel_color}20; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
+            <div style="text-align: center;">
                 <div style="font-size: 0.75em; color: {sel_color}; text-transform: uppercase; 
-                            letter-spacing: 2px;">{sel_label}</div>
-                <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; margin: 4px 0;">
+                            letter-spacing: 2px; font-weight: 600;">{sel_label}</div>
+                <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; margin: 6px 0;">
                     {sel_icon} {sel_name}
                 </div>
-                <div style="font-size: 0.9em; color: #718096; margin-bottom: 12px;">
+                <div style="font-size: 0.9em; color: #718096; margin-bottom: 14px;">
                     Most popular in: {sel_country}
                 </div>
-                <div style="background: #F7FAFC; border-radius: 8px; padding: 12px; 
-                            max-width: 350px; margin: 0 auto; font-family: monospace; font-size: 0.9em;">
-                    <span style="color: #4A5568;">Home: </span><strong>{sel_pop_home}</strong>
-                    <span style="color: #718096;"> ÷ </span>
-                    <span style="color: #4A5568;">Abroad: </span><strong>{sel_pop_abroad}</strong>
-                    <span style="color: #718096;"> = </span>
-                    <span style="font-size: 1.4em; font-weight: 800; color: {sel_color};">{sel_score_fmt}</span>
+                <div style="background: #F7FAFC; border-radius: 8px; padding: 14px; 
+                            max-width: 400px; margin: 0 auto; font-family: 'Courier New', monospace;">
+                    <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 4px;">
+                        Home: <strong>{sel_pop_home}</strong> of babies
+                    </div>
+                    <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 8px;">
+                        Abroad: <strong>{sel_pop_abroad}</strong> of babies
+                    </div>
+                    <div style="border-top: 1px solid #E2E8F0; padding-top: 8px;">
+                        <span style="color: #718096;">{sel_pop_home} ÷ {sel_pop_abroad} = </span>
+                        <span style="font-size: 1.6em; font-weight: 800; color: {sel_color};">{sel_score_fmt}</span>
+                    </div>
                 </div>
-                <div style="font-size: 0.85em; color: #4A5568; margin-top: 10px;">
+                <div style="font-size: 0.88em; color: #4A5568; margin-top: 12px;">
                     {sel_desc}
                 </div>
             </div>
@@ -402,9 +403,9 @@ def render():
         "than anywhere else. That's not random variation — that's cultural gravity pulling it home."
     )
 
-    # ─── The Local Collection: Cassette Tapes ─────────────────────
+    # ─── The Local Collection: CD Cases ───────────────────────────
     st.markdown("#### 🎵 The Local Collection")
-    st.markdown("Each country has its own collection of names that never made it out:")
+    st.markdown("Each country has its own shelf of names that never made it out:")
 
     tapes = [
         ("Northern Ireland", "🏴", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
@@ -422,39 +423,41 @@ def render():
     for t_country, t_flag, t_pct, t_color, t_names in tapes:
         tracks = ""
         for i, n in enumerate(t_names):
-            tracks += '<div style="font-size: 0.8em; color: #4A5568;">' + str(i + 1) + ". " + n + "</div>"
+            tracks += '<div style="font-size: 0.8em; color: #4A5568; padding: 2px 0;">' + str(i + 1) + ". " + n + "</div>"
 
+        # CD jewel case design
         tape_html += (
-            '<div style="background: #FAFAFA; border-radius: 10px; padding: 0; overflow: hidden;'
-            ' border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">'
-            # Header
-            '<div style="background: ' + t_color + '; padding: 10px 14px; display: flex;'
-            ' align-items: center; justify-content: space-between;">'
-            '<div style="font-weight: 700; font-size: 0.85em; color: #2D3748;">'
+            # Outer case — transparent plastic look with colored spine
+            '<div style="background: white; border-radius: 4px; padding: 0; overflow: hidden;'
+            ' border: 1px solid #CBD5E0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);'
+            ' position: relative;">'
+            # Spine (left edge color bar)
+            '<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px;'
+            ' background: ' + t_color + ';"></div>'
+            # CD artwork area (top)
+            '<div style="background: linear-gradient(135deg, ' + t_color + '40, ' + t_color + '20);'
+            ' padding: 16px 16px 12px 20px; border-bottom: 1px solid #E2E8F0;'
+            ' position: relative;">'
+            # CD circle
+            '<div style="position: absolute; top: 12px; right: 14px; width: 44px; height: 44px;'
+            ' border-radius: 50%; border: 2px solid ' + t_color + ';'
+            ' background: linear-gradient(135deg, #f8f8f8, #e8e8e8);'
+            ' display: flex; align-items: center; justify-content: center;">'
+            '<div style="width: 12px; height: 12px; border-radius: 50%;'
+            ' background: white; border: 2px solid #CBD5E0;"></div>'
+            '</div>'
+            # Title
+            '<div style="font-weight: 700; font-size: 0.9em; color: #2D3748;">'
             + t_flag + " " + t_country +
             "</div>"
-            '<div style="font-size: 0.7em; color: #2D3748; font-weight: 600;'
-            ' background: rgba(255,255,255,0.5); border-radius: 4px; padding: 2px 6px;">'
-            + t_pct + " locked"
+            '<div style="font-size: 0.7em; color: #718096; margin-top: 2px;">'
+            + t_pct + ' of names locked'
             "</div>"
             "</div>"
-            # Tape reels
-            '<div style="display: flex; align-items: center; justify-content: center; gap: 20px;'
-            ' padding: 10px; background: #F7FAFC;">'
-            '<div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;'
-            ' background: white; display: flex; align-items: center; justify-content: center;">'
-            '<div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>'
-            "</div>"
-            '<div style="width: 50px; height: 6px; background: #A0AEC0; border-radius: 3px;"></div>'
-            '<div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;'
-            ' background: white; display: flex; align-items: center; justify-content: center;">'
-            '<div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>'
-            "</div>"
-            "</div>"
-            # Track list
-            '<div style="padding: 10px 14px; border-top: 1px solid #E2E8F0;">'
-            '<div style="font-size: 0.65em; color: #A0AEC0; text-transform: uppercase;'
-            ' letter-spacing: 1.5px; margin-bottom: 4px;">TOP TRACKS</div>'
+            # Track listing (bottom)
+            '<div style="padding: 10px 14px 12px 20px;">'
+            '<div style="font-size: 0.6em; color: #A0AEC0; text-transform: uppercase;'
+            ' letter-spacing: 1.5px; margin-bottom: 4px; font-weight: 600;">TRACKLIST</div>'
             + tracks +
             "</div>"
             "</div>"
@@ -468,7 +471,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
