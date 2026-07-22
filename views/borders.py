@@ -31,7 +31,7 @@ def render():
     data_2023 = df[df["year"] == 2023]
 
     # ══════════════════════════════════════════════════════════════
-    # SECTION 1: QUIZ FIRST (Hook immediately)
+    # SECTION 1: QUIZ — Vinyl Sleeve Style
     # ══════════════════════════════════════════════════════════════
 
     st.markdown("### 🎤 Can You Say This?")
@@ -85,110 +85,129 @@ def render():
             "explain": "Welsh rule: 'ff' = English 'f' sound. A single 'f' in Welsh = English 'v' sound. So 'Ffion' = 'Fee-on'.",
         },
     ]
+
     # Challenge selector
     if "challenge_idx" not in st.session_state:
         st.session_state.challenge_idx = 0
     if "revealed" not in st.session_state:
         st.session_state.revealed = False
-    
-    # Compact layout
-    quiz_spacer_l, quiz_col, quiz_spacer_r = st.columns([1, 3, 1])
+
+    challenge = challenges[st.session_state.challenge_idx]
+
+    # Compact layout — centered
+    spacer_l, quiz_col, spacer_r = st.columns([1, 2, 1])
 
     with quiz_col:
-        challenge = challenges[st.session_state.challenge_idx]
-
-    # Display the challenge card
-    st.markdown(
-        f"""
-        <div style="background: linear-gradient(135deg, #F0F8FF, #E8F4FD); 
-                    border: 2px solid #7C9FD6; border-radius: 16px; 
-                    padding: 30px; text-align: center; margin: 20px 0;">
-            <div style="font-size: 0.85em; color: #718096; text-transform: uppercase; 
-                        letter-spacing: 2px;">How do you pronounce...</div>
-            <div style="font-size: 3em; font-weight: 800; color: #4A5568; 
-                        margin: 15px 0; font-family: Georgia, serif;">
-                {challenge['name']}
-            </div>
-            <div style="font-size: 0.9em; color: #718096;">
-                {challenge['country']}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # Buttons row
-    col_hint, col_reveal, col_next = st.columns([1, 1, 1])
-
-    with col_hint:
-        if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
-            st.info(f"💡 {challenge['hint']}")
-
-    with col_reveal:
-        if st.button("🔊 Reveal Pronunciation", use_container_width=True, key="btn_reveal"):
-            st.session_state.revealed = True
-            st.rerun()
-
-    with col_next:
-        if st.button("➡️ Next Name", use_container_width=True, key="btn_next"):
-            st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
-            st.session_state.revealed = False
-            st.rerun()
-
-    # Reveal section
-    if st.session_state.revealed:
+        # Vinyl sleeve card
         st.markdown(
             f"""
-            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 20px; text-align: center; margin-top: 16px;">
-                <div style="font-size: 0.85em; color: #059669; text-transform: uppercase; 
-                            letter-spacing: 2px;">It's pronounced:</div>
-                <div style="font-size: 2.2em; font-weight: 700; color: #059669; margin: 8px 0;">
-                    "{challenge['actual']}"
+            <div style="background: #1a1a2e; border-radius: 16px; padding: 30px; 
+                        text-align: center; margin: 15px auto; position: relative;
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                <div style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px;
+                            background: radial-gradient(circle, #1a1a2e 20%, #333 21%, #333 38%, 
+                            #1a1a2e 39%, #1a1a2e 43%, #555 44%, #555 46%, #1a1a2e 47%);
+                            border: 3px solid #444; position: relative;">
+                    <div style="width: 12px; height: 12px; border-radius: 50%; 
+                                background: #F5B7C5; position: absolute; top: 50%; left: 50%;
+                                transform: translate(-50%, -50%);"></div>
                 </div>
-                <div style="font-size: 0.85em; color: #4A5568; margin-top: 10px; 
-                            background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
-                    📖 {challenge['explain']}
+                <div style="font-size: 0.7em; color: #888; text-transform: uppercase; 
+                            letter-spacing: 3px;">SIDE {st.session_state.challenge_idx + 1} OF {len(challenges)}</div>
+                <div style="font-size: 2.2em; font-weight: 800; color: #ffffff; 
+                            margin: 10px 0; font-family: Georgia, serif;">
+                    {challenge['name']}
+                </div>
+                <div style="font-size: 0.85em; color: #aaa;">
+                    {challenge['country']}
+                </div>
+                <div style="background: rgba(255,255,255,0.05); border-radius: 8px; 
+                            padding: 6px 12px; margin-top: 12px; display: inline-block;">
+                    <span style="font-size: 0.75em; color: #7C9FD6; letter-spacing: 1px;">
+                        🎵 LOCAL VINYL RECORDS
+                    </span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        # Audio playback
-        audio_key = challenge.get("audio_file", challenge["name"].lower())
-        audio_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "assets", "audio", f"{audio_key}.wav"
-        )
-        if os.path.exists(audio_path):
-            st.audio(audio_path)
-        else:
-            st.caption("🔈 Audio clip coming soon!")
+        # Buttons row
+        col_hint, col_reveal, col_next = st.columns([1, 1, 1])
 
-        # Countryness fact
-        st.markdown(
-            f"""
-            <div style="background: #FFF5F5; border-radius: 8px; padding: 12px; 
-                        margin-top: 12px; text-align: center;">
-                <span style="color: #e63946; font-weight: 600;">
-                    Countryness: {challenge['countryness']:,}
-                </span>
-                <span style="color: #718096;"> — A name {challenge['countryness']:,}x more popular in </span>
-                <span style="font-weight: 600;">{challenge['country']}</span>
-                <span style="color: #718096;"> than anywhere else</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    # Progress dots
-    dots = ""
-    for i in range(len(challenges)):
-        if i == st.session_state.challenge_idx:
-            dots += "● "
-        else:
-            dots += "○ "
-    st.caption(f"Name {st.session_state.challenge_idx + 1} of {len(challenges)}:  {dots}")
+        with col_hint:
+            if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
+                st.info(f"💡 {challenge['hint']}")
+
+        with col_reveal:
+            if st.button("🔊 Reveal", use_container_width=True, key="btn_reveal"):
+                st.session_state.revealed = True
+                st.rerun()
+
+        with col_next:
+            if st.button("➡️ Next", use_container_width=True, key="btn_next"):
+                st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
+                st.session_state.revealed = False
+                st.rerun()
+
+        # Reveal section
+        if st.session_state.revealed:
+            st.markdown(
+                f"""
+                <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5); 
+                            border: 2px solid #A8E6C8; border-radius: 12px;
+                            padding: 18px; text-align: center; margin-top: 14px;">
+                    <div style="font-size: 0.75em; color: #059669; text-transform: uppercase; 
+                                letter-spacing: 2px;">▶ Now Playing:</div>
+                    <div style="font-size: 1.8em; font-weight: 700; color: #059669; margin: 6px 0;">
+                        "{challenge['actual']}"
+                    </div>
+                    <div style="font-size: 0.85em; color: #4A5568; margin-top: 8px; 
+                                background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
+                        📖 {challenge['explain']}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            # Audio playback — read as bytes + autoplay
+            audio_key = challenge.get("audio_file", challenge["name"].lower())
+            audio_path = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "assets", "audio", f"{audio_key}.wav"
+            )
+            if os.path.exists(audio_path):
+                with open(audio_path, "rb") as audio_file:
+                    audio_bytes = audio_file.read()
+                st.audio(audio_bytes, format="audio/wav", autoplay=True)
+            else:
+                st.caption("🔈 Audio clip coming soon!")
+
+            # Countryness fact
+            st.markdown(
+                f"""
+                <div style="background: #FFF5F5; border-radius: 8px; padding: 10px; 
+                            margin-top: 10px; text-align: center; font-size: 0.9em;">
+                    <span style="color: #e63946; font-weight: 600;">
+                        Countryness: {challenge['countryness']:,}
+                    </span>
+                    <span style="color: #718096;"> — A name {challenge['countryness']:,}x more popular in </span>
+                    <span style="font-weight: 600;">{challenge['country']}</span>
+                    <span style="color: #718096;"> than anywhere else</span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        # Progress dots
+        dots = ""
+        for i in range(len(challenges)):
+            if i == st.session_state.challenge_idx:
+                dots += "● "
+            else:
+                dots += "○ "
+        st.caption(f"{dots}")
 
     st.markdown("---")
 
@@ -528,7 +547,7 @@ def render():
 
     st.markdown("---")
 
-    # ─── Reason 3b: Active Cultural Revival ───────────────────────
+    # ─── Reason 4: Active Cultural Revival ────────────────────────
     st.markdown("### 📜 Reason 4: Active Cultural Revival")
     st.markdown(
         "It's not just old names surviving — communities are actively **inventing** "
