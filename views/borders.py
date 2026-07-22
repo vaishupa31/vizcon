@@ -289,11 +289,11 @@ def render():
             <tr><th>Label</th><th>Score</th><th>Meaning</th></tr>
           </thead>
           <tbody>
-            <tr><td style="color:#059669;font-weight:600;">✅ Global</td><td>&lt;5</td><td>Shared — no single home</td></tr>
-            <tr><td style="color:#B7791F;font-weight:600;">⚠️ Leaning</td><td>5–10</td><td>Concentrating in one place</td></tr>
-            <tr><td style="color:#C53030;font-weight:600;">🔒 Locked</td><td>10–100</td><td>Clearly belongs to one country</td></tr>
-            <tr><td style="color:#9B2C2C;font-weight:600;">🔐 Very Locked</td><td>100–1,000</td><td>Barely exists elsewhere</td></tr>
-            <tr><td style="color:#742A2A;font-weight:600;">🚫 Extreme</td><td>1,000+</td><td>A cultural password</td></tr>
+            <tr><td style="color:#059669;font-weight:600;">✅ Global</td><td><b>&lt;5</b></td><td><b>Shared — no single home</b></td></tr>
+            <tr><td style="color:#B7791F;font-weight:600;">⚠️ Leaning</td><td><b>5–10</b></td><td><b>Concentrating in one place</b></td></tr>
+            <tr><td style="color:#C53030;font-weight:600;">🔒 Locked</td><td><b>10–100</b></td><td><b>Clearly belongs to one country</b></td></tr>
+            <tr><td style="color:#9B2C2C;font-weight:600;">🔐 Very Locked</td><td><b>100–1,000</b></td><td><b>Barely exists elsewhere</b></td></tr>
+            <tr><td style="color:#742A2A;font-weight:600;">🚫 Extreme</td><td><b>1,000+</b></td><td><b>A cultural password</b></td></tr>
           </tbody>
         </table>
       </div>
@@ -315,8 +315,8 @@ def render():
         "below it, a name belongs to everyone. Above it, one country **owns** it."
     )
 
-    # ─── See it in action: Staircase Cards ────────────────────────
-    st.markdown("#### See it in action:")
+    # ─── Examples: Staircase Cards ────────────────────────────────
+    st.markdown("#### Examples:")
 
     staircase = [
         ("Liam", "Scotland", "1.84%", "0.66%", "2.8", "✅ Global", "#059669", "#F0FFF4"),
@@ -349,8 +349,8 @@ def render():
     # ─── The Local Collection: CD Cases (HTML) ────────────────────
     st.markdown("#### 🎵 The Local Collection")
     st.markdown(
-        "Just like B-sides that never left the local record shop, some names only ever get "
-        "played in one country — and the rest of the world has never heard of them."
+        "Just like B-side tracks, these are names that are hardly listened to "
+        "outside their home country."
     )
 
     tapes = [
@@ -418,8 +418,6 @@ def render():
     st.markdown(tape_html, unsafe_allow_html=True)
 
     st.markdown("---")
-
-
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
