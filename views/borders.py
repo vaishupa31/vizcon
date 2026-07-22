@@ -127,7 +127,7 @@ def render():
 
     # Reveal section
     if st.session_state.revealed:
-        st.markdown(
+         st.markdown(
             f"""
             <div style="background: #FFF5F5; border-radius: 8px; padding: 12px; 
                         margin-top: 12px; text-align: center;">
