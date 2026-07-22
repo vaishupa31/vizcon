@@ -246,7 +246,7 @@ def render():
             dots += "○ "
     st.caption(f"{dots}")
 
-st.markdown("---")
+    st.markdown("---")
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 2: INTRO — Why Some Names Never Left
