@@ -127,16 +127,15 @@ def render():
 
     # Reveal section
     if st.session_state.revealed:
-          st.markdown(
+        st.markdown(
             f"""
-            <div style="background: #FFF5F5; border-radius: 8px; padding: 12px; 
-                        margin-top: 12px; text-align: center;">
-                <span style="color: #e63946; font-weight: 600;">
-                    Countryness: {challenge['countryness']:,}
-                </span>
-                <span style="color: #718096;"> — A name {challenge['countryness']:,}x more popular in </span>
-                <span style="font-weight: 600;">{challenge['country']}</span>
-                <span style="color: #718096;"> than anywhere else</span>
+            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
+                        padding: 20px; text-align: center; margin-top: 16px;">
+                <div style="font-size: 0.85em; color: #059669; text-transform: uppercase; 
+                            letter-spacing: 2px;">It's pronounced:</div>
+                <div style="font-size: 2.2em; font-weight: 700; color: #059669; margin: 8px 0;">
+                    "{challenge['actual']}"
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -161,14 +160,13 @@ def render():
                 <span style="color: #e63946; font-weight: 600;">
                     Countryness: {challenge['countryness']:,}
                 </span>
-                <span style="color: #718096;"> — This is why </span>
-                <span style="font-weight: 600;">{challenge['name']}</span>
-                <span style="color: #718096;"> never left {challenge['country']}</span>
+                <span style="color: #718096;"> — A name {challenge['countryness']:,}x more popular in </span>
+                <span style="font-weight: 600;">{challenge['country']}</span>
+                <span style="color: #718096;"> than anywhere else</span>
             </div>
             """,
             unsafe_allow_html=True,
         )
-
     # Progress dots
     dots = ""
     for i in range(len(challenges)):
