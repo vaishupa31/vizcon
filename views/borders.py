@@ -91,7 +91,6 @@ def render():
         st.session_state.show_hint = False
     challenge = challenges[st.session_state.challenge_idx]
 
-    # Markdown
     st.markdown(
         f"""
         <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
