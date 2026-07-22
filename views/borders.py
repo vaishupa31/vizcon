@@ -41,7 +41,7 @@ def render():
     )
 
     # Pronunciation challenge data
-        challenges = [
+    challenges = [
         {
             "name": "Sadhbh",
             "country": "🇮🇪 Ireland",
