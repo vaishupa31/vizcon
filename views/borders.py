@@ -30,8 +30,8 @@ def render():
     summary = load_summary()
     data_2023 = df[df["year"] == 2023]
 
-       # ══════════════════════════════════════════════════════════════
-    # SECTION 1: QUIZ — Hybrid (gradient card + column layout)
+        # ══════════════════════════════════════════════════════════════
+    # SECTION 1: QUIZ — Hybrid (HTML card + native buttons)
     # ══════════════════════════════════════════════════════════════
 
     # Pronunciation challenge data
@@ -92,6 +92,10 @@ def render():
         st.session_state.show_hint = False
 
     challenge = challenges[st.session_state.challenge_idx]
+    c_name = challenge["name"]
+    c_country = challenge["country"]
+    c_idx = st.session_state.challenge_idx + 1
+    c_total = len(challenges)
 
     # ─── Section heading ──────────────────────────────────────────
     st.markdown("### 🎤 Can You Say This?")
@@ -100,142 +104,125 @@ def render():
         "they'll never leave their home country. Give it a try!"
     )
 
-    # ─── Style the container with gradient background ─────────────
-    st.markdown(
-        """
-        <style>
-            div[data-testid="stVerticalBlock"] > div:has(> div.quiz-box-marker) {
-                background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);
+    # ─── HTML gradient card (vinyl + name) ────────────────────────
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);
+                border-radius: 16px; padding: 36px 28px; margin: 12px 0;
                 border: 1px solid #E2E8F0;
-                border-radius: 16px;
-                padding: 24px;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+                display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
+        <div style="flex-shrink: 0;">
+            <svg width="180" height="180" viewBox="0 0 220 220">
+                <circle cx="110" cy="110" r="100" fill="#2D3748" stroke="#4A5568" stroke-width="1"/>
+                <circle cx="110" cy="110" r="90" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="80" fill="none" stroke="#354258" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="70" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="60" fill="none" stroke="#354258" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="50" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="35" fill="#7C9FD6" opacity="0.9"/>
+                <circle cx="110" cy="110" r="28" fill="none" stroke="#5A82BE" stroke-width="0.8"/>
+                <circle cx="110" cy="110" r="18" fill="#2D3748"/>
+                <circle cx="110" cy="110" r="5" fill="#4A5568"/>
+                <circle cx="110" cy="110" r="3" fill="#2D3748"/>
+            </svg>
+        </div>
+        <div style="text-align: center; min-width: 180px;">
+            <div style="font-size: 0.7em; color: #718096; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 6px;">
+                SIDE {c_idx} OF {c_total}
+            </div>
+            <div style="font-size: 2.5em; font-weight: 800; color: #2D3748; font-family: Georgia, serif; margin: 6px 0;">
+                {c_name}
+            </div>
+            <div style="font-size: 1em; color: #4A5568; margin-top: 4px;">
+                {c_country}
+            </div>
+            <div style="background: rgba(124,159,214,0.12); border-radius: 8px; padding: 5px 14px; margin-top: 14px; display: inline-block; border: 1px solid rgba(124,159,214,0.25);">
+                <span style="font-size: 0.72em; color: #5A82BE; letter-spacing: 1px;">🎵 LOCAL VINYL RECORDS</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # ─── Everything inside a container ────────────────────────────
-    with st.container():
-        # Marker div for CSS targeting
-        st.markdown('<div class="quiz-box-marker"></div>', unsafe_allow_html=True)
+    # ─── Native buttons ───────────────────────────────────────────
+    col_hint, col_reveal, col_next = st.columns([1, 1, 1])
 
-        # Two-column layout: Vinyl left, Name+Buttons right
-        left, right = st.columns([1, 1.2], vertical_alignment="center")
+    with col_hint:
+        if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
+            st.session_state.show_hint = True
 
-        with left:
-            c_idx = st.session_state.challenge_idx + 1
-            c_total = len(challenges)
-            st.markdown(f"""
-            <div style="text-align: center;">
-                <svg width="200" height="200" viewBox="0 0 220 220">
-                    <circle cx="110" cy="110" r="100" fill="#2D3748" stroke="#4A5568" stroke-width="1"/>
-                    <circle cx="110" cy="110" r="90" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                    <circle cx="110" cy="110" r="80" fill="none" stroke="#354258" stroke-width="0.5"/>
-                    <circle cx="110" cy="110" r="70" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                    <circle cx="110" cy="110" r="60" fill="none" stroke="#354258" stroke-width="0.5"/>
-                    <circle cx="110" cy="110" r="50" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                    <circle cx="110" cy="110" r="35" fill="#7C9FD6" opacity="0.9"/>
-                    <circle cx="110" cy="110" r="28" fill="none" stroke="#5A82BE" stroke-width="0.8"/>
-                    <circle cx="110" cy="110" r="18" fill="#2D3748"/>
-                    <circle cx="110" cy="110" r="5" fill="#4A5568"/>
-                    <circle cx="110" cy="110" r="3" fill="#2D3748"/>
-                </svg>
-                <div style="font-size: 0.72em; color: #718096; text-transform: uppercase; letter-spacing: 3px; margin-top: 8px;">
-                    SIDE {c_idx} OF {c_total}
+    with col_reveal:
+        if st.button("🔊 Reveal", use_container_width=True, key="btn_reveal"):
+            st.session_state.revealed = True
+
+    with col_next:
+        if st.button("➡️ Next", use_container_width=True, key="btn_next"):
+            st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
+            st.session_state.revealed = False
+            st.session_state.show_hint = False
+            st.rerun()
+
+    # ─── Hint ─────────────────────────────────────────────────────
+    if st.session_state.get("show_hint"):
+        st.info(f'💡 {challenge["hint"]}')
+
+    # ─── Progress dots ────────────────────────────────────────────
+    dots = ""
+    for i in range(len(challenges)):
+        dots += "● " if i == st.session_state.challenge_idx else "○ "
+    st.caption(dots)
+
+    # ─── Reveal section ───────────────────────────────────────────
+    if st.session_state.revealed:
+        c_actual = challenge["actual"]
+        c_explain = challenge["explain"]
+        c_countryness = challenge["countryness"]
+
+        st.markdown(
+            f"""
+            <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5); 
+                        border: 2px solid #A8E6C8; border-radius: 12px;
+                        padding: 18px; text-align: center; margin-top: 10px;">
+                <div style="font-size: 0.75em; color: #059669; text-transform: uppercase; 
+                            letter-spacing: 2px;">▶ Now Playing:</div>
+                <div style="font-size: 1.8em; font-weight: 700; color: #059669; margin: 6px 0;">
+                    "{c_actual}"
+                </div>
+                <div style="font-size: 0.85em; color: #4A5568; margin-top: 8px; 
+                            background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
+                    📖 {c_explain}
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """,
+            unsafe_allow_html=True,
+        )
 
-        with right:
-            c_name = challenge["name"]
-            c_country = challenge["country"]
-            st.markdown(
-                f"""
-                <div style="text-align: center;">
-                    <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif; margin-bottom: 4px;">{c_name}</div>
-                    <div style="font-size: 1em; color: #4A5568;">{c_country}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+        # Audio playback
+        audio_key = challenge.get("audio_file", challenge["name"].lower())
+        audio_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "assets", "audio", f"{audio_key}.wav"
+        )
+        if os.path.exists(audio_path):
+            with open(audio_path, "rb") as audio_file:
+                audio_bytes = audio_file.read()
+            st.audio(audio_bytes, format="audio/wav", autoplay=True)
+        else:
+            st.caption("🔈 Audio clip coming soon!")
 
-            if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
-                st.session_state.show_hint = True
-
-            if st.button("🔊 Reveal", use_container_width=True, key="btn_reveal"):
-                st.session_state.revealed = True
-
-            if st.button("➡️ Next", use_container_width=True, key="btn_next"):
-                st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
-                st.session_state.revealed = False
-                st.session_state.show_hint = False
-                st.rerun()
-
-        # ─── Hint ─────────────────────────────────────────────────
-        if st.session_state.get("show_hint"):
-            st.info(f'💡 {challenge["hint"]}')
-
-        # ─── Progress dots ────────────────────────────────────────
-        dots = ""
-        for i in range(len(challenges)):
-            dots += "● " if i == st.session_state.challenge_idx else "○ "
-        st.caption(dots)
-
-        # ─── Reveal section ───────────────────────────────────────
-        if st.session_state.revealed:
-            c_actual = challenge["actual"]
-            c_explain = challenge["explain"]
-            c_countryness = challenge["countryness"]
-            c_country = challenge["country"]
-
-            st.markdown(
-                f"""
-                <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5); 
-                            border: 2px solid #A8E6C8; border-radius: 12px;
-                            padding: 18px; text-align: center; margin-top: 10px;">
-                    <div style="font-size: 0.75em; color: #059669; text-transform: uppercase; 
-                                letter-spacing: 2px;">▶ Now Playing:</div>
-                    <div style="font-size: 1.8em; font-weight: 700; color: #059669; margin: 6px 0;">
-                        "{c_actual}"
-                    </div>
-                    <div style="font-size: 0.85em; color: #4A5568; margin-top: 8px; 
-                                background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
-                        📖 {c_explain}
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-            # Audio playback
-            audio_key = challenge.get("audio_file", challenge["name"].lower())
-            audio_path = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "assets", "audio", f"{audio_key}.wav"
-            )
-            if os.path.exists(audio_path):
-                with open(audio_path, "rb") as audio_file:
-                    audio_bytes = audio_file.read()
-                st.audio(audio_bytes, format="audio/wav", autoplay=True)
-            else:
-                st.caption("🔈 Audio clip coming soon!")
-
-            # Countryness fact
-            st.markdown(
-                f"""
-                <div style="background: #FFF5F5; border-radius: 8px; padding: 10px; 
-                            margin-top: 10px; text-align: center; font-size: 0.9em;">
-                    <span style="color: #e63946; font-weight: 600;">
-                        Countryness: {c_countryness:,}
-                    </span>
-                    <span style="color: #718096;"> — A name {c_countryness:,}x more popular in </span>
-                    <span style="font-weight: 600;">{c_country}</span>
-                    <span style="color: #718096;"> than anywhere else</span>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+        # Countryness fact
+        st.markdown(
+            f"""
+            <div style="background: #FFF5F5; border-radius: 8px; padding: 10px; 
+                        margin-top: 10px; text-align: center; font-size: 0.9em;">
+                <span style="color: #e63946; font-weight: 600;">
+                    Countryness: {c_countryness:,}
+                </span>
+                <span style="color: #718096;"> — A name {c_countryness:,}x more popular in </span>
+                <span style="font-weight: 600;">{c_country}</span>
+                <span style="color: #718096;"> than anywhere else</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.markdown("---")
 
