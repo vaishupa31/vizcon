@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -281,6 +281,71 @@ def render():
         """,
         unsafe_allow_html=True,
     )
+
+    # ─── Classification: Table + Paragraph side by side ───────────
+    st.markdown("#### How We Classified Them")
+
+    col_table, col_text = st.columns([1, 1])
+
+    with col_table:
+        st.markdown(
+            """
+            <div style="margin: 8px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #E2E8F0;">
+                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Label</th>
+                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Score</th>
+                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #F0FFF4;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #059669;">✅ Global</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">< 5</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Shared — no single home</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFFF0;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">5 – 10</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Concentrating in one place</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF5F5;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #C53030;">🔒 Locked</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">10 – 100</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Clearly belongs to one country</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF0F0;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">100 – 1,000</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">Barely exists elsewhere</td>
+                        </tr>
+                        <tr style="background: #FFE8E8;">
+                            <td style="padding: 9px 6px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">1,000+</td>
+                            <td style="padding: 9px 6px; color: #4A5568;">A cultural password</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_text:
+        st.markdown(
+            "A score below **5** means a name is genuinely shared — it's roughly equally popular "
+            "across all countries. Think *Liam*, *Thomas*, *Emily*. No single country owns them.\n\n"
+            "Once a name crosses **5**, something shifts. Over **62%** of all babies with that name "
+            "are concentrated in a single country. It's no longer shared — it's *leaning*.\n\n"
+            "By the time you hit **50–100**, nearly **88%** of the name's usage is in one place. "
+            "These names — like *Siobhan* or *Conor* — are clearly Irish, clearly Scottish, clearly somewhere specific.\n\n"
+            "And at **1,000+**? Over **97%** of all babies with that name live in one country. "
+            "These are cultural passwords — names like *Narelle* (Australia) or *Sadhbh* (Ireland) "
+            "that effectively don't exist anywhere else on Earth.\n\n"
+            "We drew the line at **5** because that's the tipping point: "
+            "below it, a name belongs to everyone. Above it, one country **owns** it."
+        )
 
     # ─── See it in action: Staircase Cards ────────────────────────
     st.markdown("#### See it in action:")
@@ -402,6 +467,7 @@ def render():
     )
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
