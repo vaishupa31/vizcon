@@ -405,22 +405,22 @@ def render():
 
     st.markdown("### 🏷️ Can't Read the Lyrics")
     st.markdown(
-        "The first wall is the simplest: if you can't read a name, you won't use it. Same origin. Different fate."
+        "The first wall is the simplest: if you can't read a name, you won't use it."
     )
 
-    # ─── Record label distribution sheet ──────────────────────────
+    # ─── Part 1: Same origin, different fate ──────────────────────
+    st.markdown("**Same origin. Different fate.**")
+
+    # Record label distribution sheet function
     def distribution_sheet(track, origin, score, catalog, date, status, status_color, status_angle, countries):
-        # Build HTML using string concatenation to avoid quote conflicts
         html = (
             '<div style="background:linear-gradient(135deg,#F5F0E4,#EDE8D8,#F8F4EA);'
             'border:1px solid #C4AD82;border-radius:6px;padding:22px;'
             'font-family:Courier New,monospace;box-shadow:0 6px 20px rgba(0,0,0,.12);'
             'position:relative;overflow:hidden;">'
-            # Diagonal stamp watermark
             '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate('
             + str(status_angle) + 'deg);font-size:1.1rem;font-weight:900;letter-spacing:3px;color:'
             + status_color + ';opacity:.12;white-space:nowrap;">' + status + '</div>'
-            # Header
             '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">'
             '<div>'
             '<div style="font-size:.6rem;letter-spacing:4px;color:#8D7555;font-weight:700;">POLARIS RECORDS</div>'
@@ -429,7 +429,6 @@ def render():
             '<div style="text-align:right;">'
             '<div style="font-size:.58rem;color:#8D7555;font-weight:600;">' + catalog + '</div>'
             '</div></div>'
-            # Track name with vinyl icon
             '<div style="text-align:center;border-top:1px solid #CBB996;border-bottom:1px solid #CBB996;'
             'padding:14px 0;margin-bottom:16px;">'
             '<div style="display:inline-flex;align-items:center;gap:10px;">'
@@ -444,7 +443,6 @@ def render():
             '<div style="font-size:.7rem;color:#7B6A54;margin-top:6px;">'
             'Origin: ' + origin + ' &nbsp;|&nbsp; Countryness Score: <b>' + score + '</b>'
             '</div></div>'
-            # Shipping labels header
             '<div style="font-size:.58rem;color:#8D7555;letter-spacing:2px;margin-bottom:8px;font-weight:600;">'
             'DISTRIBUTION STATUS BY TERRITORY</div>'
             '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
@@ -468,10 +466,8 @@ def render():
                     '</div>'
                 )
 
-        # Close grid + footer
         html += (
             '</div>'
-            # Footer: status badge + barcode
             '<div style="margin-top:16px;padding-top:14px;border-top:1px solid #CBB996;'
             'display:flex;justify-content:space-between;align-items:center;">'
             '<span style="padding:6px 16px;border:2px solid ' + status_color + ';border-radius:3px;'
@@ -537,14 +533,21 @@ def render():
     with col_right:
         st.markdown(niamh, unsafe_allow_html=True)
 
-    st.markdown("")  # spacer
+    st.markdown("")
     st.markdown(
         "Both names are Irish. Both are common. But **Declan** is phonetically transparent — "
         "anyone can read it and say it. **Niamh** (pronounced *NEEV*) requires insider knowledge. "
         "That single difference determined their fate."
     )
 
- # ─── Station Data ─────────────────────────────────────────────
+    # ─── Part 2: It's not just Irish ─────────────────────────────
+    st.markdown("")
+    st.markdown(
+        "And it's not just Irish. Every country in the Anglosphere has its own phonetic code "
+        "that outsiders can't crack. **Tune in to hear what each one sounds like:**"
+    )
+
+    # Station Data
     stations = {
         "Gaeilge FM": {
             "freq": "88.3",
@@ -608,7 +611,7 @@ def render():
         },
     }
 
-    # ─── Radio Dial (pills selector) ─────────────────────────────
+    # Radio Dial (pills selector)
     station_names = list(stations.keys())
     selected_station = st.pills(
         "📻 Tune the dial",
@@ -625,21 +628,17 @@ def render():
         key_text = station["key"]
         names = station["names"]
 
-        # ─── Radio Receiver HTML ──────────────────────────────────
-        # Build the radio display using string concatenation (no f-strings for HTML)
+        # Radio Receiver HTML (string concatenation)
         radio_top = (
             '<div style="background: linear-gradient(145deg, #1A1A2E, #16213E, #1A1A2E);'
             'border-radius: 12px; padding: 28px; box-shadow: 0 10px 40px rgba(0,0,0,.4);'
             'border: 1px solid #2D3748; position: relative; overflow: hidden;">'
-            # Subtle speaker grille texture on left
             '<div style="position:absolute; left:0; top:0; bottom:0; width:80px;'
             'background: repeating-linear-gradient(0deg, #2D3748 0px, #2D3748 2px, #1A1A2E 2px, #1A1A2E 4px);'
             'opacity:.3; border-radius: 12px 0 0 12px;"></div>'
-            # Frequency display
             '<div style="margin-left:90px;">'
             '<div style="background: #0a0a0a; border-radius: 8px; padding: 16px 24px;'
             'border: 1px solid #333; box-shadow: inset 0 2px 8px rgba(0,0,0,.5);">'
-            # Frequency number
             '<div style="display:flex; justify-content:space-between; align-items:center;">'
             '<div>'
             '<span style="font-family: monospace; font-size: 2.2rem;'
@@ -653,7 +652,6 @@ def render():
             '<div style="font-size: .7rem; color: ' + color + ';">' + subtitle + '</div>'
             '</div>'
             '</div>'
-            # Frequency bar (dial position)
             '<div style="margin-top: 12px; height: 3px; background: #2D3748; border-radius: 2px;'
             'position: relative;">'
             '<div style="position: absolute; left: ' + str((float(freq) - 85) / 20 * 100) + '%;'
@@ -661,7 +659,6 @@ def render():
             'border-radius: 50%; box-shadow: 0 0 6px ' + color + ';"></div>'
             '</div>'
             '</div>'
-            # Decryption key
             '<div style="margin-top: 16px; padding: 10px 16px; background: #ffffff08;'
             'border-radius: 6px; border-left: 3px solid ' + color + ';">'
             '<span style="font-size: .6rem; letter-spacing: 2px; color: #718096;'
@@ -671,7 +668,7 @@ def render():
             '</div>'
         )
 
-        # Now Playing tracklist
+        # Tracklist
         tracklist = (
             '<div style="margin-top: 20px;">'
             '<div style="font-size: .6rem; letter-spacing: 3px; color: #718096;'
@@ -684,10 +681,8 @@ def render():
                 '<div style="display: flex; align-items: center; padding: 12px 16px;'
                 'background: #ffffff05; border-radius: 6px; margin-bottom: 8px;'
                 'border: 1px solid #2D3748;">'
-                # Track number
                 '<div style="font-size: .7rem; color: #4A5568; font-weight: 700;'
                 'min-width: 28px; font-family: monospace;">' + track_num + '</div>'
-                # Name + pronunciation
                 '<div style="flex: 1;">'
                 '<div style="display: flex; align-items: baseline; gap: 10px;">'
                 '<span style="font-size: 1.1rem; font-weight: 700; color: #F7FAFC;'
@@ -697,7 +692,6 @@ def render():
                 '</div>'
                 '<div style="font-size: .65rem; color: #718096; margin-top: 3px;">' + rule + '</div>'
                 '</div>'
-                # Countryness badge
                 '<div style="background: #ffffff10; border: 1px solid #4A5568;'
                 'border-radius: 4px; padding: 4px 10px; text-align: center;">'
                 '<div style="font-size: .55rem; color: #718096; letter-spacing: 1px;">LOCKED</div>'
@@ -707,31 +701,17 @@ def render():
             )
 
         tracklist += '</div>'
-
-        # Close radio
         radio_bottom = '</div></div>'
 
         full_radio = radio_top + tracklist + radio_bottom
         st.markdown(full_radio, unsafe_allow_html=True)
 
+    # ─── Part 3: The pattern — longer = more locked ───────────────
     st.markdown("")
     st.markdown(
-        "Five countries. Five phonetic codes. Each one creates a wall that only locals can hear past. "
-        "The result? **A name can be beloved in one country and completely unpronounceable in another** — "
-        "even though they all speak English."
+        "There's a measurable pattern here: the longer and more complex a name looks, "
+        "the less likely it is to cross borders."
     )
-
-
-    # ─── Name length vs countryness ───────────────────────────────
-    st.markdown("#### Longer name, higher wall")
-
-    st.markdown(
-        "It's not just exotic characters — **length itself** is a barrier. "
-        "The longer and more complex a name looks, the less likely anyone outside will try it."
-    )
-
-    # Bar chart data: name length brackets vs avg countryness
-    import plotly.graph_objects as go
 
     length_data = {
         "bracket": ["3–4 letters", "5–6 letters", "7–8 letters", "9–10 letters", "11+ letters"],
@@ -763,8 +743,9 @@ def render():
     st.plotly_chart(fig, use_container_width=True)
 
     st.markdown(
-        "Names with **11+ letters** have an average countryness of **201** — "
-        "effectively cultural passwords. At 3–4 letters? Just **8** — practically global."
+        "Names with **11+ letters** average a countryness of **201** — effectively cultural passwords. "
+        "At 3–4 letters? Just **8** — practically global. "
+        "Spelling complexity and visual length work together as a pronunciation filter."
     )
 
     st.markdown("---")
