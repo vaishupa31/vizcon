@@ -30,7 +30,7 @@ def render():
     summary = load_summary()
     data_2023 = df[df["year"] == 2023]
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 1: QUIZ — Integrated Record Shop Card
     # ══════════════════════════════════════════════════════════════
 
@@ -235,106 +235,263 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
-    # SECTION 2: INTRO — Why Some Names Never Left
+        # ══════════════════════════════════════════════════════════════
+    # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
-    st.markdown("### 🏠 Why Some Names Never Left")
+    st.markdown("### 💿 What Stayed in the Shop?")
+    st.markdown(
+        "Could you read all of those? Probably not — and that's the point. "
+        "But before we explore *why*, we need a way to **measure** how locked a name is."
+    )
+
+    # ─── Countryness Formula ──────────────────────────────────────
     st.markdown(
         """
-        Could you pronounce all of those? Probably not — and that's the point.
-        
-        In 2023, **41% of all baby names** in the Anglosphere are at least 5x more 
-        popular in one country than anywhere else. They're culturally locked — 
-        and some countries lock harder than others.
+        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
+                    border-radius: 12px; padding: 24px; margin: 20px 0;
+                    border: 1px solid #E2E8F0; text-align: center;">
+            <div style="font-size: 0.75em; color: #7C9FD6; text-transform: uppercase; 
+                        letter-spacing: 2px; margin-bottom: 10px;">We invented a metric</div>
+            <div style="font-size: 1.6em; font-weight: 800; color: #2D3748; margin-bottom: 8px;">
+                The Countryness Score
+            </div>
+            <div style="font-size: 1.1em; color: #4A5568; font-family: 'Courier New', monospace;
+                        background: white; border-radius: 8px; padding: 14px; margin: 12px auto;
+                        max-width: 500px; border: 1px solid #E2E8F0;">
+                <span style="color: #7C9FD6;">popularity in top country</span><br>
+                ────────────────────────────── = <strong style="color: #2D3748;">countryness</strong><br>
+                <span style="color: #718096;">avg popularity everywhere else</span>
+            </div>
+            <div style="font-size: 0.95em; color: #4A5568; margin-top: 12px; font-style: italic;">
+                "How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?"
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ─── Worked Example: Niamh vs Liam ───────────────────────────
+    st.markdown("#### See it in action:")
+
+    col_liam, col_vs, col_niamh = st.columns([5, 1, 5])
+
+    with col_liam:
+        st.markdown(
+            """
+            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
+                        padding: 20px; text-align: center;">
+                <div style="font-size: 0.7em; color: #059669; text-transform: uppercase; 
+                            letter-spacing: 2px;">GLOBAL NAME</div>
+                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Liam</div>
+                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
+                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
+                    Top country: Scotland<br>
+                    Popularity there: <strong>1.84%</strong><br>
+                    Avg elsewhere: <strong>0.66%</strong><br><br>
+                    1.84 ÷ 0.66 = <span style="font-size: 1.3em; color: #059669; font-weight: 800;">2.8</span>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85em; color: #059669;">
+                    ✅ Less than 3x difference — it's everywhere!
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_vs:
+        st.markdown(
+            """
+            <div style="text-align: center; padding-top: 60px;">
+                <div style="font-size: 1.8em; color: #718096;">vs</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_niamh:
+        st.markdown(
+            """
+            <div style="background: #FFF5F5; border: 2px solid #F5B7C5; border-radius: 12px;
+                        padding: 20px; text-align: center;">
+                <div style="font-size: 0.7em; color: #e63946; text-transform: uppercase; 
+                            letter-spacing: 2px;">LOCKED NAME</div>
+                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Niamh</div>
+                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
+                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
+                    Top country: Ireland<br>
+                    Popularity there: <strong>2.45%</strong><br>
+                    Avg elsewhere: <strong>0.04%</strong><br><br>
+                    2.45 ÷ 0.04 = <span style="font-size: 1.3em; color: #e63946; font-weight: 800;">60</span>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85em; color: #e63946;">
+                    🔒 60x more popular in Ireland — locked!
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # ─── The Scale ────────────────────────────────────────────────
+    st.markdown("")
+    st.markdown("#### The Countryness Scale:")
+    st.markdown(
         """
+        <div style="background: white; border-radius: 12px; padding: 20px; margin: 15px 0;
+                    border: 1px solid #E2E8F0;">
+            <div style="position: relative; height: 40px; border-radius: 20px; margin: 10px 0 30px;
+                        background: linear-gradient(to right, #A8E6C8, #F5D68A, #F5B7C5, #e63946);">
+                <div style="position: absolute; top: -18px; left: 2%; font-size: 0.7em; color: #718096;">1</div>
+                <div style="position: absolute; top: -18px; left: 18%; font-size: 0.7em; color: #718096;">5</div>
+                <div style="position: absolute; top: -18px; left: 45%; font-size: 0.7em; color: #718096;">50</div>
+                <div style="position: absolute; top: -18px; left: 70%; font-size: 0.7em; color: #718096;">500</div>
+                <div style="position: absolute; top: -18px; left: 92%; font-size: 0.7em; color: #718096;">10,000+</div>
+                <div style="position: absolute; top: -5px; left: 18%; width: 3px; height: 50px; 
+                            background: #2D3748; border-radius: 2px;"></div>
+                <div style="position: absolute; top: 48px; left: 12%; font-size: 0.75em; font-weight: 700; 
+                            color: #2D3748; white-space: nowrap;">↑ Our threshold</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 35px; flex-wrap: wrap; gap: 8px;">
+                <div style="text-align: center; flex: 1; min-width: 80px;">
+                    <div style="font-weight: 700; color: #059669;">Liam</div>
+                    <div style="font-size: 0.75em; color: #718096;">2.8 — Global</div>
+                </div>
+                <div style="text-align: center; flex: 1; min-width: 80px;">
+                    <div style="font-weight: 700; color: #B7791F;">Joseph</div>
+                    <div style="font-size: 0.75em; color: #718096;">5 — Threshold</div>
+                </div>
+                <div style="text-align: center; flex: 1; min-width: 80px;">
+                    <div style="font-weight: 700; color: #C53030;">Niamh</div>
+                    <div style="font-size: 0.75em; color: #718096;">60 — Locked</div>
+                </div>
+                <div style="text-align: center; flex: 1; min-width: 80px;">
+                    <div style="font-weight: 700; color: #9B2C2C;">Pádraig</div>
+                    <div style="font-size: 0.75em; color: #718096;">343 — Very locked</div>
+                </div>
+                <div style="text-align: center; flex: 1; min-width: 80px;">
+                    <div style="font-weight: 700; color: #742A2A;">Sadhbh</div>
+                    <div style="font-size: 0.75em; color: #718096;">8,171 — Extreme</div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    # Bar chart: % of locked names per country
-    st.markdown("#### Which Countries Keep Their Names the Most?")
-
-    country_pct = []
-    for country in data_2023["max_country"].unique():
-        country_data = data_2023[data_2023["max_country"] == country]
-        total = country_data["name"].nunique()
-        locked = country_data[country_data["countryness"] >= 5]["name"].nunique()
-        if total > 0:
-            country_pct.append({"Country": country, "% Locked": round(locked / total * 100, 1)})
-
-    country_pct_df = sorted(country_pct, key=lambda x: x["% Locked"], reverse=True)
-
-    fig_locked = go.Figure()
-    fig_locked.add_trace(go.Bar(
-        x=[c["Country"] for c in country_pct_df],
-        y=[c["% Locked"] for c in country_pct_df],
-        marker_color=[COUNTRY_COLORS.get(c["Country"], "#7C9FD6") for c in country_pct_df],
-        text=[f"{c['% Locked']}%" for c in country_pct_df],
-        textposition="outside",
-        textfont=dict(size=13, color="#4A5568"),
-    ))
-    fig_locked.update_layout(
-        **CHART_LAYOUT,
-        title=None,
-        yaxis_title="% of Names Culturally Locked (countryness ≥ 5)",
-        height=400,
-        showlegend=False,
+    st.markdown(
+        "> **Why 5?** A name with countryness ≥ 5 is at least **5x more popular** in its home country "
+        "than anywhere else. That's not random variation — that's cultural gravity pulling it home."
     )
-    st.plotly_chart(fig_locked, use_container_width=True)
 
-    # Example names per country
+    # ─── The Local Collection: Cassette Tapes ─────────────────────
     st.markdown("#### 🎵 The Local Collection")
+    st.markdown("Each country has its own collection of names that never made it out:")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(
-            """
-            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🏴 Northern Ireland (65% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Eireann · Roisé · Dáithí · Ruadhán · Cianan</div>
+    tapes = [
+        {
+            "country": "Northern Ireland",
+            "flag": "🏴",
+            "pct": "65%",
+            "color": "#9FE6C8",
+            "names": ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"],
+        },
+        {
+            "country": "Ireland",
+            "flag": "🇮🇪",
+            "pct": "55%",
+            "color": "#A8E6C8",
+            "names": ["Naoise", "Sadhbh", "Iarla", "Laoise", "Aoibhínn"],
+        },
+        {
+            "country": "Scotland",
+            "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+            "pct": "52%",
+            "color": "#C8A8E8",
+            "names": ["Innes", "Ruairidh", "Munro", "Murdo", "Breagha"],
+        },
+        {
+            "country": "USA",
+            "flag": "🇺🇸",
+            "pct": "44%",
+            "color": "#A8D8F0",
+            "names": ["Kaylani", "Anahi", "Tadeo", "Itzel", "Malani"],
+        },
+        {
+            "country": "Canada",
+            "flag": "🇨🇦",
+            "pct": "36%",
+            "color": "#F5B7C5",
+            "names": ["Édouard", "Éloi", "Ludovic", "Frédérique", "Noélie"],
+        },
+        {
+            "country": "New Zealand",
+            "flag": "🇳🇿",
+            "pct": "36%",
+            "color": "#C8A8E8",
+            "names": ["Kauri", "Manaia", "Ardie", "Nikau", "Amarni"],
+        },
+        {
+            "country": "England & Wales",
+            "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+            "pct": "35%",
+            "color": "#F5D68A",
+            "names": ["Barney", "Isla-rose", "Delilah-rose", "Tommy-lee", "Ffion"],
+        },
+        {
+            "country": "Australia",
+            "flag": "🇦🇺",
+            "pct": "23%",
+            "color": "#F5C878",
+            "names": ["Darcy", "Pippa", "Billie", "Harvey", "Matilda"],
+        },
+    ]
+
+    tape_html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 16px 0;">'
+
+    for tape in tapes:
+        tracks = "".join([f'<div style="font-size: 0.8em; color: #4A5568;">{i+1}. {n}</div>' for i, n in enumerate(tape["names"])])
+        tape_html += f"""
+        <div style="background: #FAFAFA; border-radius: 10px; padding: 0; overflow: hidden;
+                    border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="background: {tape['color']}; padding: 10px 14px; display: flex; 
+                        align-items: center; justify-content: space-between;">
+                <div style="font-weight: 700; font-size: 0.85em; color: #2D3748;">
+                    {tape['flag']} {tape['country']}
+                </div>
+                <div style="font-size: 0.7em; color: #2D3748; font-weight: 600;
+                            background: rgba(255,255,255,0.5); border-radius: 4px; padding: 2px 6px;">
+                    {tape['pct']} locked
+                </div>
             </div>
-            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🇮🇪 Ireland (55% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Naoise · Sadhbh · Iarla · Laoise · Aoibhínn</div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 20px;
+                        padding: 10px; background: #F7FAFC;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;
+                            background: white; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>
+                </div>
+                <div style="width: 50px; height: 6px; background: #A0AEC0; border-radius: 3px;"></div>
+                <div style="width: 28px; height: 28px; border-radius: 50%; border: 3px solid #A0AEC0;
+                            background: white; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0;"></div>
+                </div>
             </div>
-            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland (52% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Innes · Ruairidh · Munro · Murdo</div>
+            <div style="padding: 10px 14px; border-top: 1px solid #E2E8F0;">
+                <div style="font-size: 0.65em; color: #A0AEC0; text-transform: uppercase; 
+                            letter-spacing: 1.5px; margin-bottom: 4px;">TOP TRACKS</div>
+                {tracks}
             </div>
-            <div style="background: #F0FFF4; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🇳🇿 New Zealand (36% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Kauri · Manaia · Ardie · Nikau</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col2:
-        st.markdown(
-            """
-            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🇨🇦 Canada (36% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Édouard · Éloi · Ludovic · Frédérique</div>
-            </div>
-            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🇺🇸 USA (44% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Kaylani · Anahi · Tadeo · Itzel</div>
-            </div>
-            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🏴󠁧󠁢󠁷󠁬󠁳󠁿 England & Wales (35% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Ffion · Barney · Isla-rose · Tommy-lee</div>
-            </div>
-            <div style="background: #EEF2FF; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-                <div style="font-weight: 700;">🇦🇺 Australia (23% locked)</div>
-                <div style="color: #718096; font-size: 0.9em;">Narelle · Zali · Bronte</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        </div>
+        """
+
+    tape_html += "</div>"
+    st.markdown(tape_html, unsafe_allow_html=True)
 
     st.markdown(
-        "So **why** do these names stay locked? We found three main reasons:"
+        "So **why** do these names stay locked? We found four forces keeping them home:"
     )
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
