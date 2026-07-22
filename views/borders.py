@@ -30,8 +30,8 @@ def render():
     summary = load_summary()
     data_2023 = df[df["year"] == 2023]
 
-    # ══════════════════════════════════════════════════════════════
-    # SECTION 1: QUIZ — Integrated Record Shop Card
+        # ══════════════════════════════════════════════════════════════
+    # SECTION 1: QUIZ — Hybrid (gradient card + column layout)
     # ══════════════════════════════════════════════════════════════
 
     # Pronunciation challenge data
@@ -92,94 +92,81 @@ def render():
         st.session_state.show_hint = False
 
     challenge = challenges[st.session_state.challenge_idx]
-
-    # Pull values out to avoid f-string quote conflicts
     c_name = challenge["name"]
     c_country = challenge["country"]
     c_idx = st.session_state.challenge_idx + 1
     c_total = len(challenges)
 
+    # ─── Gradient card header ─────────────────────────────────────
     st.markdown(
-        f"""
+        """
         <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
-                    border-radius: 16px; padding: 20px 16px; margin-bottom: 20px;
-                    border: 1px solid #E2E8F0;">
-            <div style="text-align: center; margin-bottom: 28px;">
-                <h2 style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 0 0 10px 0;">
-                    🎤 Can You Say This?
-                </h2>
-                <p style="font-size: 1.05em; color: #4A5568; max-width: 550px; margin: 0 auto; line-height: 1.6;">
-                    These names are <strong>cultural passwords</strong> — if you can't say them, 
-                    they'll never leave their home country. Give it a try!
-                </p>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
-                <div style="flex-shrink: 0;">
-                    <svg width="140" height="140" viewBox="0 0 140 140">
-                        <circle cx="70" cy="70" r="66" fill="#2D3748" stroke="#4A5568" stroke-width="1"/>
-                        <circle cx="70" cy="70" r="59" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                        <circle cx="70" cy="70" r="53" fill="none" stroke="#354258" stroke-width="0.5"/>
-                        <circle cx="70" cy="70" r="47" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                        <circle cx="70" cy="70" r="41" fill="none" stroke="#354258" stroke-width="0.5"/>
-                        <circle cx="70" cy="70" r="35" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                        <circle cx="70" cy="70" r="29" fill="none" stroke="#354258" stroke-width="0.5"/>
-                        <ellipse cx="52" cy="52" rx="20" ry="13" fill="rgba(255,255,255,0.04)" transform="rotate(-30 52 52)"/>
-                        <circle cx="70" cy="70" r="22" fill="#7C9FD6" opacity="0.9"/>
-                        <circle cx="70" cy="70" r="17" fill="none" stroke="#5A82BE" stroke-width="0.8"/>
-                        <circle cx="70" cy="70" r="13" fill="#2D3748"/>
-                        <circle cx="70" cy="70" r="4" fill="#4A5568"/>
-                        <circle cx="70" cy="70" r="2.5" fill="#2D3748"/>
-                    </svg>
-                </div>
-                <div style="text-align: center; min-width: 200px;">
-                    <div style="font-size: 0.7em; color: #718096; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 4px;">
-                        SIDE {c_idx} OF {c_total}
-                    </div>
-                    <div style="font-size: 2.6em; font-weight: 800; color: #2D3748; font-family: Georgia, serif; margin: 6px 0;">
-                        {c_name}
-                    </div>
-                    <div style="font-size: 0.95em; color: #4A5568; margin-top: 4px;">
-                        {c_country}
-                    </div>
-                    <div style="background: rgba(124,159,214,0.12); border-radius: 8px; padding: 5px 12px; margin-top: 12px; display: inline-block; border: 1px solid rgba(124,159,214,0.25);">
-                        <span style="font-size: 0.72em; color: #5A82BE; letter-spacing: 1px;">🎵 LOCAL VINYL RECORDS</span>
-                    </div>
-                </div>
-            </div>
+                    border-radius: 16px; padding: 32px 28px 20px; margin-bottom: 8px;
+                    border: 1px solid #E2E8F0; text-align: center;">
+            <h2 style="font-size: 1.7em; font-weight: 800; color: #2D3748; margin: 0 0 8px 0;">
+                🎤 Can You Say This?
+            </h2>
+            <p style="font-size: 0.95em; color: #4A5568; max-width: 520px; margin: 0 auto; line-height: 1.5;">
+                These names are <strong>cultural passwords</strong> — if you can't say them, 
+                they'll never leave their home country. Give it a try!
+            </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Buttons — full width
-    col_hint, col_reveal, col_next = st.columns([1, 1, 1])
+    # ─── Two-column layout: Vinyl left, Name+Buttons right ────────
+    left, right = st.columns([1, 1.2], vertical_alignment="center")
 
-    with col_hint:
+    with left:
+        st.markdown(f"""
+        <div style="text-align: center;">
+            <svg width="200" height="200" viewBox="0 0 220 220">
+                <circle cx="110" cy="110" r="100" fill="#2D3748" stroke="#4A5568" stroke-width="1"/>
+                <circle cx="110" cy="110" r="90" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="80" fill="none" stroke="#354258" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="70" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="60" fill="none" stroke="#354258" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="50" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+                <circle cx="110" cy="110" r="35" fill="#7C9FD6" opacity="0.9"/>
+                <circle cx="110" cy="110" r="28" fill="none" stroke="#5A82BE" stroke-width="0.8"/>
+                <circle cx="110" cy="110" r="18" fill="#2D3748"/>
+                <circle cx="110" cy="110" r="5" fill="#4A5568"/>
+                <circle cx="110" cy="110" r="3" fill="#2D3748"/>
+            </svg>
+            <div style="font-size: 0.72em; color: #718096; text-transform: uppercase; letter-spacing: 3px; margin-top: 8px;">
+                SIDE {c_idx} OF {c_total}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with right:
+        st.markdown(f"### {c_name}")
+        st.markdown(f"*{c_country}*")
+
         if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
             st.session_state.show_hint = True
 
-    with col_reveal:
         if st.button("🔊 Reveal", use_container_width=True, key="btn_reveal"):
             st.session_state.revealed = True
 
-    with col_next:
         if st.button("➡️ Next", use_container_width=True, key="btn_next"):
             st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
             st.session_state.revealed = False
             st.session_state.show_hint = False
             st.rerun()
 
-    # Hint display
+    # ─── Hint ─────────────────────────────────────────────────────
     if st.session_state.get("show_hint"):
         st.info(f'💡 {challenge["hint"]}')
 
-    # Progress dots
+    # ─── Progress dots ────────────────────────────────────────────
     dots = ""
     for i in range(len(challenges)):
         dots += "● " if i == st.session_state.challenge_idx else "○ "
     st.caption(dots)
 
-    # Reveal section
+    # ─── Reveal section ───────────────────────────────────────────
     if st.session_state.revealed:
         c_actual = challenge["actual"]
         c_explain = challenge["explain"]
@@ -189,7 +176,7 @@ def render():
             f"""
             <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5); 
                         border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 18px; text-align: center; margin-top: 14px;">
+                        padding: 18px; text-align: center; margin-top: 10px;">
                 <div style="font-size: 0.75em; color: #059669; text-transform: uppercase; 
                             letter-spacing: 2px;">▶ Now Playing:</div>
                 <div style="font-size: 1.8em; font-weight: 700; color: #059669; margin: 6px 0;">
