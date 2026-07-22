@@ -246,111 +246,59 @@ def render():
     )
 
     # ─── Formula + Classification side by side ────────────────────
-    # Force equal-height columns
-    st.markdown(
-        """
-        <style>
-            div[data-testid="stHorizontalBlock"] {
-                align-items: stretch;
-            }
-            div[data-testid="stHorizontalBlock"] > div[data-testid="stVerticalBlockBorderWrapper"] {
-                height: 100%;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-    col_formula, col_class = st.columns([1, 1])
+    st.markdown("""
+    <style>
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+    .info-card{background:linear-gradient(135deg,#EEF2FF,#E8F4FD);border:1px solid #E2E8F0;border-radius:12px;display:flex;flex-direction:column;padding:24px;box-sizing:border-box;}
+    .small-title{text-transform:uppercase;letter-spacing:2px;font-size:0.72rem;color:#7C9FD6;text-align:center;margin-bottom:8px;}
+    .main-title{text-align:center;font-size:1.45rem;font-weight:800;color:#2D3748;margin-bottom:4px;}
+    .subtitle{text-align:center;color:#4A5568;font-size:.88rem;margin-bottom:18px;}
+    .formula-box{background:white;border-radius:8px;border:1px solid #E2E8F0;padding:18px;}
+    .formula-top{text-align:center;font-family:Courier New;color:#7C9FD6;font-weight:700;border-bottom:2px solid #2D3748;padding-bottom:8px;}
+    .formula-bottom{text-align:center;font-family:Courier New;color:#718096;font-weight:700;padding-top:8px;}
+    .note-box{margin-top:18px;padding:12px;background:rgba(124,159,214,.08);border-radius:8px;font-size:.8rem;line-height:1.6;color:#4A5568;}
+    .info-card table{width:100%;border-collapse:collapse;font-size:.83rem;}
+    .info-card th{text-align:left;padding:8px;border-bottom:2px solid #CBD5E0;color:#4A5568;}
+    .info-card td{padding:8px;border-bottom:1px solid #E2E8F0;color:#4A5568;}
+    .info-card tr:last-child td{border-bottom:none;}
+    @media (max-width:900px){.info-grid{grid-template-columns:1fr;}}
+    </style>
 
-    with col_formula:
-        st.markdown(
-            """
-            <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 55px 16px; margin: 0;
-                        border: 1px solid #E2E8F0; text-align: center; height: 100%;">
-                <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
-                            letter-spacing: 2px; margin-bottom: 8px;">HOW WE MEASURED IT</div>
-                <div style="font-size: 1.4em; font-weight: 800; color: #2D3748; margin-bottom: 4px;">
-                    The Countryness Score
-                </div>
-                <div style="font-size: 0.88em; color: #4A5568; margin-bottom: 12px; font-style: italic;">
-                    How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?
-                </div>
-                <div style="background: white; border-radius: 8px; padding: 14px; margin: 10px auto;
-                            border: 1px solid #E2E8F0;">
-                    <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace; font-weight: 700;
-                                border-bottom: 2px solid #2D3748; padding-bottom: 8px; margin-bottom: 8px;">
-                        proportion in top country
-                    </div>
-                    <div style="font-size: 0.95em; color: #718096; font-family: 'Courier New', monospace; font-weight: 700;">
-                        avg proportion in other countries
-                    </div>
-                </div>
-                <div style="background: rgba(124,159,214,0.08); border-radius: 8px; padding: 10px;
-                            margin: 12px auto 0; text-align: left;">
-                    <div style="font-size: 0.78em; color: #4A5568; line-height: 1.5;">
-                        <strong style="color: #7C9FD6;">Proportion</strong> = how many babies out of ALL babies 
-                        born that year got this name.<br>
-                        <span style="color: #718096;">e.g., 2,450 Niamhs out of 100,000 Irish babies = <strong>0.0245</strong> (or 2.45%)</span>
-                    </div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="small-title">HOW WE MEASURED IT</div>
+        <div class="main-title">The Countryness Score</div>
+        <div class="subtitle">How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?</div>
+        <div class="formula-box">
+          <div class="formula-top">proportion in top country</div>
+          <div class="formula-bottom">avg proportion in other countries</div>
+        </div>
+        <div class="note-box">
+          <b style="color:#7C9FD6;">Proportion</b> = how many babies out of ALL babies born that year received the name.
+          <br><br>
+          Example: <b>2,450 Niamhs</b> out of <b>100,000 Irish babies</b> = <b>0.0245</b> (2.45%)
+        </div>
+      </div>
 
-    with col_class:
-        st.markdown(
-            """
-            <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 20px 16px; margin: 0; text-align: center;
-                        border: 1px solid #E2E8F0; height: 100%;">
-                <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
-                            letter-spacing: 2px; margin-bottom: 8px;">HOW WE CLASSIFIED THEM</div>
-                <div style="font-size: 1.4em; font-weight: 800; color: #2D3748; margin-bottom: 4px;">
-                    The Classification
-                </div>
-                <div style="font-size: 0.88em; color: #4A5568; margin-bottom: 12px;">Not all locked names are locked equally:</div>
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.82em; text-align: left;">
-                    <thead>
-                        <tr style="border-bottom: 2px solid #CBD5E0;">
-                            <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Label</th>
-                            <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Score</th>
-                            <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Meaning</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid #E2E8F0;">
-                            <td style="padding: 7px 6px; font-weight: 600; color: #059669;">✅ Global</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">< 5</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">Shared — no single home</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #E2E8F0;">
-                            <td style="padding: 7px 6px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">5 – 10</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">Concentrating in one place</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #E2E8F0;">
-                            <td style="padding: 7px 6px; font-weight: 600; color: #C53030;">🔒 Locked</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">10 – 100</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">Clearly belongs to one country</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #E2E8F0;">
-                            <td style="padding: 7px 6px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">100 – 1,000</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">Barely exists elsewhere</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 7px 6px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">1,000+</td>
-                            <td style="padding: 7px 6px; color: #4A5568;">A cultural password</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+      <div class="info-card">
+        <div class="small-title">HOW WE CLASSIFIED THEM</div>
+        <div class="main-title">The Classification</div>
+        <div class="subtitle">Not all locked names are locked equally.</div>
+        <table>
+          <thead>
+            <tr><th>Label</th><th>Score</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="color:#059669;font-weight:600;">✅ Global</td><td>&lt;5</td><td>Shared — no single home</td></tr>
+            <tr><td style="color:#B7791F;font-weight:600;">⚠️ Leaning</td><td>5–10</td><td>Concentrating in one place</td></tr>
+            <tr><td style="color:#C53030;font-weight:600;">🔒 Locked</td><td>10–100</td><td>Clearly belongs to one country</td></tr>
+            <tr><td style="color:#9B2C2C;font-weight:600;">🔐 Very Locked</td><td>100–1,000</td><td>Barely exists elsewhere</td></tr>
+            <tr><td style="color:#742A2A;font-weight:600;">🚫 Extreme</td><td>1,000+</td><td>A cultural password</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # ─── Paragraph explanation (full width below) ─────────────────
     st.markdown(
@@ -470,6 +418,7 @@ def render():
     st.markdown(tape_html, unsafe_allow_html=True)
 
     st.markdown("---")
+
 
 
     # ══════════════════════════════════════════════════════════════
