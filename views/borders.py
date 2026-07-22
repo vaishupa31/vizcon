@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -282,123 +282,66 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # ─── Interactive Scale with Segmented Control ─────────────────
-    st.markdown("#### See it in action")
+    # ─── See it in action: Static Cards ───────────────────────────
+    st.markdown("#### See it in action:")
 
-    scale_names = [
-        {
-            "name": "Liam",
-            "score": 2.8,
-            "country": "Scotland",
-            "pop_home": "1.84%",
-            "pop_abroad": "0.66%",
-            "label": "Global",
-            "color": "#059669",
-            "icon": "✅",
-            "desc": "Less than 3x difference — it belongs to everyone!",
-        },
-        {
-            "name": "Joseph",
-            "score": 5.0,
-            "country": "USA",
-            "pop_home": "4.80%",
-            "pop_abroad": "0.96%",
-            "label": "Threshold",
-            "color": "#B7791F",
-            "icon": "⚠️",
-            "desc": "Right at 5x — starting to lean American.",
-        },
-        {
-            "name": "Siobhan",
-            "score": 71,
-            "country": "Ireland",
-            "pop_home": "0.14%",
-            "pop_abroad": "0.002%",
-            "label": "Locked",
-            "color": "#C53030",
-            "icon": "🔒",
-            "desc": "71x more popular in Ireland — clearly locked.",
-        },
-        {
-            "name": "Innes",
-            "score": 861,
-            "country": "Scotland",
-            "pop_home": "0.22%",
-            "pop_abroad": "0.00026%",
-            "label": "Very Locked",
-            "color": "#9B2C2C",
-            "icon": "🔐",
-            "desc": "861x — practically unknown outside Scotland.",
-        },
-        {
-            "name": "Narelle",
-            "score": 4738,
-            "country": "Australia",
-            "pop_home": "0.05%",
-            "pop_abroad": "0.00001%",
-            "label": "Extreme",
-            "color": "#742A2A",
-            "icon": "🚫",
-            "desc": "4,738x — exists almost nowhere else on Earth.",
-    },
-    ]
+    col_liam, col_vs, col_niamh = st.columns([5, 1, 5])
 
-    scale_tabs = st.tabs([
-        "Liam (2.8)",
-        "Joseph (5)",
-        "Siobhan (71)",
-        "Innes (861)",
-        "Narelle (4,738)",
-    ])
-
-    for tab_idx, tab in enumerate(scale_tabs):
-        with tab:
-            sel = scale_names[tab_idx]
-            sel_name = sel["name"]
-            sel_score = sel["score"]
-            sel_country = sel["country"]
-            sel_pop_home = sel["pop_home"]
-            sel_pop_abroad = sel["pop_abroad"]
-            sel_label = sel["label"]
-            sel_color = sel["color"]
-            sel_icon = sel["icon"]
-            sel_desc = sel["desc"]
-            sel_score_fmt = f"{sel_score:,.0f}" if sel_score >= 10 else str(sel_score)
-
-            st.markdown(
-                f"""
-                <div style="background: white; border-radius: 12px; padding: 24px; margin: 10px 0;
-                            border: 2px solid {sel_color}30; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
-                    <div style="text-align: center;">
-                        <div style="font-size: 0.75em; color: {sel_color}; text-transform: uppercase; 
-                                    letter-spacing: 2px; font-weight: 600;">{sel_label}</div>
-                        <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; margin: 6px 0;">
-                            {sel_icon} {sel_name}
-                        </div>
-                        <div style="font-size: 0.9em; color: #718096; margin-bottom: 14px;">
-                            Most popular in: {sel_country}
-                        </div>
-                        <div style="background: #F7FAFC; border-radius: 8px; padding: 14px; 
-                                    max-width: 400px; margin: 0 auto; font-family: 'Courier New', monospace;">
-                            <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 4px;">
-                                Home: <strong>{sel_pop_home}</strong> of babies
-                            </div>
-                            <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 8px;">
-                                Abroad: <strong>{sel_pop_abroad}</strong> of babies
-                            </div>
-                            <div style="border-top: 1px solid #E2E8F0; padding-top: 8px;">
-                                <span style="color: #718096;">{sel_pop_home} ÷ {sel_pop_abroad} = </span>
-                                <span style="font-size: 1.6em; font-weight: 800; color: {sel_color};">{sel_score_fmt}</span>
-                            </div>
-                        </div>
-                        <div style="font-size: 0.88em; color: #4A5568; margin-top: 12px;">
-                            {sel_desc}
-                        </div>
-                    </div>
+    with col_liam:
+        st.markdown(
+            """
+            <div style="background: #F0FFF4; border: 2px solid #A8E6C8; border-radius: 12px;
+                        padding: 20px; text-align: center;">
+                <div style="font-size: 0.7em; color: #059669; text-transform: uppercase; 
+                            letter-spacing: 2px;">GLOBAL NAME</div>
+                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Liam</div>
+                <div style="font-size: 0.85em; color: #718096;">Most popular in: Scotland</div>
+                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
+                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
+                    Home: <strong>1.84%</strong> of babies<br>
+                    Abroad: <strong>0.66%</strong> of babies<br><br>
+                    1.84 ÷ 0.66 = <span style="font-size: 1.3em; color: #059669; font-weight: 800;">2.8</span>
                 </div>
-                """,
-                unsafe_allow_html=True,
-            )
+                <div style="margin-top: 10px; font-size: 0.85em; color: #059669;">
+                    ✅ Less than 3x difference — it's everywhere!
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_vs:
+        st.markdown(
+            """
+            <div style="text-align: center; padding-top: 60px;">
+                <div style="font-size: 1.8em; color: #718096;">vs</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_niamh:
+        st.markdown(
+            """
+            <div style="background: #FFF5F5; border: 2px solid #F5B7C5; border-radius: 12px;
+                        padding: 20px; text-align: center;">
+                <div style="font-size: 0.7em; color: #e63946; text-transform: uppercase; 
+                            letter-spacing: 2px;">LOCKED NAME</div>
+                <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 8px 0;">Niamh</div>
+                <div style="font-size: 0.85em; color: #718096;">Most popular in: Ireland</div>
+                <div style="font-size: 0.85em; color: #4A5568; text-align: left; padding: 10px;
+                            background: white; border-radius: 8px; margin-top: 10px; font-family: monospace;">
+                    Home: <strong>2.45%</strong> of babies<br>
+                    Abroad: <strong>0.04%</strong> of babies<br><br>
+                    2.45 ÷ 0.04 = <span style="font-size: 1.3em; color: #e63946; font-weight: 800;">60</span>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85em; color: #e63946;">
+                    🔒 60x more popular in Ireland — locked!
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.markdown(
         "> **Why 5?** A name with countryness ≥ 5 is at least **5x more popular** in its home country "
