@@ -286,44 +286,50 @@ def render():
         )
 
     with col_class:
-        st.markdown("#### How We Classified Them")
-        st.markdown("Not all locked names are locked equally:")
         st.markdown(
             """
-            <div style="margin: 8px 0;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+            <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
+                        border-radius: 12px; padding: 24px; margin: 0;
+                        border: 1px solid #E2E8F0; height: 100%;">
+                <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
+                            letter-spacing: 2px; margin-bottom: 8px;">HOW WE CLASSIFIED THEM</div>
+                <div style="font-size: 1.4em; font-weight: 800; color: #2D3748; margin-bottom: 4px;">
+                    Five Levels of Locked
+                </div>
+                <div style="font-size: 0.88em; color: #4A5568; margin-bottom: 12px;">Not all locked names are locked equally:</div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.82em;">
                     <thead>
-                        <tr style="border-bottom: 2px solid #E2E8F0;">
-                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Label</th>
-                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Score</th>
-                            <th style="text-align: left; padding: 9px 6px; color: #4A5568;">Meaning</th>
+                        <tr style="border-bottom: 2px solid #CBD5E0;">
+                            <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Label</th>
+                            <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Score</th>
+                            <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Meaning</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="border-bottom: 1px solid #E2E8F0; background: #F0FFF4;">
-                            <td style="padding: 9px 6px; font-weight: 600; color: #059669;">✅ Global</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">< 5</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">Shared — no single home</td>
+                        <tr style="border-bottom: 1px solid #E2E8F0;">
+                            <td style="padding: 7px 6px; font-weight: 600; color: #059669;">✅ Global</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">< 5</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">Shared — no single home</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFFF0;">
-                            <td style="padding: 9px 6px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">5 – 10</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">Concentrating in one place</td>
+                        <tr style="border-bottom: 1px solid #E2E8F0;">
+                            <td style="padding: 7px 6px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">5 – 10</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">Concentrating in one place</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF5F5;">
-                            <td style="padding: 9px 6px; font-weight: 600; color: #C53030;">🔒 Locked</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">10 – 100</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">Clearly belongs to one country</td>
+                        <tr style="border-bottom: 1px solid #E2E8F0;">
+                            <td style="padding: 7px 6px; font-weight: 600; color: #C53030;">🔒 Locked</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">10 – 100</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">Clearly belongs to one country</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF0F0;">
-                            <td style="padding: 9px 6px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">100 – 1,000</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">Barely exists elsewhere</td>
+                        <tr style="border-bottom: 1px solid #E2E8F0;">
+                            <td style="padding: 7px 6px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">100 – 1,000</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">Barely exists elsewhere</td>
                         </tr>
-                        <tr style="background: #FFE8E8;">
-                            <td style="padding: 9px 6px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">1,000+</td>
-                            <td style="padding: 9px 6px; color: #4A5568;">A cultural password</td>
+                        <tr>
+                            <td style="padding: 7px 6px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">1,000+</td>
+                            <td style="padding: 7px 6px; color: #4A5568;">A cultural password</td>
                         </tr>
                     </tbody>
                 </table>
@@ -335,14 +341,14 @@ def render():
     # ─── Paragraph explanation (full width below) ─────────────────
     st.markdown(
         """
-        <div style="font-size: 0.92em; color: #4A5568; line-height: 1.7; margin: 12px 0 16px 0;">
-            <p style="margin: 0 0 8px 0;">A score below <strong>5</strong> means a name is genuinely shared — it's roughly equally popular 
+        <div style="font-size: 0.9em; color: #4A5568; line-height: 1.65; margin: 16px 0;">
+            <p style="margin: 0 0 6px 0;">A score below <strong>5</strong> means a name is genuinely shared — it's roughly equally popular 
             across all countries. Think <em>Liam</em>, <em>Thomas</em>, <em>Emily</em>. No single country owns them.</p>
-            <p style="margin: 0 0 8px 0;">Once a name crosses <strong>5</strong>, something shifts. Over <strong>62%</strong> of all babies with that name 
+            <p style="margin: 0 0 6px 0;">Once a name crosses <strong>5</strong>, something shifts. Over <strong>62%</strong> of all babies with that name 
             are concentrated in a single country. It's no longer shared — it's <em>leaning</em>.</p>
-            <p style="margin: 0 0 8px 0;">By the time you hit <strong>50–100</strong>, nearly <strong>88%</strong> of the name's usage is in one place. 
+            <p style="margin: 0 0 6px 0;">By the time you hit <strong>50–100</strong>, nearly <strong>88%</strong> of the name's usage is in one place. 
             These names — like <em>Siobhan</em> or <em>Conor</em> — are clearly Irish, clearly Scottish, clearly somewhere specific.</p>
-            <p style="margin: 0 0 8px 0;">And at <strong>1,000+</strong>? Over <strong>97%</strong> of all babies with that name live in one country. 
+            <p style="margin: 0 0 6px 0;">And at <strong>1,000+</strong>? Over <strong>97%</strong> of all babies with that name live in one country. 
             These are cultural passwords — names like <em>Narelle</em> (Australia) or <em>Sadhbh</em> (Ireland) 
             that effectively don't exist anywhere else on Earth.</p>
             <p style="margin: 0;">We drew the line at <strong>5</strong> because that's the tipping point: 
