@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -282,12 +282,14 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # ─── Interactive Scale with Radio Buttons ─────────────────────
+    # ─── Interactive Scale with Select Slider ─────────────────────
     st.markdown("#### See it in action:")
+    st.markdown("*Slide to explore names at different levels of cultural lock-in:*")
 
     scale_names = [
         {
-            "name": "Liam",
+            "name": "Liam (2.8)",
+            "key": "Liam",
             "score": 2.8,
             "country": "Scotland",
             "pop_home": "1.84%",
@@ -298,7 +300,8 @@ def render():
             "desc": "Less than 3x difference — it belongs to everyone!",
         },
         {
-            "name": "Joseph",
+            "name": "Joseph (5)",
+            "key": "Joseph",
             "score": 5.0,
             "country": "USA",
             "pop_home": "4.80%",
@@ -309,7 +312,8 @@ def render():
             "desc": "Right at 5x — starting to lean American.",
         },
         {
-            "name": "Siobhan",
+            "name": "Siobhan (71)",
+            "key": "Siobhan",
             "score": 71,
             "country": "Ireland",
             "pop_home": "0.14%",
@@ -320,7 +324,8 @@ def render():
             "desc": "71x more popular in Ireland — clearly locked.",
         },
         {
-            "name": "Innes",
+            "name": "Innes (861)",
+            "key": "Innes",
             "score": 861,
             "country": "Scotland",
             "pop_home": "0.22%",
@@ -331,7 +336,8 @@ def render():
             "desc": "861x — practically unknown outside Scotland.",
         },
         {
-            "name": "Narelle",
+            "name": "Narelle (4,738)",
+            "key": "Narelle",
             "score": 4738,
             "country": "Australia",
             "pop_home": "0.05%",
@@ -343,16 +349,16 @@ def render():
         },
     ]
 
-    selected = st.radio(
-        "Pick a name to see its score:",
+    selected = st.select_slider(
+        "← Global · · · · · · · · · · · · · · · · · · Locked →",
         options=[s["name"] for s in scale_names],
-        horizontal=True,
-        key="countryness_radio",
+        value="Liam (2.8)",
+        key="countryness_slider",
     )
 
     # Find selected name data
     sel = next(s for s in scale_names if s["name"] == selected)
-    sel_name = sel["name"]
+    sel_name = sel["key"]
     sel_score = sel["score"]
     sel_country = sel["country"]
     sel_pop_home = sel["pop_home"]
@@ -366,7 +372,7 @@ def render():
     st.markdown(
         f"""
         <div style="background: white; border-radius: 12px; padding: 24px; margin: 10px 0;
-                    border: 2px solid {sel_color}20; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
+                    border: 2px solid {sel_color}30; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
             <div style="text-align: center;">
                 <div style="font-size: 0.75em; color: {sel_color}; text-transform: uppercase; 
                             letter-spacing: 2px; font-weight: 600;">{sel_label}</div>
@@ -405,66 +411,150 @@ def render():
 
     # ─── The Local Collection: CD Cases ───────────────────────────
     st.markdown("#### 🎵 The Local Collection")
-    st.markdown("Each country has its own shelf of names that never made it out:")
+    st.markdown("Each country has its own shelf of names that never made it out.  \n*Spine width = proportion of names culturally locked in that country.*")
 
-    tapes = [
-        ("Northern Ireland", "🏴", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
-        ("Ireland", "🇮🇪", "55%", "#A8E6C8", ["Naoise", "Sadhbh", "Iarla", "Laoise", "Aoibhínn"]),
-        ("Scotland", "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "52%", "#C8A8E8", ["Innes", "Ruairidh", "Munro", "Murdo", "Breagha"]),
-        ("USA", "🇺🇸", "44%", "#A8D8F0", ["Kaylani", "Anahi", "Tadeo", "Itzel", "Malani"]),
-        ("Canada", "🇨🇦", "36%", "#F5B7C5", ["Édouard", "Éloi", "Ludovic", "Frédérique", "Noélie"]),
-        ("New Zealand", "🇳🇿", "36%", "#C8A8E8", ["Kauri", "Manaia", "Ardie", "Nikau", "Amarni"]),
-        ("England & Wales", "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "35%", "#F5D68A", ["Barney", "Isla-rose", "Delilah-rose", "Tommy-lee", "Ffion"]),
-        ("Australia", "🇦🇺", "23%", "#F5C878", ["Darcy", "Pippa", "Billie", "Harvey", "Matilda"]),
+    from PIL import Image, ImageDraw, ImageFont
+    import io
+
+    shelf_countries = [
+        {"name": "N. Ireland", "pct": 65, "color": (159, 230, 200), "names": ["Éireann", "Roisé", "Dáithí"]},
+        {"name": "Ireland", "pct": 55, "color": (168, 230, 200), "names": ["Naoise", "Sadhbh", "Iarla"]},
+        {"name": "Scotland", "pct": 52, "color": (200, 168, 232), "names": ["Innes", "Ruairidh", "Munro"]},
+        {"name": "USA", "pct": 44, "color": (168, 216, 240), "names": ["Kaylani", "Anahi", "Tadeo"]},
+        {"name": "Canada", "pct": 36, "color": (245, 183, 197), "names": ["Édouard", "Éloi", "Ludovic"]},
+        {"name": "N. Zealand", "pct": 36, "color": (200, 168, 232), "names": ["Kauri", "Manaia", "Nikau"]},
+        {"name": "England", "pct": 35, "color": (245, 214, 138), "names": ["Barney", "Ffion", "Isla-rose"]},
+        {"name": "Australia", "pct": 23, "color": (245, 200, 120), "names": ["Darcy", "Pippa", "Narelle"]},
     ]
 
-    tape_html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 16px 0;">'
+    # Canvas
+    canvas_w = 1400
+    canvas_h = 550
+    img = Image.new("RGB", (canvas_w, canvas_h), (240, 248, 255))
+    draw = ImageDraw.Draw(img)
 
-    for t_country, t_flag, t_pct, t_color, t_names in tapes:
-        tracks = ""
-        for i, n in enumerate(t_names):
-            tracks += '<div style="font-size: 0.8em; color: #4A5568; padding: 2px 0;">' + str(i + 1) + ". " + n + "</div>"
+    # Fonts
+    try:
+        font_name = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 14)
+        font_pct = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+        font_track = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 11)
+        font_caption = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
+    except:
+        font_name = ImageFont.load_default()
+        font_pct = ImageFont.load_default()
+        font_track = ImageFont.load_default()
+        font_caption = ImageFont.load_default()
 
-        # CD jewel case design
-        tape_html += (
-            # Outer case — transparent plastic look with colored spine
-            '<div style="background: white; border-radius: 4px; padding: 0; overflow: hidden;'
-            ' border: 1px solid #CBD5E0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);'
-            ' position: relative;">'
-            # Spine (left edge color bar)
-            '<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px;'
-            ' background: ' + t_color + ';"></div>'
-            # CD artwork area (top)
-            '<div style="background: linear-gradient(135deg, ' + t_color + '40, ' + t_color + '20);'
-            ' padding: 16px 16px 12px 20px; border-bottom: 1px solid #E2E8F0;'
-            ' position: relative;">'
-            # CD circle
-            '<div style="position: absolute; top: 12px; right: 14px; width: 44px; height: 44px;'
-            ' border-radius: 50%; border: 2px solid ' + t_color + ';'
-            ' background: linear-gradient(135deg, #f8f8f8, #e8e8e8);'
-            ' display: flex; align-items: center; justify-content: center;">'
-            '<div style="width: 12px; height: 12px; border-radius: 50%;'
-            ' background: white; border: 2px solid #CBD5E0;"></div>'
-            '</div>'
-            # Title
-            '<div style="font-weight: 700; font-size: 0.9em; color: #2D3748;">'
-            + t_flag + " " + t_country +
-            "</div>"
-            '<div style="font-size: 0.7em; color: #718096; margin-top: 2px;">'
-            + t_pct + ' of names locked'
-            "</div>"
-            "</div>"
-            # Track listing (bottom)
-            '<div style="padding: 10px 14px 12px 20px;">'
-            '<div style="font-size: 0.6em; color: #A0AEC0; text-transform: uppercase;'
-            ' letter-spacing: 1.5px; margin-bottom: 4px; font-weight: 600;">TRACKLIST</div>'
-            + tracks +
-            "</div>"
-            "</div>"
-        )
+    # Shelf dimensions
+    shelf_top = 30
+    shelf_height = 430
+    shelf_bottom = shelf_top + shelf_height
+    shelf_left = 40
+    shelf_right = canvas_w - 40
+    available_width = shelf_right - shelf_left
 
-    tape_html += "</div>"
-    st.markdown(tape_html, unsafe_allow_html=True)
+    # Shelf background
+    draw.rounded_rectangle(
+        [shelf_left - 15, shelf_top - 15, shelf_right + 15, shelf_bottom + 35],
+        radius=10,
+        fill=(45, 43, 63),
+        outline=(26, 24, 40),
+        width=2
+    )
+    draw.rounded_rectangle(
+        [shelf_left - 5, shelf_top - 5, shelf_right + 5, shelf_bottom + 5],
+        radius=6,
+        fill=(61, 58, 80),
+    )
+
+    # Shelf ledge
+    draw.rectangle(
+        [shelf_left - 20, shelf_bottom + 5, shelf_right + 20, shelf_bottom + 30],
+        fill=(74, 69, 96),
+    )
+    draw.rectangle(
+        [shelf_left - 20, shelf_bottom + 5, shelf_right + 20, shelf_bottom + 9],
+        fill=(90, 86, 112),
+    )
+
+    # Calculate spine widths
+    total_pct = sum(c["pct"] for c in shelf_countries)
+    gap = 5
+    total_gaps = gap * (len(shelf_countries) - 1)
+    usable_width = available_width - total_gaps
+
+    x = shelf_left
+    for country in shelf_countries:
+        spine_w = int((country["pct"] / total_pct) * usable_width)
+        spine_w = max(spine_w, 55)
+        spine_h = shelf_height - 10
+        spine_x = x
+        spine_y = shelf_top
+
+        r, g, b = country["color"]
+
+        # Main spine body
+        draw.rectangle([spine_x, spine_y, spine_x + spine_w, spine_y + spine_h], fill=(r, g, b))
+
+        # Left edge (dark bevel)
+        draw.rectangle([spine_x, spine_y, spine_x + 3, spine_y + spine_h],
+                       fill=(max(r - 50, 0), max(g - 50, 0), max(b - 50, 0)))
+
+        # Right edge (light)
+        draw.rectangle([spine_x + spine_w - 2, spine_y, spine_x + spine_w, spine_y + spine_h],
+                       fill=(min(r + 30, 255), min(g + 30, 255), min(b + 30, 255)))
+
+        # Top cap
+        draw.rectangle([spine_x, spine_y, spine_x + spine_w, spine_y + 5],
+                       fill=(max(r - 40, 0), max(g - 40, 0), max(b - 40, 0)))
+
+        # Bottom cap
+        draw.rectangle([spine_x, spine_y + spine_h - 3, spine_x + spine_w, spine_y + spine_h],
+                       fill=(max(r - 30, 0), max(g - 30, 0), max(b - 30, 0)))
+
+        # Gloss line
+        draw.rectangle([spine_x + 6, spine_y + 10, spine_x + 8, spine_y + spine_h - 10],
+                       fill=(min(r + 50, 255), min(g + 50, 255), min(b + 50, 255)))
+
+        # Rotated text
+        txt_w = spine_h
+        txt_h = spine_w
+        txt_img = Image.new("RGBA", (txt_w, txt_h), (0, 0, 0, 0))
+        txt_draw = ImageDraw.Draw(txt_img)
+
+        # Country name
+        txt_draw.text((12, 6), country["name"], fill=(45, 55, 72), font=font_name)
+
+        # Percentage
+        name_len = txt_draw.textlength(country["name"], font=font_name)
+        txt_draw.text((12 + name_len + 8, 3), f"{country['pct']}%", fill=(45, 55, 72), font=font_pct)
+
+        # Track names (if wide enough)
+        if spine_w >= 65:
+            for j, track in enumerate(country["names"]):
+                track_x = txt_w - 30 - (j * 100)
+                if track_x > 0:
+                    txt_draw.text((track_x, 6), track, fill=(74, 85, 104), font=font_track)
+
+        # Rotate and paste
+        txt_rotated = txt_img.rotate(90, expand=True)
+        img.paste(txt_rotated, (spine_x, spine_y), txt_rotated)
+
+        x += spine_w + gap
+
+    # Caption
+    draw.text(
+        (shelf_left, shelf_bottom + 38),
+        "← Wider spine = more names locked · Thinner spine = more globally shared →",
+        fill=(113, 128, 150),
+        font=font_caption,
+    )
+
+    # Display
+    buf = io.BytesIO()
+    img.save(buf, format="PNG", dpi=(300, 300))
+    buf.seek(0)
+    st.image(buf, use_container_width=True)
 
     st.markdown(
         "So **why** do these names stay locked? We found four forces keeping them home:"
