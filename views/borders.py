@@ -282,54 +282,6 @@ def render():
         unsafe_allow_html=True,
     )
 
-    # ─── Classification Table (no examples) ───────────────────────
-    st.markdown("#### How We Classified Them")
-    st.markdown(
-        "Not all locked names are locked equally. We split them into five levels:"
-    )
-
-    classification_html = """
-    <div style="margin: 16px 0;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; max-width: 600px;">
-            <thead>
-                <tr style="border-bottom: 2px solid #E2E8F0;">
-                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Label</th>
-                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Countryness</th>
-                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">What it means</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="border-bottom: 1px solid #E2E8F0; background: #F0FFF4;">
-                    <td style="padding: 10px 8px; font-weight: 600; color: #059669;">✅ Global</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">< 5</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">Shared across countries — no single home</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFFF0;">
-                    <td style="padding: 10px 8px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">5 – 10</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">Starting to concentrate in one place</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF5F5;">
-                    <td style="padding: 10px 8px; font-weight: 600; color: #C53030;">🔒 Locked</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">10 – 100</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">Clearly belongs to one country</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF0F0;">
-                    <td style="padding: 10px 8px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">100 – 1,000</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">Barely exists outside its home</td>
-                </tr>
-                <tr style="background: #FFE8E8;">
-                    <td style="padding: 10px 8px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">1,000+</td>
-                    <td style="padding: 10px 8px; color: #4A5568;">Effectively a cultural password</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    """
-    st.markdown(classification_html, unsafe_allow_html=True)
-
     # ─── See it in action: Staircase Cards ────────────────────────
     st.markdown("#### See it in action:")
 
