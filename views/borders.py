@@ -49,6 +49,7 @@ def render():
             "actual": "SIVE (just one syllable!)",
             "hint": "Rhymes with a number between four and six.",
             "explain": "In Irish Gaelic, 'dh' and 'bh' are both silent between vowels. So Sa-dh-bh = just 'S' + 'ive'.",
+            "audio_file": "sadhbh",
         },
         {
             "name": "Ngaire",
@@ -57,24 +58,25 @@ def render():
             "actual": "NY-ree",
             "hint": "The first two letters are actually one sound you already know.",
             "explain": "In Māori, 'Ng' is a single consonant — the same sound as the 'ng' in 'singing', but at the start.",
+            "audio_file": "ngaire",
         },
         {
             "name": "Frédérique",
             "country": "🇨🇦 Canada",
             "countryness": 10588,
             "actual": "fray-day-REEK",
-            "audio_file": "frederique",
             "hint": "The accents aren't decorative — each one changes a vowel.",
             "explain": "In French, 'é' always sounds like 'ay'. Three é's = three 'ay' sounds: fray-day-reek.",
+            "audio_file": "frederique",
         },
         {
             "name": "Caoimhín",
             "country": "🏴 N. Ireland",
             "countryness": 465,
             "actual": "KEE-veen",
-            "audio_file": "caoimhin",
             "hint": "You already know this name — just not in this spelling.",
             "explain": "It's literally 'Kevin' in Irish! 'Aoi' = 'ee', 'mh' = 'v', 'ín' = 'een'. Kevin → Kee-veen.",
+            "audio_file": "caoimhin",
         },
         {
             "name": "Ffion",
@@ -83,6 +85,7 @@ def render():
             "actual": "FEE-on",
             "hint": "In Welsh, one of these letters is lying to you.",
             "explain": "Welsh rule: 'ff' = English 'f' sound. A single 'f' in Welsh = English 'v' sound. So 'Ffion' = 'Fee-on'.",
+            "audio_file": "ffion",
         },
     ]
 
@@ -95,7 +98,7 @@ def render():
     challenge = challenges[st.session_state.challenge_idx]
 
     # Compact layout — centered
-    spacer_l, quiz_col, spacer_r = st.columns([1, 2, 1])
+    spacer_l, quiz_col, spacer_r = st.columns([1, 4, 1])
 
     with quiz_col:
         # Vinyl sleeve card
@@ -104,14 +107,27 @@ def render():
             <div style="background: #1a1a2e; border-radius: 16px; padding: 30px; 
                         text-align: center; margin: 15px auto; position: relative;
                         box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
-                <div style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px;
-                            background: radial-gradient(circle, #1a1a2e 20%, #333 21%, #333 38%, 
-                            #1a1a2e 39%, #1a1a2e 43%, #555 44%, #555 46%, #1a1a2e 47%);
-                            border: 3px solid #444; position: relative;">
-                    <div style="width: 12px; height: 12px; border-radius: 50%; 
-                                background: #F5B7C5; position: absolute; top: 50%; left: 50%;
-                                transform: translate(-50%, -50%);"></div>
-                </div>
+                <svg width="120" height="120" viewBox="0 0 120 120" style="margin-bottom: 15px;">
+                    <!-- Outer disc -->
+                    <circle cx="60" cy="60" r="56" fill="#111" stroke="#333" stroke-width="2"/>
+                    <!-- Grooves -->
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#222" stroke-width="0.5"/>
+                    <circle cx="60" cy="60" r="46" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
+                    <circle cx="60" cy="60" r="42" fill="none" stroke="#222" stroke-width="0.5"/>
+                    <circle cx="60" cy="60" r="38" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
+                    <circle cx="60" cy="60" r="34" fill="none" stroke="#222" stroke-width="0.5"/>
+                    <circle cx="60" cy="60" r="30" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
+                    <circle cx="60" cy="60" r="26" fill="none" stroke="#222" stroke-width="0.5"/>
+                    <!-- Shine / light reflection -->
+                    <ellipse cx="45" cy="45" rx="18" ry="12" fill="rgba(255,255,255,0.03)" transform="rotate(-30 45 45)"/>
+                    <!-- Label area -->
+                    <circle cx="60" cy="60" r="18" fill="#2d2d44"/>
+                    <circle cx="60" cy="60" r="17" fill="none" stroke="#F5B7C5" stroke-width="1" opacity="0.6"/>
+                    <circle cx="60" cy="60" r="14" fill="#1a1a2e"/>
+                    <!-- Spindle hole -->
+                    <circle cx="60" cy="60" r="3" fill="#333"/>
+                    <circle cx="60" cy="60" r="2" fill="#1a1a2e"/>
+                </svg>
                 <div style="font-size: 0.7em; color: #888; text-transform: uppercase; 
                             letter-spacing: 3px;">SIDE {st.session_state.challenge_idx + 1} OF {len(challenges)}</div>
                 <div style="font-size: 2.2em; font-weight: 800; color: #ffffff; 
