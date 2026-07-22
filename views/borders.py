@@ -385,7 +385,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS — Storyline Flow
     # ══════════════════════════════════════════════════════════════
 
@@ -544,50 +544,183 @@ def render():
         "That single difference determined their fate."
     )
 
-    # ─── The data: 3.2% vs 30.2% ─────────────────────────────────
-    st.markdown("#### The Orthographic Wall")
+ # ─── Station Data ─────────────────────────────────────────────
+    stations = {
+        "Gaeilge FM": {
+            "freq": "88.3",
+            "subtitle": "Irish Gaelic",
+            "color": "#A8E6C8",
+            "key": "bh/mh = 'v' · dh/gh = silent · aoi = 'ee' · fh = silent",
+            "names": [
+                ("Sadhbh", "/SIVE/", "dh + bh both silent between vowels", "8,171"),
+                ("Caoimhín", "/KEE-veen/", "aoi = ee, mh = v, ín = een", "465"),
+                ("Gearóid", "/GAR-ohd/", "G hard, eá = ah, óid = ohd", "6,896"),
+                ("Aoibhínn", "/EE-veen/", "aoi = ee, bh = v, ínn = een", "2,774"),
+            ]
+        },
+        "Alba FM": {
+            "freq": "91.7",
+            "subtitle": "Scottish Gaelic",
+            "color": "#C8A8E8",
+            "key": "idh/aidh = silent 'ee' · eo = 'aw' · gh = silent",
+            "names": [
+                ("Ruaraidh", "/ROO-ah-ree/", "aidh ending = silent 'ee'", "2,219"),
+                ("Eilidh", "/AY-lee/", "idh = silent 'ee' sound", "78"),
+                ("Breagha", "/BREE-ah/", "gh is silent between vowels", "2,931"),
+                ("Seonaid", "/SHAW-natch/", "eo = aw, aid = atch", "1,492"),
+            ]
+        },
+        "Québec FM": {
+            "freq": "94.5",
+            "subtitle": "Canadian French",
+            "color": "#F5B7C5",
+            "key": "é = 'ay' · ç = 's' · -ique = 'eek' · oi = 'wa'",
+            "names": [
+                ("Frédérique", "/fray-day-REEK/", "é = ay, -ique = eek", "10,588"),
+                ("Ophélie", "/oh-fay-LEE/", "é = ay, ie = ee", "3,786"),
+                ("Océanne", "/oh-say-ANN/", "é = ay, double n = nasal", "3,781"),
+                ("Éloi", "/ay-LWA/", "É = ay, oi = wa", "1,940"),
+            ]
+        },
+        "Aotearoa FM": {
+            "freq": "97.1",
+            "subtitle": "Te Reo Māori",
+            "color": "#F5C878",
+            "key": "ng = one sound · wh = 'f' · every vowel spoken · au = 'ow'",
+            "names": [
+                ("Ngaire", "/NY-ree/", "Ng is one consonant in Māori", "11,270"),
+                ("Aroha", "/ah-ROH-ha/", "Every vowel pronounced separately", "13,713"),
+                ("Nikau", "/NEE-kow/", "au = ow (named after a palm tree)", "29,620"),
+                ("Manaia", "/mah-NY-ah/", "ai = eye sound", "8,319"),
+            ]
+        },
+        "Cymru FM": {
+            "freq": "99.9",
+            "subtitle": "Welsh",
+            "color": "#F5D68A",
+            "key": "ff = 'f' · f = 'v' · ll = lateral fricative · dd = 'th'",
+            "names": [
+                ("Ffion", "/FEE-on/", "ff = f (single f = v in Welsh)", "1,761"),
+                ("Osian", "/OSH-an/", "si = sh in Welsh", "1,462"),
+                ("Iwan", "/ee-WAN/", "I is always 'ee' in Welsh", "1,383"),
+                ("Llŷr", "/SHLEER/", "ll = voiceless lateral fricative", "500"),
+            ]
+        },
+    }
 
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD);
-                border-radius: 12px; padding: 24px; margin: 16px 0;
-                border: 1px solid #E2E8F0;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
-            <div style="text-align: center;">
-                <div style="font-size: 0.7em; color: #059669; text-transform: uppercase; letter-spacing: 2px;">
-                    Names that ESCAPED
-                </div>
-                <div style="font-size: 3em; font-weight: 800; color: #059669; margin: 4px 0;">
-                    3.2%
-                </div>
-                <div style="font-size: 0.8em; color: #718096;">
-                    contain Gaelic orthography
-                </div>
-            </div>
-            <div style="font-size: 2em; color: #CBD5E0; font-weight: 300;">vs</div>
-            <div style="text-align: center;">
-                <div style="font-size: 0.7em; color: #C53030; text-transform: uppercase; letter-spacing: 2px;">
-                    Names that STAYED
-                </div>
-                <div style="font-size: 3em; font-weight: 800; color: #C53030; margin: 4px 0;">
-                    30.2%
-                </div>
-                <div style="font-size: 0.8em; color: #718096;">
-                    contain Gaelic orthography
-                </div>
-            </div>
-        </div>
-        <div style="text-align: center; margin-top: 16px; font-size: 0.85em; color: #4A5568;">
-            Gaelic patterns: <strong>bh, dh, gh, mh, aoi, igh, eadh</strong> — 
-            letter combinations that have no equivalent pronunciation in standard English.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown(
-        "Names that escaped to the global charts have almost **no** Gaelic spelling. "
-        "Names that stayed are **10x** more likely to contain these patterns. "
-        "The spelling IS the border."
+    # ─── Radio Dial (pills selector) ─────────────────────────────
+    station_names = list(stations.keys())
+    selected_station = st.pills(
+        "📻 Tune the dial",
+        station_names,
+        default=station_names[0],
+        key="radio_dial"
     )
+
+    if selected_station:
+        station = stations[selected_station]
+        freq = station["freq"]
+        subtitle = station["subtitle"]
+        color = station["color"]
+        key_text = station["key"]
+        names = station["names"]
+
+        # ─── Radio Receiver HTML ──────────────────────────────────
+        # Build the radio display using string concatenation (no f-strings for HTML)
+        radio_top = (
+            '<div style="background: linear-gradient(145deg, #1A1A2E, #16213E, #1A1A2E);'
+            'border-radius: 12px; padding: 28px; box-shadow: 0 10px 40px rgba(0,0,0,.4);'
+            'border: 1px solid #2D3748; position: relative; overflow: hidden;">'
+            # Subtle speaker grille texture on left
+            '<div style="position:absolute; left:0; top:0; bottom:0; width:80px;'
+            'background: repeating-linear-gradient(0deg, #2D3748 0px, #2D3748 2px, #1A1A2E 2px, #1A1A2E 4px);'
+            'opacity:.3; border-radius: 12px 0 0 12px;"></div>'
+            # Frequency display
+            '<div style="margin-left:90px;">'
+            '<div style="background: #0a0a0a; border-radius: 8px; padding: 16px 24px;'
+            'border: 1px solid #333; box-shadow: inset 0 2px 8px rgba(0,0,0,.5);">'
+            # Frequency number
+            '<div style="display:flex; justify-content:space-between; align-items:center;">'
+            '<div>'
+            '<span style="font-family: monospace; font-size: 2.2rem;'
+            'font-weight: 800; color: ' + color + '; text-shadow: 0 0 10px ' + color + '80;'
+            'letter-spacing: 2px;">' + freq + ' MHz</span>'
+            '<div style="font-size: .65rem; color: #718096; letter-spacing: 3px;'
+            'margin-top: 4px; font-weight: 600;">FM STEREO</div>'
+            '</div>'
+            '<div style="text-align:right;">'
+            '<div style="font-size: 1rem; font-weight: 700; color: #F7FAFC;">' + selected_station + '</div>'
+            '<div style="font-size: .7rem; color: ' + color + ';">' + subtitle + '</div>'
+            '</div>'
+            '</div>'
+            # Frequency bar (dial position)
+            '<div style="margin-top: 12px; height: 3px; background: #2D3748; border-radius: 2px;'
+            'position: relative;">'
+            '<div style="position: absolute; left: ' + str((float(freq) - 85) / 20 * 100) + '%;'
+            'top: -4px; width: 10px; height: 10px; background: ' + color + ';'
+            'border-radius: 50%; box-shadow: 0 0 6px ' + color + ';"></div>'
+            '</div>'
+            '</div>'
+            # Decryption key
+            '<div style="margin-top: 16px; padding: 10px 16px; background: #ffffff08;'
+            'border-radius: 6px; border-left: 3px solid ' + color + ';">'
+            '<span style="font-size: .6rem; letter-spacing: 2px; color: #718096;'
+            'font-weight: 700;">DECRYPTION KEY: </span>'
+            '<span style="font-size: .72rem; color: #E2E8F0; font-family: monospace;">'
+            + key_text + '</span>'
+            '</div>'
+        )
+
+        # Now Playing tracklist
+        tracklist = (
+            '<div style="margin-top: 20px;">'
+            '<div style="font-size: .6rem; letter-spacing: 3px; color: #718096;'
+            'font-weight: 700; margin-bottom: 12px;">▶ NOW PLAYING</div>'
+        )
+
+        for i, (name, pron, rule, score) in enumerate(names):
+            track_num = str(i + 1).zfill(2)
+            tracklist += (
+                '<div style="display: flex; align-items: center; padding: 12px 16px;'
+                'background: #ffffff05; border-radius: 6px; margin-bottom: 8px;'
+                'border: 1px solid #2D3748;">'
+                # Track number
+                '<div style="font-size: .7rem; color: #4A5568; font-weight: 700;'
+                'min-width: 28px; font-family: monospace;">' + track_num + '</div>'
+                # Name + pronunciation
+                '<div style="flex: 1;">'
+                '<div style="display: flex; align-items: baseline; gap: 10px;">'
+                '<span style="font-size: 1.1rem; font-weight: 700; color: #F7FAFC;'
+                'font-family: Georgia, serif;">' + name + '</span>'
+                '<span style="font-size: .75rem; color: ' + color + '; font-style: italic;">'
+                + pron + '</span>'
+                '</div>'
+                '<div style="font-size: .65rem; color: #718096; margin-top: 3px;">' + rule + '</div>'
+                '</div>'
+                # Countryness badge
+                '<div style="background: #ffffff10; border: 1px solid #4A5568;'
+                'border-radius: 4px; padding: 4px 10px; text-align: center;">'
+                '<div style="font-size: .55rem; color: #718096; letter-spacing: 1px;">LOCKED</div>'
+                '<div style="font-size: .85rem; font-weight: 800; color: ' + color + ';">' + score + 'x</div>'
+                '</div>'
+                '</div>'
+            )
+
+        tracklist += '</div>'
+
+        # Close radio
+        radio_bottom = '</div></div>'
+
+        full_radio = radio_top + tracklist + radio_bottom
+        st.markdown(full_radio, unsafe_allow_html=True)
+
+    st.markdown("")
+    st.markdown(
+        "Five countries. Five phonetic codes. Each one creates a wall that only locals can hear past. "
+        "The result? **A name can be beloved in one country and completely unpronounceable in another** — "
+        "even though they all speak English."
+    )
+
 
     # ─── Name length vs countryness ───────────────────────────────
     st.markdown("#### Longer name, higher wall")
