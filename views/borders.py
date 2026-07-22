@@ -264,11 +264,11 @@ def render():
                 </div>
                 <div style="background: white; border-radius: 8px; padding: 14px; margin: 10px auto;
                             max-width: 400px; border: 1px solid #E2E8F0;">
-                    <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace;
+                    <div style="font-size: 0.95em; color: #7C9FD6; font-family: 'Courier New', monospace; font-weight: 700;
                                 border-bottom: 2px solid #2D3748; padding-bottom: 8px; margin-bottom: 8px;">
                         proportion in top country
                     </div>
-                    <div style="font-size: 0.95em; color: #718096; font-family: 'Courier New', monospace;">
+                    <div style="font-size: 0.95em; color: #718096; font-family: 'Courier New', monospace; font-weight: 700;">
                         avg proportion in other countries
                     </div>
                 </div>
@@ -289,7 +289,7 @@ def render():
         st.markdown(
             """
             <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 24px; margin: 0;
+                        border-radius: 12px; padding: 24px; margin: 0; text-align: center;
                         border: 1px solid #E2E8F0; height: 100%;">
                 <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
                             letter-spacing: 2px; margin-bottom: 8px;">HOW WE CLASSIFIED THEM</div>
@@ -297,7 +297,7 @@ def render():
                     Five Levels of Locked
                 </div>
                 <div style="font-size: 0.88em; color: #4A5568; margin-bottom: 12px;">Not all locked names are locked equally:</div>
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.82em;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.82em; text-align: left;">
                     <thead>
                         <tr style="border-bottom: 2px solid #CBD5E0;">
                             <th style="text-align: left; padding: 8px 6px; color: #4A5568;">Label</th>
@@ -462,6 +462,7 @@ def render():
     )
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
