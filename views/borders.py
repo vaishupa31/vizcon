@@ -225,7 +225,7 @@ def render():
     st.markdown("---")
 
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -412,58 +412,142 @@ def render():
     # ─── Declan vs Niamh comparison ───────────────────────────────
     st.markdown("#### Same origin. Different fate.")
 
-    # ─── Passport representation ──────────────────────────────────
-    st.markdown("""
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0;">
+    # ─── Record label distribution sheet ──────────────────────────
+    def distribution_sheet(track, origin, score, catalog, date, status, status_color, status_angle, countries):
+        html = f"""
+        <div style="background: linear-gradient(135deg, #F5F0E4, #EDE8D8, #F8F4EA);
+                    border:1px solid #C4AD82; border-radius:6px; padding:22px;
+                    font-family:'Courier New',monospace; box-shadow:0 6px 20px rgba(0,0,0,.12);
+                    position:relative; overflow:hidden;">
+            <!-- Aged paper noise -->
+            <div style="position:absolute; inset:0; opacity:.03;
+                        background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22><rect width=%224%22 height=%224%22 fill=%22%23000%22 opacity=%22.4%22/><rect x=%221%22 y=%221%22 width=%222%22 height=%222%22 fill=%22%23fff%22/></svg>');"></div>
+            <!-- Diagonal stamp -->
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate({status_angle}deg);
+                        font-size:1.1rem; font-weight:900; letter-spacing:3px; color:{status_color};
+                        opacity:.12; white-space:nowrap;">{status}</div>
+            <!-- Header -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+                <div>
+                    <div style="font-size:.6rem; letter-spacing:4px; color:#8D7555; font-weight:700;">POLARIS RECORDS</div>
+                    <div style="font-size:.55rem; color:#A89268; margin-top:2px;">DISTRIBUTION DEPT.</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:.58rem; color:#8D7555; font-weight:600;">{catalog}</div>
+                </div>
+            </div>
+            <!-- Track name with vinyl icon -->
+            <div style="text-align:center; border-top:1px solid #CBB996; border-bottom:1px solid #CBB996;
+                        padding:14px 0; margin-bottom:16px;">
+                <div style="display:inline-flex; align-items:center; gap:10px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="11" fill="#2D3748"/>
+                        <circle cx="12" cy="12" r="7" fill="none" stroke="#4A5568" stroke-width=".5"/>
+                        <circle cx="12" cy="12" r="4" fill="#7C9FD6" opacity=".8"/>
+                        <circle cx="12" cy="12" r="2" fill="#2D3748"/>
+                    </svg>
+                    <span style="font-size:1.6rem; font-weight:800; font-family:Georgia; color:#2D3748;">{track}</span>
+                </div>
+                <div style="font-size:.7rem; color:#7B6A54; margin-top:6px;">
+                    Origin: {origin} &nbsp;|&nbsp; Countryness Score: <b>{score}</b>
+                </div>
+            </div>
+            <!-- Shipping labels -->
+            <div style="font-size:.58rem; color:#8D7555; letter-spacing:2px; margin-bottom:8px; font-weight:600;">
+                DISTRIBUTION STATUS BY TERRITORY
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        """
+        for c, released in countries:
+            if released:
+                bg = "#ECFDF5"
+                border_c = "#0E9F6E"
+                icon = "☑"
+                label = "SHIPPED"
+                label_color = "#0E9F6E"
+            else:
+                bg = "#FEF2F2"
+                border_c = "#E5E7EB"
+                icon = "☐"
+                label = "NOT SHIPPED"
+                label_color = "#9CA3AF"
+            html += f"""
+                <div style="background:{bg}; border:1px solid {border_c}; border-radius:4px;
+                            padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:.68rem; color:#4A5568; font-weight:600;">{c}</span>
+                    <span style="font-size:.62rem; font-weight:700; color:{label_color};">{icon} {label}</span>
+                </div>
+            """
+        html += f"""
+            </div>
+            <!-- Footer: status badge + barcode -->
+            <div style="margin-top:16px; padding-top:14px; border-top:1px solid #CBB996;
+                        display:flex; justify-content:space-between; align-items:center;">
+                <span style="padding:6px 16px; border:2px solid {status_color}; border-radius:3px;
+                             font-weight:800; letter-spacing:2px; font-size:.65rem;
+                             color:{status_color}; text-transform:uppercase;">{status}</span>
+                <div style="text-align:right;">
+                    <svg width="60" height="20" viewBox="0 0 60 20">
+                        <rect x="0" y="0" width="1.5" height="18" fill="#2D3748"/>
+                        <rect x="3" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="5.5" y="0" width="2" height="18" fill="#2D3748"/>
+                        <rect x="9" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="11.5" y="0" width="1.5" height="18" fill="#2D3748"/>
+                        <rect x="14.5" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="17" y="0" width="2" height="18" fill="#2D3748"/>
+                        <rect x="20.5" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="23" y="0" width="1.5" height="18" fill="#2D3748"/>
+                        <rect x="26" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="28.5" y="0" width="2" height="18" fill="#2D3748"/>
+                        <rect x="32" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="34.5" y="0" width="1.5" height="18" fill="#2D3748"/>
+                        <rect x="37.5" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="40" y="0" width="2" height="18" fill="#2D3748"/>
+                        <rect x="43.5" y="0" width="1" height="18" fill="#2D3748"/>
+                        <rect x="46" y="0" width="1.5" height="18" fill="#2D3748"/>
+                    </svg>
+                    <div style="font-size:.5rem; color:#8D7555; margin-top:2px;">{date}</div>
+                </div>
+            </div>
+        </div>
+        """
+        return html
 
-      <!-- Declan's passport -->
-      <div style="background: #F7F5F0; border: 1px solid #C9B99A; border-radius: 4px; padding: 24px;
-                  box-shadow: 2px 2px 8px rgba(0,0,0,0.1); font-family: 'Courier New', monospace;">
-        <div style="text-align: center; border-bottom: 1px solid #C9B99A; padding-bottom: 12px; margin-bottom: 14px;">
-          <div style="font-size: 0.6em; color: #8B7355; text-transform: uppercase; letter-spacing: 3px;">IMMIGRATION RECORD</div>
-          <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 4px 0; font-family: Georgia, serif;">Declan</div>
-          <div style="font-size: 0.72em; color: #8B7355;">Origin: Ireland · Score: 2.5</div>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">USA <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">England <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">Scotland <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">Ireland <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">N. Ireland <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">Canada <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">Australia <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">New Zealand <span style="font-size:1.1em;">✓</span></div>
-        </div>
-        <div style="text-align: center; margin-top: 14px; font-size: 0.75em; color: #059669; font-weight: 700; letter-spacing: 1px;">
-          STATUS: ALL BORDERS CLEARED
-        </div>
-      </div>
+    declan = distribution_sheet(
+        track="Declan",
+        origin="Ireland",
+        score="2.5",
+        catalog="CAT# IRL-1968-007",
+        date="DIST. 1968–2023",
+        status="WORLDWIDE RELEASE",
+        status_color="#059669",
+        status_angle=-18,
+        countries=[
+            ("USA", True), ("Canada", True), ("Australia", True), ("England", True),
+            ("Scotland", True), ("Ireland", True), ("Northern Ireland", True), ("New Zealand", True),
+        ],
+    )
 
-      <!-- Niamh's passport -->
-      <div style="background: #F7F5F0; border: 1px solid #C9B99A; border-radius: 4px; padding: 24px;
-                  box-shadow: 2px 2px 8px rgba(0,0,0,0.1); font-family: 'Courier New', monospace;">
-        <div style="text-align: center; border-bottom: 1px solid #C9B99A; padding-bottom: 12px; margin-bottom: 14px;">
-          <div style="font-size: 0.6em; color: #8B7355; text-transform: uppercase; letter-spacing: 3px;">IMMIGRATION RECORD</div>
-          <div style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 4px 0; font-family: Georgia, serif;">Niamh</div>
-          <div style="font-size: 0.72em; color: #8B7355;">Origin: Ireland · Score: 28</div>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <div style="border: 1.5px solid #CBD5E0; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #A0AEC0; font-weight: 700; text-decoration: line-through;">USA ✗</div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">England <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #CBD5E0; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #A0AEC0; font-weight: 700; text-decoration: line-through;">Scotland ✗</div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">Ireland <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #059669; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #059669; font-weight: 700;">N. Ireland <span style="font-size:1.1em;">✓</span></div>
-          <div style="border: 1.5px solid #CBD5E0; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #A0AEC0; font-weight: 700; text-decoration: line-through;">Canada ✗</div>
-          <div style="border: 1.5px solid #CBD5E0; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #A0AEC0; font-weight: 700; text-decoration: line-through;">Australia ✗</div>
-          <div style="border: 1.5px solid #CBD5E0; border-radius: 3px; padding: 5px 8px; text-align: center; font-size: 0.7em; color: #A0AEC0; font-weight: 700; text-decoration: line-through;">New Zealand ✗</div>
-        </div>
-        <div style="text-align: center; margin-top: 14px; font-size: 0.75em; color: #C53030; font-weight: 700; letter-spacing: 1px;">
-          STATUS: ENTRY DENIED (5/8)
-        </div>
-      </div>
+    niamh = distribution_sheet(
+        track="Niamh",
+        origin="Ireland",
+        score="28",
+        catalog="CAT# IRL-1970-042",
+        date="DIST. 1970–2023",
+        status="LOCAL RELEASE ONLY",
+        status_color="#DC2626",
+        status_angle=-15,
+        countries=[
+            ("USA", False), ("Canada", False), ("Australia", False), ("England", True),
+            ("Scotland", False), ("Ireland", True), ("Northern Ireland", True), ("New Zealand", False),
+        ],
+    )
 
-    </div>
-    """, unsafe_allow_html=True)
+    col_left, col_right = st.columns(2)
+    with col_left:
+        st.markdown(declan, unsafe_allow_html=True)
+    with col_right:
+        st.markdown(niamh, unsafe_allow_html=True)
 
     st.markdown(
         "Both names are Irish. Both are common. But **Declan** is phonetically transparent — "
@@ -562,8 +646,6 @@ def render():
     )
 
     st.markdown("---")
-
-
 
     # ─── Reason 2: Culture & Tradition ────────────────────────────
     st.markdown("### ✝️ Reason 2: Culture & Tradition")
