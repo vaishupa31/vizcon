@@ -225,7 +225,7 @@ def render():
     st.markdown("---")
 
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -396,7 +396,7 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS — Storyline Flow
     # ══════════════════════════════════════════════════════════════
 
@@ -423,47 +423,55 @@ def render():
     # ─── Declan vs Niamh comparison ───────────────────────────────
     st.markdown("#### Same origin. Different fate.")
 
-    col_declan, col_niamh = st.columns(2)
+    st.markdown("""
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0;">
 
-    with col_declan:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5);
-                    border: 2px solid #A8E6C8; border-radius: 12px;
-                    padding: 24px; text-align: center;">
-            <div style="font-size: 0.7em; color: #059669; text-transform: uppercase;
-                        letter-spacing: 2px; margin-bottom: 6px;">ESCAPED</div>
-            <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif;">
-                Declan
-            </div>
-            <div style="font-size: 0.85em; color: #4A5568; margin: 8px 0;">Irish origin</div>
-            <div style="font-size: 2em; font-weight: 800; color: #059669; margin: 8px 0;">2.5</div>
-            <div style="font-size: 0.75em; color: #718096;">countryness score</div>
-            <div style="margin-top: 12px; font-size: 0.8em; color: #059669; 
-                        background: rgba(6,214,160,0.08); border-radius: 6px; padding: 6px;">
-                ✅ Used in all 8 countries
-            </div>
+      <!-- Declan's passport -->
+      <div style="background: #FAFDF7; border: 2px solid #A8E6C8; border-radius: 12px; padding: 20px; position: relative;">
+        <div style="text-align: center; margin-bottom: 14px;">
+          <div style="font-size: 0.65em; color: #059669; text-transform: uppercase; letter-spacing: 3px;">PASSPORT</div>
+          <div style="font-size: 2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif;">Declan</div>
+          <div style="font-size: 0.8em; color: #718096;">Irish origin · Countryness: <strong style="color:#059669;">2.5</strong></div>
         </div>
-        """, unsafe_allow_html=True)
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇺🇸 USA ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇬🇧 ENG ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🏴 SCO ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇮🇪 IRE ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🏴 NI ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇨🇦 CAN ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇦🇺 AUS ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇳🇿 NZ ✓</div>
+        </div>
+        <div style="text-align: center; margin-top: 12px; font-size: 0.78em; color: #059669; font-weight: 600;">
+          8/8 borders crossed ✈️
+        </div>
+      </div>
 
-    with col_niamh:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, #FFF5F5, #FFF0F0);
-                    border: 2px solid #F5B7C5; border-radius: 12px;
-                    padding: 24px; text-align: center;">
-            <div style="font-size: 0.7em; color: #C53030; text-transform: uppercase;
-                        letter-spacing: 2px; margin-bottom: 6px;">LOCKED</div>
-            <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif;">
-                Niamh
-            </div>
-            <div style="font-size: 0.85em; color: #4A5568; margin: 8px 0;">Irish origin</div>
-            <div style="font-size: 2em; font-weight: 800; color: #C53030; margin: 8px 0;">28</div>
-            <div style="font-size: 0.75em; color: #718096;">countryness score</div>
-            <div style="margin-top: 12px; font-size: 0.8em; color: #C53030; 
-                        background: rgba(197,48,48,0.06); border-radius: 6px; padding: 6px;">
-                🔒 Concentrated in Ireland & UK
-            </div>
+      <!-- Niamh's passport -->
+      <div style="background: #FFFAF9; border: 2px solid #F5B7C5; border-radius: 12px; padding: 20px; position: relative;">
+        <div style="text-align: center; margin-bottom: 14px;">
+          <div style="font-size: 0.65em; color: #C53030; text-transform: uppercase; letter-spacing: 3px;">PASSPORT</div>
+          <div style="font-size: 2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif;">Niamh</div>
+          <div style="font-size: 0.8em; color: #718096;">Irish origin · Countryness: <strong style="color:#C53030;">28</strong></div>
         </div>
-        """, unsafe_allow_html=True)
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+          <div style="background: #E2E8F0; color: #A0AEC0; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇺🇸 USA ✗</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇬🇧 ENG ✓</div>
+          <div style="background: #E2E8F0; color: #A0AEC0; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🏴 SCO ✗</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇮🇪 IRE ✓</div>
+          <div style="background: #059669; color: white; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🏴 NI ✓</div>
+          <div style="background: #E2E8F0; color: #A0AEC0; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇨🇦 CAN ✗</div>
+          <div style="background: #E2E8F0; color: #A0AEC0; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇦🇺 AUS ✗</div>
+          <div style="background: #E2E8F0; color: #A0AEC0; border-radius: 6px; padding: 6px 4px; text-align: center; font-size: 0.65em; font-weight: 600;">🇳🇿 NZ ✗</div>
+        </div>
+        <div style="text-align: center; margin-top: 12px; font-size: 0.78em; color: #C53030; font-weight: 600;">
+          3/8 borders crossed 🔒
+        </div>
+      </div>
+
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown(
         "Both names are Irish. Both are common. But **Declan** is phonetically transparent — "
@@ -562,6 +570,7 @@ def render():
     )
 
     st.markdown("---")
+
 
     # ─── Reason 2: Culture & Tradition ────────────────────────────
     st.markdown("### ✝️ Reason 2: Culture & Tradition")
