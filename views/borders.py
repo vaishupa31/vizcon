@@ -31,7 +31,7 @@ def render():
     data_2023 = df[df["year"] == 2023]
 
         # ══════════════════════════════════════════════════════════════
-    # SECTION 1: QUIZ — Hybrid (gradient card + column layout)
+    # SECTION 1: QUIZ — Clean Native Layout
     # ══════════════════════════════════════════════════════════════
 
     # Pronunciation challenge data
@@ -92,57 +92,33 @@ def render():
         st.session_state.show_hint = False
 
     challenge = challenges[st.session_state.challenge_idx]
-    c_name = challenge["name"]
-    c_country = challenge["country"]
-    c_idx = st.session_state.challenge_idx + 1
-    c_total = len(challenges)
 
-    # ─── Gradient card header ─────────────────────────────────────
-    st.markdown(
-        """
-        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
-                    border-radius: 16px; padding: 32px 28px 20px; margin-bottom: 8px;
-                    border: 1px solid #E2E8F0; text-align: center;">
-            <h2 style="font-size: 1.7em; font-weight: 800; color: #2D3748; margin: 0 0 8px 0;">
-                🎤 Can You Say This?
-            </h2>
-            <p style="font-size: 0.95em; color: #4A5568; max-width: 520px; margin: 0 auto; line-height: 1.5;">
-                These names are <strong>cultural passwords</strong> — if you can't say them, 
-                they'll never leave their home country. Give it a try!
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    # ─── Title ────────────────────────────────────────────────────
+    st.markdown("<h1 style='text-align:center'>🎤 Can You Say This?</h1>", unsafe_allow_html=True)
+    st.caption("Pronounce the name before revealing the answer.")
 
     # ─── Two-column layout: Vinyl left, Name+Buttons right ────────
     left, right = st.columns([1, 1.2], vertical_alignment="center")
 
     with left:
-        st.markdown(f"""
-        <div style="text-align: center;">
-            <svg width="200" height="200" viewBox="0 0 220 220">
-                <circle cx="110" cy="110" r="100" fill="#2D3748" stroke="#4A5568" stroke-width="1"/>
-                <circle cx="110" cy="110" r="90" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                <circle cx="110" cy="110" r="80" fill="none" stroke="#354258" stroke-width="0.5"/>
-                <circle cx="110" cy="110" r="70" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                <circle cx="110" cy="110" r="60" fill="none" stroke="#354258" stroke-width="0.5"/>
-                <circle cx="110" cy="110" r="50" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
-                <circle cx="110" cy="110" r="35" fill="#7C9FD6" opacity="0.9"/>
-                <circle cx="110" cy="110" r="28" fill="none" stroke="#5A82BE" stroke-width="0.8"/>
-                <circle cx="110" cy="110" r="18" fill="#2D3748"/>
-                <circle cx="110" cy="110" r="5" fill="#4A5568"/>
-                <circle cx="110" cy="110" r="3" fill="#2D3748"/>
-            </svg>
-            <div style="font-size: 0.72em; color: #718096; text-transform: uppercase; letter-spacing: 3px; margin-top: 8px;">
-                SIDE {c_idx} OF {c_total}
-            </div>
-        </div>
+        st.markdown("""
+        <svg width="220" height="220" viewBox="0 0 220 220">
+            <circle cx="110" cy="110" r="100" fill="#2D3748"/>
+            <circle cx="110" cy="110" r="90" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+            <circle cx="110" cy="110" r="80" fill="none" stroke="#46546a"/>
+            <circle cx="110" cy="110" r="70" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
+            <circle cx="110" cy="110" r="60" fill="none" stroke="#46546a" stroke-width="0.5"/>
+            <circle cx="110" cy="110" r="55" fill="#7C9FD6"/>
+            <circle cx="110" cy="110" r="18" fill="#2D3748"/>
+        </svg>
         """, unsafe_allow_html=True)
 
     with right:
-        st.markdown(f"### {c_name}")
-        st.markdown(f"*{c_country}*")
+        c_idx = st.session_state.challenge_idx + 1
+        c_total = len(challenges)
+        st.caption(f"SIDE {c_idx} OF {c_total}")
+        st.markdown(f"### {challenge['name']}")
+        st.write(challenge["country"])
 
         if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
             st.session_state.show_hint = True
@@ -160,36 +136,10 @@ def render():
     if st.session_state.get("show_hint"):
         st.info(f'💡 {challenge["hint"]}')
 
-    # ─── Progress dots ────────────────────────────────────────────
-    dots = ""
-    for i in range(len(challenges)):
-        dots += "● " if i == st.session_state.challenge_idx else "○ "
-    st.caption(dots)
-
     # ─── Reveal section ───────────────────────────────────────────
     if st.session_state.revealed:
-        c_actual = challenge["actual"]
-        c_explain = challenge["explain"]
-        c_countryness = challenge["countryness"]
-
-        st.markdown(
-            f"""
-            <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5); 
-                        border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 18px; text-align: center; margin-top: 10px;">
-                <div style="font-size: 0.75em; color: #059669; text-transform: uppercase; 
-                            letter-spacing: 2px;">▶ Now Playing:</div>
-                <div style="font-size: 1.8em; font-weight: 700; color: #059669; margin: 6px 0;">
-                    "{c_actual}"
-                </div>
-                <div style="font-size: 0.85em; color: #4A5568; margin-top: 8px; 
-                            background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
-                    📖 {c_explain}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.success(f'🔊 "{challenge["actual"]}"')
+        st.info(f'📖 {challenge["explain"]}')
 
         # Audio playback
         audio_key = challenge.get("audio_file", challenge["name"].lower())
@@ -200,27 +150,13 @@ def render():
         if os.path.exists(audio_path):
             with open(audio_path, "rb") as audio_file:
                 audio_bytes = audio_file.read()
-            st.audio(audio_bytes, format="audio/wav", autoplay=True)
-        else:
-            st.caption("🔈 Audio clip coming soon!")
+            st.audio(audio_bytes, format="audio/wav")
 
-        # Countryness fact
-        st.markdown(
-            f"""
-            <div style="background: #FFF5F5; border-radius: 8px; padding: 10px; 
-                        margin-top: 10px; text-align: center; font-size: 0.9em;">
-                <span style="color: #e63946; font-weight: 600;">
-                    Countryness: {c_countryness:,}
-                </span>
-                <span style="color: #718096;"> — A name {c_countryness:,}x more popular in </span>
-                <span style="font-weight: 600;">{c_country}</span>
-                <span style="color: #718096;"> than anywhere else</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        # Countryness metric
+        st.metric("Countryness", f"{challenge['countryness']:,}")
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
