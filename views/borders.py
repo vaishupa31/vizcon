@@ -405,8 +405,7 @@ def render():
 
     st.markdown("### 🏷️ Can't Read the Lyrics")
     st.markdown(
-        "The first wall is the simplest: if you can't read a name, you won't use it. "
-        "Pronunciation is the invisible border that no amount of shared language can break."
+        "The first wall is the simplest: if you can't read a name, you won't use it. Same origin. Different fate."
     )
 
     # ─── Record label distribution sheet ──────────────────────────
@@ -637,64 +636,104 @@ def render():
 
     st.markdown("---")
 
-    # ─── Reason 2: Culture & Tradition ────────────────────────────
-    st.markdown("### ✝️ Reason 2: Culture & Tradition")
+        # ══════════════════════════════════════════════════════════════
+    # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🎵 Same Song, Different Key")
     st.markdown(
-        "Even when a name has a perfectly pronounceable equivalent in English, "
-        "communities choose the **local form** — because the form IS the identity."
+        "Sometimes the song exists in both versions — an original and a remix. "
+        "One gets global airplay. The other stays in the vault."
     )
 
-    # Patrick vs Pádraig
-    st.markdown("#### Same Saint. Different Name. Different Fate.")
+    # ─── Saint Patrick watercolor illustration ────────────────────
+    saint_img = "artifacts/image_063.png"
+    col_spacer_l, col_img, col_spacer_r = st.columns([1, 2, 1])
+    with col_img:
+        st.image(saint_img, caption="St. Patrick — one saint, two spellings, two fates", use_container_width=True)
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(
-            """
-            <div style="background: #F0F8FF; border-radius: 10px; padding: 16px; text-align: center;">
-                <div style="color: #A8E6C8; font-size: 0.8em; font-weight: 600;">GLOBAL VERSION</div>
-                <div style="font-size: 1.4em; font-weight: 700; margin: 6px 0;">Patrick</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #A8E6C8;">~2</div>
-                <div style="color: #718096; font-size: 0.8em;">countryness — everywhere</div>
+    # ─── Album cover cards: Original vs International Remix ───────
+    col_original, col_remix = st.columns(2)
+
+    with col_original:
+        st.markdown("""
+        <div style="background: linear-gradient(145deg, #1A1A2E, #16213E);
+                    border-radius: 8px; padding: 24px; text-align: center;
+                    box-shadow: 0 8px 24px rgba(0,0,0,.3); position: relative; overflow: hidden;">
+            <!-- Subtle texture -->
+            <div style="position:absolute; inset:0; opacity:.04;
+                        background:repeating-linear-gradient(45deg, #fff 0px, #fff 1px, transparent 1px, transparent 6px);"></div>
+            <!-- Label -->
+            <div style="font-size:.55rem; letter-spacing:4px; color:#E63946; font-weight:700; margin-bottom:12px;">
+                ● ORIGINAL PRESSING
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col2:
-        st.markdown(
-            """
-            <div style="text-align: center; padding-top: 25px;">
-                <div style="font-size: 2.5em;">⚡</div>
-                <div style="font-size: 0.85em; color: #718096; margin-top: 4px;">Same person.<br>Same meaning.<br>Different identity.</div>
+            <!-- Album art area -->
+            <div style="background: linear-gradient(135deg, #0F3443, #34e89e20);
+                        border-radius: 6px; padding: 30px 20px; margin: 10px 0;">
+                <div style="font-size: 2.4em; font-weight: 800; color: #F0FFF4; font-family: Georgia, serif;
+                            text-shadow: 0 2px 8px rgba(0,0,0,.3);">
+                    Pádraig
+                </div>
+                <div style="font-size: .75rem; color: #A8E6C8; margin-top: 8px; font-style: italic;">
+                    /PAW-drig/
+                </div>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col3:
-        st.markdown(
-            """
-            <div style="background: #FFF5F5; border-radius: 10px; padding: 16px; text-align: center;">
-                <div style="color: #F5B7C5; font-size: 0.8em; font-weight: 600;">LOCAL VERSION</div>
-                <div style="font-size: 1.4em; font-weight: 700; margin: 6px 0;">Pádraig</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #F5B7C5;">343</div>
-                <div style="color: #718096; font-size: 0.8em;">countryness — locked in Ireland</div>
+            <!-- Details -->
+            <div style="margin-top: 14px; font-size: .7rem; color: #A0AEC0; font-family: 'Courier New', monospace;">
+                Origin: Irish Gaelic<br>
+                Countryness: <b style="color:#E63946;">343</b><br>
+                Markets: Ireland, N. Ireland only
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            <!-- Status -->
+            <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #E63946; border-radius: 3px;
+                        display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #E63946;">
+                LIMITED RELEASE
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col_remix:
+        st.markdown("""
+        <div style="background: linear-gradient(145deg, #1A1A2E, #16213E);
+                    border-radius: 8px; padding: 24px; text-align: center;
+                    box-shadow: 0 8px 24px rgba(0,0,0,.3); position: relative; overflow: hidden;">
+            <!-- Subtle texture -->
+            <div style="position:absolute; inset:0; opacity:.04;
+                        background:repeating-linear-gradient(45deg, #fff 0px, #fff 1px, transparent 1px, transparent 6px);"></div>
+            <!-- Label -->
+            <div style="font-size:.55rem; letter-spacing:4px; color:#059669; font-weight:700; margin-bottom:12px;">
+                ● INTERNATIONAL REMIX
+            </div>
+            <!-- Album art area -->
+            <div style="background: linear-gradient(135deg, #0F3443, #7C9FD620);
+                        border-radius: 6px; padding: 30px 20px; margin: 10px 0;">
+                <div style="font-size: 2.4em; font-weight: 800; color: #F0FFF4; font-family: Georgia, serif;
+                            text-shadow: 0 2px 8px rgba(0,0,0,.3);">
+                    Patrick
+                </div>
+                <div style="font-size: .75rem; color: #7C9FD6; margin-top: 8px; font-style: italic;">
+                    /PAT-rik/
+                </div>
+            </div>
+            <!-- Details -->
+            <div style="margin-top: 14px; font-size: .7rem; color: #A0AEC0; font-family: 'Courier New', monospace;">
+                Origin: English adaptation<br>
+                Countryness: <b style="color:#059669;">2</b><br>
+                Markets: All 8 countries
+            </div>
+            <!-- Status -->
+            <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #059669; border-radius: 3px;
+                        display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #059669;">
+                WORLDWIDE RELEASE
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.markdown("")
-
-    more_saints = {
-        "English (Global)": ["Patrick (~2)", "Kieran (1.4)", "Brendan (4.7)", "Bridget (~3)"],
-        "Gaelic (Locked)": ["Pádraig (343)", "Ciarán (24)", "Breandán (—)", "Brigid (6)"],
-    }
-    st.dataframe(more_saints, use_container_width=True, hide_index=True)
-
     st.markdown(
-        "**Choosing Pádraig over Patrick is a cultural statement.** "
-        "It says: *I belong to this place, this language, this tradition.* "
-        "The pronunciation wall is real — but sometimes staying locked is a **choice**."
+        "It's literally the same name — same saint, same meaning. But **Patrick** is the remix "
+        "that stripped away the Gaelic spelling, making it readable for every English speaker on Earth. "
+        "**Pádraig** kept its original form — and stayed home because of it."
     )
 
     st.markdown("---")
