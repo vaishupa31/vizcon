@@ -266,7 +266,7 @@ def render():
         st.markdown(
             """
             <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 48px 32px; margin: 0;
+                        border-radius: 12px; padding: 60px 36px; margin: 0;
                         border: 1px solid #E2E8F0; text-align: center; height: 100%;">
                 <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
                             letter-spacing: 2px; margin-bottom: 8px;">HOW WE MEASURED IT</div>
@@ -383,15 +383,15 @@ def render():
         staircase_html += (
             '<div style="flex: 1; min-width: 140px; background: ' + s_bg + ';'
             ' border: 2px solid ' + s_color + '40; border-radius: 10px;'
-            ' padding: 14px 10px; text-align: center;">'
-            '<div style="font-size: 0.65em; color: ' + s_color + '; text-transform: uppercase;'
+            ' padding: 16px 12px; text-align: center;">'
+            '<div style="font-size: 0.75em; color: ' + s_color + '; text-transform: uppercase;'
             ' letter-spacing: 1.5px; font-weight: 600;">' + s_verdict + '</div>'
-            '<div style="font-size: 1.3em; font-weight: 800; color: #2D3748; margin: 6px 0;">'
+            '<div style="font-size: 1.5em; font-weight: 800; color: #2D3748; margin: 6px 0;">'
             + s_name + '</div>'
-            '<div style="font-size: 0.7em; color: #718096; margin-bottom: 8px;">' + s_country + '</div>'
-            '<div style="font-size: 2em; font-weight: 800; color: ' + s_color + ';">'
+            '<div style="font-size: 0.8em; color: #718096; margin-bottom: 8px;">' + s_country + '</div>'
+            '<div style="font-size: 2.2em; font-weight: 800; color: ' + s_color + ';">'
             + s_score + '</div>'
-            '<div style="font-size: 0.6em; color: #718096; margin-top: 4px; font-family: monospace;">'
+            '<div style="font-size: 0.7em; color: #718096; margin-top: 4px; font-family: monospace;">'
             + s_home + ' ÷ ' + s_abroad + '</div>'
             '</div>'
         )
@@ -400,7 +400,10 @@ def render():
 
     # ─── The Local Collection: CD Cases (HTML) ────────────────────
     st.markdown("#### 🎵 The Local Collection")
-    st.markdown("So in 2023, how much of each country's naming culture is locked?")
+    st.markdown(
+        "Just like B-sides that never left the local record shop, some names only ever get "
+        "played in one country — and the rest of the world has never heard of them."
+    )
 
     tapes = [
         ("Northern Ireland", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
@@ -466,11 +469,8 @@ def render():
     tape_html += "</div>"
     st.markdown(tape_html, unsafe_allow_html=True)
 
-    st.markdown(
-        "So **why** do these names stay locked? We found four forces keeping them home:"
-    )
-
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
