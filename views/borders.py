@@ -10,11 +10,14 @@ def render():
     # ─── Header ───────────────────────────────────────────────────
     st.markdown(
         """
-        <div style="text-align:center; padding: 20px 0 10px;">
-            <h1 style="font-size: 2.4em; color: #4A5568;">
-                💿 The Local Vinyl
+        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
+                    border-radius: 16px; padding: 50px 30px; text-align: center; 
+                    margin-bottom: 20px; border: 1px solid #E2E8F0;">
+            <div style="font-size: 3em; margin-bottom: 10px;">💿</div>
+            <h1 style="font-size: 2.8em; font-weight: 800; color: #2D3748; margin: 0 0 12px 0;">
+                The Local Vinyl
             </h1>
-            <p style="font-size: 1.15em; color: #718096; max-width: 700px; margin: 0 auto;">
+            <p style="font-size: 1.2em; color: #4A5568; max-width: 650px; margin: 0 auto; line-height: 1.7;">
                 Not every name makes it to the global playlist.<br>
                 Some are pressed on vinyl that only plays in one country.
             </p>
