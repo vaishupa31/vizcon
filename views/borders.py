@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -266,7 +266,7 @@ def render():
         st.markdown(
             """
             <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 36px 24px; margin: 0;
+                        border-radius: 12px; padding: 48px 32px; margin: 0;
                         border: 1px solid #E2E8F0; text-align: center; height: 100%;">
                 <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
                             letter-spacing: 2px; margin-bottom: 8px;">HOW WE MEASURED IT</div>
