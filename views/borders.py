@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -287,7 +287,7 @@ def render():
 
     staircase = [
         ("Liam", "Scotland", "1.84%", "0.66%", "2.8", "✅ Global", "#059669", "#F0FFF4"),
-        ("Joseph", "USA", "4.80%", "0.96%", "5", "⚠️ Threshold", "#B7791F", "#FFFFF0"),
+        ("Joseph", "USA", "4.80%", "0.96%", "5", "⚠️ Leaning", "#B7791F", "#FFFFF0"),
         ("Siobhan", "Ireland", "0.14%", "0.002%", "71", "🔒 Locked", "#C53030", "#FFF5F5"),
         ("Innes", "Scotland", "0.22%", "0.00026%", "861", "🔐 Very Locked", "#9B2C2C", "#FFF0F0"),
         ("Narelle", "Australia", "0.05%", "0.00001%", "4,738", "🚫 Extreme", "#742A2A", "#FFE8E8"),
@@ -313,14 +313,113 @@ def render():
     staircase_html += '</div>'
     st.markdown(staircase_html, unsafe_allow_html=True)
 
+    # ─── Classification ───────────────────────────────────────────
+    st.markdown("#### How We Classified Them")
     st.markdown(
-        "> **Why 5?** A name with countryness ≥ 5 is at least **5x more popular** in its home country "
-        "than anywhere else. That's not random variation — that's cultural gravity pulling it home."
+        "Not all locked names are locked equally. We split them into five levels:"
+    )
+
+    classification_html = """
+    <div style="margin: 16px 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+            <thead>
+                <tr style="border-bottom: 2px solid #E2E8F0;">
+                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Label</th>
+                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Countryness</th>
+                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">What it means</th>
+                    <th style="text-align: left; padding: 10px 8px; color: #4A5568;">Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #E2E8F0; background: #F0FFF4;">
+                    <td style="padding: 10px 8px; font-weight: 600; color: #059669;">✅ Global</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">< 5</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">Shared across countries — no single home</td>
+                    <td style="padding: 10px 8px; color: #718096;">Liam (2.8)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFFF0;">
+                    <td style="padding: 10px 8px; font-weight: 600; color: #B7791F;">⚠️ Leaning</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">5 – 10</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">Starting to concentrate in one place</td>
+                    <td style="padding: 10px 8px; color: #718096;">Joseph (5)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF5F5;">
+                    <td style="padding: 10px 8px; font-weight: 600; color: #C53030;">🔒 Locked</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">10 – 100</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">Clearly belongs to one country</td>
+                    <td style="padding: 10px 8px; color: #718096;">Siobhan (71)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0; background: #FFF0F0;">
+                    <td style="padding: 10px 8px; font-weight: 600; color: #9B2C2C;">🔐 Very Locked</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">100 – 1,000</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">Barely exists outside its home</td>
+                    <td style="padding: 10px 8px; color: #718096;">Innes (861)</td>
+                </tr>
+                <tr style="background: #FFE8E8;">
+                    <td style="padding: 10px 8px; font-weight: 600; color: #742A2A;">🚫 Extreme</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">1,000+</td>
+                    <td style="padding: 10px 8px; color: #4A5568;">Effectively a cultural password</td>
+                    <td style="padding: 10px 8px; color: #718096;">Narelle (4,738)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    """
+    st.markdown(classification_html, unsafe_allow_html=True)
+
+    st.markdown(
+        'Names with countryness ≥ 5 are what we call **"culturally locked."**'
+    )
+
+    # ─── But why 5? ───────────────────────────────────────────────
+    st.markdown("#### But why draw the line at 5?")
+    st.markdown("Because that's where the data shifts:")
+
+    threshold_html = """
+    <div style="background: white; border-radius: 10px; padding: 16px; margin: 12px 0;
+                border: 1px solid #E2E8F0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.88em;">
+            <thead>
+                <tr style="border-bottom: 2px solid #E2E8F0;">
+                    <th style="text-align: left; padding: 8px; color: #4A5568;">Countryness</th>
+                    <th style="text-align: left; padding: 8px; color: #4A5568;">% of the name's babies in its top country</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #F0F0F0;">
+                    <td style="padding: 8px; color: #718096;">1 – 2</td>
+                    <td style="padding: 8px; color: #718096;">17% — evenly spread</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #F0F0F0;">
+                    <td style="padding: 8px; color: #718096;">2 – 5</td>
+                    <td style="padding: 8px; color: #718096;">49% — roughly half</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #F0F0F0; background: #FFFFF0;">
+                    <td style="padding: 8px; font-weight: 700; color: #2D3748;">≥ 5</td>
+                    <td style="padding: 8px; font-weight: 700; color: #2D3748;">62%+ — majority in ONE country</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #F0F0F0;">
+                    <td style="padding: 8px; color: #718096;">≥ 50</td>
+                    <td style="padding: 8px; color: #718096;">88% — almost all</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; color: #718096;">≥ 1,000</td>
+                    <td style="padding: 8px; color: #718096;">97% — exclusive</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    """
+    st.markdown(threshold_html, unsafe_allow_html=True)
+
+    st.markdown(
+        "> At countryness = 5, the **majority** of babies with that name live in a single country. "
+        "Below 5, the name is genuinely shared. Above 5, one country **owns** it."
     )
 
     # ─── The Local Collection: CD Cases (HTML) ────────────────────
     st.markdown("#### 🎵 The Local Collection")
-    st.markdown("Each country has its own collection of names that never made it out:")
+    st.markdown("So in 2023, how much of each country's naming culture is locked?")
 
     tapes = [
         ("Northern Ireland", "65%", "#9FE6C8", ["Éireann", "Roisé", "Dáithí", "Ruadhán", "Cianán"]),
@@ -341,12 +440,12 @@ def render():
             tracks += '<div style="font-size: 0.8em; color: #4A5568; padding: 2px 0;">' + str(i + 1) + ". " + n + "</div>"
 
         tape_html += (
-            # Outer case — colorful but darker shade
+            # Outer case
             '<div style="background: linear-gradient(145deg, ' + t_color + '35, ' + t_color + '20); border-radius: 6px;'
             ' padding: 0; overflow: hidden; border: 1px solid ' + t_color + '60;'
             ' box-shadow: 0 4px 12px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.05);'
             ' position: relative;">'
-            # Spine (left edge — full color)
+            # Spine
             '<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 7px;'
             ' background: ' + t_color + ';'
             ' box-shadow: 1px 0 4px rgba(0,0,0,0.4);"></div>'
@@ -378,7 +477,7 @@ def render():
             '<div style="padding: 10px 14px 12px 22px; background: ' + t_color + '15;">'
             '<div style="font-size: 0.6em; color: #718096; text-transform: uppercase;'
             ' letter-spacing: 1.5px; margin-bottom: 5px; font-weight: 600;">TRACKLIST</div>'
-            + tracks.replace("color: #CBD5E0", "color: #4A5568") +
+            + tracks +
             "</div>"
             "</div>"
         )
@@ -391,6 +490,7 @@ def render():
     )
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
