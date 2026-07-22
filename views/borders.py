@@ -127,6 +127,7 @@ def render():
     with col_reveal:
         if st.button("🔊 Reveal Pronunciation", use_container_width=True, key="btn_reveal"):
             st.session_state.revealed = True
+            st.rerun()
 
     with col_next:
         if st.button("➡️ Next Name", use_container_width=True, key="btn_next"):
