@@ -102,7 +102,7 @@ def render():
     st.markdown(
         f"""
         <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
-                    border-radius: 16px; padding: 40px 30px; margin-bottom: 20px;
+                    border-radius: 16px; padding: 20px 16px; margin-bottom: 20px;
                     border: 1px solid #E2E8F0;">
             <div style="text-align: center; margin-bottom: 28px;">
                 <h2 style="font-size: 1.8em; font-weight: 800; color: #2D3748; margin: 0 0 10px 0;">
