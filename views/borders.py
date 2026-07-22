@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -283,7 +283,7 @@ def render():
     )
 
     # ─── Interactive Scale with Segmented Control ─────────────────
-    st.markdown("#### See it in action:")
+    st.markdown("#### See it in action")
 
     scale_names = [
         {
@@ -343,60 +343,62 @@ def render():
     },
     ]
 
-    selected = st.pills(
-        "Pick a name to see its score:",
-        options=[s["name"] for s in scale_names],
-        default="Liam", 
-        key="countryness_seg",
-    )
+    scale_tabs = st.tabs([
+        "Liam (2.8)",
+        "Joseph (5)",
+        "Siobhan (71)",
+        "Innes (861)",
+        "Narelle (4,738)",
+    ])
 
-    # Find selected name data (default to Liam if None)
-    sel = next((s for s in scale_names if s["name"] == selected), scale_names[0])
-    sel_name = sel["name"]
-    sel_score = sel["score"]
-    sel_country = sel["country"]
-    sel_pop_home = sel["pop_home"]
-    sel_pop_abroad = sel["pop_abroad"]
-    sel_label = sel["label"]
-    sel_color = sel["color"]
-    sel_icon = sel["icon"]
-    sel_desc = sel["desc"]
-    sel_score_fmt = f"{sel_score:,.0f}" if sel_score >= 10 else str(sel_score)
+    for tab_idx, tab in enumerate(scale_tabs):
+        with tab:
+            sel = scale_names[tab_idx]
+            sel_name = sel["name"]
+            sel_score = sel["score"]
+            sel_country = sel["country"]
+            sel_pop_home = sel["pop_home"]
+            sel_pop_abroad = sel["pop_abroad"]
+            sel_label = sel["label"]
+            sel_color = sel["color"]
+            sel_icon = sel["icon"]
+            sel_desc = sel["desc"]
+            sel_score_fmt = f"{sel_score:,.0f}" if sel_score >= 10 else str(sel_score)
 
-    st.markdown(
-        f"""
-        <div style="background: white; border-radius: 12px; padding: 24px; margin: 10px 0;
-                    border: 2px solid {sel_color}30; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
-            <div style="text-align: center;">
-                <div style="font-size: 0.75em; color: {sel_color}; text-transform: uppercase; 
-                            letter-spacing: 2px; font-weight: 600;">{sel_label}</div>
-                <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; margin: 6px 0;">
-                    {sel_icon} {sel_name}
-                </div>
-                <div style="font-size: 0.9em; color: #718096; margin-bottom: 14px;">
-                    Most popular in: {sel_country}
-                </div>
-                <div style="background: #F7FAFC; border-radius: 8px; padding: 14px; 
-                            max-width: 400px; margin: 0 auto; font-family: 'Courier New', monospace;">
-                    <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 4px;">
-                        Home: <strong>{sel_pop_home}</strong> of babies
+            st.markdown(
+                f"""
+                <div style="background: white; border-radius: 12px; padding: 24px; margin: 10px 0;
+                            border: 2px solid {sel_color}30; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.75em; color: {sel_color}; text-transform: uppercase; 
+                                    letter-spacing: 2px; font-weight: 600;">{sel_label}</div>
+                        <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; margin: 6px 0;">
+                            {sel_icon} {sel_name}
+                        </div>
+                        <div style="font-size: 0.9em; color: #718096; margin-bottom: 14px;">
+                            Most popular in: {sel_country}
+                        </div>
+                        <div style="background: #F7FAFC; border-radius: 8px; padding: 14px; 
+                                    max-width: 400px; margin: 0 auto; font-family: 'Courier New', monospace;">
+                            <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 4px;">
+                                Home: <strong>{sel_pop_home}</strong> of babies
+                            </div>
+                            <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 8px;">
+                                Abroad: <strong>{sel_pop_abroad}</strong> of babies
+                            </div>
+                            <div style="border-top: 1px solid #E2E8F0; padding-top: 8px;">
+                                <span style="color: #718096;">{sel_pop_home} ÷ {sel_pop_abroad} = </span>
+                                <span style="font-size: 1.6em; font-weight: 800; color: {sel_color};">{sel_score_fmt}</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.88em; color: #4A5568; margin-top: 12px;">
+                            {sel_desc}
+                        </div>
                     </div>
-                    <div style="font-size: 0.9em; color: #4A5568; margin-bottom: 8px;">
-                        Abroad: <strong>{sel_pop_abroad}</strong> of babies
-                    </div>
-                    <div style="border-top: 1px solid #E2E8F0; padding-top: 8px;">
-                        <span style="color: #718096;">{sel_pop_home} ÷ {sel_pop_abroad} = </span>
-                        <span style="font-size: 1.6em; font-weight: 800; color: {sel_color};">{sel_score_fmt}</span>
-                    </div>
                 </div>
-                <div style="font-size: 0.88em; color: #4A5568; margin-top: 12px;">
-                    {sel_desc}
-                </div>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+                """,
+                unsafe_allow_html=True,
+            )
 
     st.markdown(
         "> **Why 5?** A name with countryness ≥ 5 is at least **5x more popular** in its home country "
@@ -438,14 +440,18 @@ def render():
             # Top section
             '<div style="padding: 14px 14px 10px 22px; border-bottom: 1px solid ' + t_color + '40;'
             ' position: relative; min-height: 60px;">'
-            # CD disc (top right)
-            '<div style="position: absolute; top: 10px; right: 12px; width: 52px; height: 52px;'
-            ' border-radius: 50%;'
-            ' background: conic-gradient(from 0deg, #888 0%, #ccc 15%, #999 30%, #ddd 45%, #aaa 60%, #ccc 75%, #888 90%, #bbb 100%);'
-            ' box-shadow: 0 2px 8px rgba(0,0,0,0.25), inset 0 0 10px rgba(0,0,0,0.15);'
-            ' display: flex; align-items: center; justify-content: center;">'
-            '<div style="width: 14px; height: 14px; border-radius: 50%;'
-            ' background: ' + t_color + '30; border: 2px solid ' + t_color + '80;"></div>'
+            # Cassette icon (top right)
+            '<div style="position: absolute; top: 10px; right: 12px;">'
+            '<svg width="52" height="36" viewBox="0 0 52 36">'
+            '<rect x="1" y="1" width="50" height="34" rx="4" fill="#2D3748" stroke="#4A5568" stroke-width="1.5"/>'
+            '<rect x="8" y="6" width="36" height="16" rx="2" fill="#1A202C" stroke="#4A5568" stroke-width="0.8"/>'
+            '<circle cx="18" cy="14" r="5" fill="none" stroke="' + t_color + '" stroke-width="1.5"/>'
+            '<circle cx="34" cy="14" r="5" fill="none" stroke="' + t_color + '" stroke-width="1.5"/>'
+            '<circle cx="18" cy="14" r="1.5" fill="' + t_color + '"/>'
+            '<circle cx="34" cy="14" r="1.5" fill="' + t_color + '"/>'
+            '<line x1="23" y1="14" x2="29" y2="14" stroke="#4A5568" stroke-width="0.8"/>'
+            '<rect x="12" y="25" width="28" height="6" rx="1" fill="#4A5568"/>'
+            '</svg>'
             '</div>'
             # Country title
             '<div style="font-weight: 700; font-size: 0.9em; color: #2D3748;">'
@@ -472,7 +478,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
