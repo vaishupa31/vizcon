@@ -235,7 +235,7 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
@@ -246,6 +246,20 @@ def render():
     )
 
     # ─── Formula + Classification side by side ────────────────────
+    # Force equal-height columns
+    st.markdown(
+        """
+        <style>
+            div[data-testid="stHorizontalBlock"] {
+                align-items: stretch;
+            }
+            div[data-testid="stHorizontalBlock"] > div[data-testid="stVerticalBlockBorderWrapper"] {
+                height: 100%;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
     col_formula, col_class = st.columns([1, 1])
 
     with col_formula:
@@ -289,7 +303,7 @@ def render():
         st.markdown(
             """
             <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 24px; margin: 0; text-align: center;
+                        border-radius: 12px; padding: 36px 24px; margin: 0; text-align: center;
                         border: 1px solid #E2E8F0; height: 100%;">
                 <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
                             letter-spacing: 2px; margin-bottom: 8px;">HOW WE CLASSIFIED THEM</div>
@@ -457,7 +471,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 3: REASONS WHY
