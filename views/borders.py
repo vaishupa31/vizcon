@@ -48,6 +48,7 @@ def render():
             "countryness": 8171,
             "actual": "SIVE (just one syllable!)",
             "hint": "Rhymes with a number between four and six.",
+            "explain": "In Irish Gaelic, 'dh' and 'bh' are both silent between vowels. So Sa-dh-bh = just 'S' + 'ive'.",
         },
         {
             "name": "Ngaire",
@@ -55,6 +56,7 @@ def render():
             "countryness": 11270,
             "actual": "NY-ree",
             "hint": "The first two letters are actually one sound you already know.",
+            "explain": "In Māori, 'Ng' is a single consonant — the same sound as the 'ng' in 'singing', but at the start.",
         },
         {
             "name": "Frédérique",
@@ -63,6 +65,7 @@ def render():
             "actual": "fray-day-REEK",
             "audio_file": "frederique",
             "hint": "The accents aren't decorative — each one changes a vowel.",
+            "explain": "In French, 'é' always sounds like 'ay'. Three é's = three 'ay' sounds: fray-day-reek.",
         },
         {
             "name": "Caoimhín",
@@ -71,6 +74,7 @@ def render():
             "actual": "KEE-veen",
             "audio_file": "caoimhin",
             "hint": "You already know this name — just not in this spelling.",
+            "explain": "It's literally 'Kevin' in Irish! 'Aoi' = 'ee', 'mh' = 'v', 'ín' = 'een'. Kevin → Kee-veen.",
         },
         {
             "name": "Ffion",
@@ -78,6 +82,7 @@ def render():
             "countryness": 1761,
             "actual": "FEE-on",
             "hint": "In Welsh, one of these letters is lying to you.",
+            "explain": "Welsh rule: 'ff' = English 'f' sound. A single 'f' in Welsh = English 'v' sound. So 'Ffion' = 'Fee-on'.",
         },
     ]
     # Challenge selector
@@ -85,8 +90,12 @@ def render():
         st.session_state.challenge_idx = 0
     if "revealed" not in st.session_state:
         st.session_state.revealed = False
+    
+    # Compact layout
+    quiz_spacer_l, quiz_col, quiz_spacer_r = st.columns([1, 3, 1])
 
-    challenge = challenges[st.session_state.challenge_idx]
+    with quiz_col:
+        challenge = challenges[st.session_state.challenge_idx]
 
     # Display the challenge card
     st.markdown(
@@ -112,15 +121,15 @@ def render():
     col_hint, col_reveal, col_next = st.columns([1, 1, 1])
 
     with col_hint:
-        if st.button("💡 Hint", use_container_width=True):
+        if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
             st.info(f"💡 {challenge['hint']}")
 
     with col_reveal:
-        if st.button("🔊 Reveal Pronunciation", use_container_width=True):
+        if st.button("🔊 Reveal Pronunciation", use_container_width=True, key="btn_reveal"):
             st.session_state.revealed = True
 
     with col_next:
-        if st.button("➡️ Next Name", use_container_width=True):
+        if st.button("➡️ Next Name", use_container_width=True, key="btn_next"):
             st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
             st.session_state.revealed = False
             st.rerun()
@@ -135,6 +144,10 @@ def render():
                             letter-spacing: 2px;">It's pronounced:</div>
                 <div style="font-size: 2.2em; font-weight: 700; color: #059669; margin: 8px 0;">
                     "{challenge['actual']}"
+                </div>
+                <div style="font-size: 0.85em; color: #4A5568; margin-top: 10px; 
+                            background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
+                    📖 {challenge['explain']}
                 </div>
             </div>
             """,
@@ -152,7 +165,7 @@ def render():
         else:
             st.caption("🔈 Audio clip coming soon!")
 
-        # Why it matters
+        # Countryness fact
         st.markdown(
             f"""
             <div style="background: #FFF5F5; border-radius: 8px; padding: 12px; 
