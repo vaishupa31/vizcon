@@ -409,9 +409,6 @@ def render():
         "Pronunciation is the invisible border that no amount of shared language can break."
     )
 
-    # ─── Declan vs Niamh comparison ───────────────────────────────
-    st.markdown("#### Same origin. Different fate.")
-
     # ─── Record label distribution sheet ──────────────────────────
     def distribution_sheet(track, origin, score, catalog, date, status, status_color, status_angle, countries):
         # Build HTML using string concatenation to avoid quote conflicts
@@ -509,8 +506,8 @@ def render():
         track="Declan",
         origin="Ireland",
         score="2.5",
-        catalog="CAT# IRL-1968-007",
-        date="DIST. 1968–2023",
+        catalog="CAT# IRL-1997-007",
+        date="DIST. 1997–2023",
         status="WORLDWIDE RELEASE",
         status_color="#059669",
         status_angle=-18,
@@ -524,8 +521,8 @@ def render():
         track="Niamh",
         origin="Ireland",
         score="28",
-        catalog="CAT# IRL-1970-042",
-        date="DIST. 1970–2023",
+        catalog="CAT# IRL-1997-042",
+        date="DIST. 1997–2023",
         status="LOCAL RELEASE ONLY",
         status_color="#DC2626",
         status_angle=-15,
@@ -541,6 +538,7 @@ def render():
     with col_right:
         st.markdown(niamh, unsafe_allow_html=True)
 
+    st.markdown("")  # spacer
     st.markdown(
         "Both names are Irish. Both are common. But **Declan** is phonetically transparent — "
         "anyone can read it and say it. **Niamh** (pronounced *NEEV*) requires insider knowledge. "
@@ -638,7 +636,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ─── Reason 2: Culture & Tradition ────────────────────────────
     st.markdown("### ✝️ Reason 2: Culture & Tradition")
