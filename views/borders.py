@@ -30,7 +30,7 @@ def render():
     summary = load_summary()
     data_2023 = df[df["year"] == 2023]
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # SECTION 1: QUIZ — Hybrid (gradient card + column layout)
     # ══════════════════════════════════════════════════════════════
 
@@ -96,8 +96,17 @@ def render():
     # ─── Section heading (matches "What Stayed in the Shop") ──────
     st.markdown("### 🎤 Can You Say This?")
     st.markdown(
-        "These names are **cultural passwords** — if you can't say them, "
-        "they'll never leave their home country. Give it a try!"
+        """
+        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
+                    border-radius: 16px; padding: 20px 24px; margin-bottom: 16px;
+                    border: 1px solid #E2E8F0; text-align: center;">
+            <p style="font-size: 0.92em; color: #4A5568; margin: 0; line-height: 1.6;">
+                These names are <strong>cultural passwords</strong> — if you can't say them, 
+                they'll never leave their home country. Give it a try!
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
     # ─── Two-column layout: Vinyl left, Name+Buttons right ────────
@@ -128,8 +137,17 @@ def render():
         """, unsafe_allow_html=True)
 
     with right:
-        st.markdown(f"### {challenge['name']}")
-        st.write(challenge["country"])
+        c_name = challenge["name"]
+        c_country = challenge["country"]
+        st.markdown(
+            f"""
+            <div style="text-align: center;">
+                <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif; margin-bottom: 4px;">{c_name}</div>
+                <div style="font-size: 1em; color: #4A5568;">{c_country}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
         if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
             st.session_state.show_hint = True
@@ -209,7 +227,6 @@ def render():
         )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
