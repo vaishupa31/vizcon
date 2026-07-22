@@ -540,69 +540,68 @@ def render():
         "That single difference determined their fate."
     )
 
-       # ─── Part 2: It's not just Irish ─────────────────────────────
+        # ─── Part 2: It's not just Irish ─────────────────────────────
     st.markdown("")
     st.markdown("**It's not just Irish.**")
     st.markdown(
-        "Every country in the Anglosphere has its own phonetic code that outsiders can't crack. "
-        "Here are the rules that lock names in place:"
+        "Every country in the Anglosphere has its own phonetic code that outsiders can't crack."
     )
 
-    # Jukebox — just the phonetic rules
+    # Music sheet phonetic data
     stations = {
         "Gaeilge": {
             "subtitle": "Irish Gaelic",
             "color": "#A8E6C8",
             "rules": [
-                ("bh / mh", "→ 'v'"),
-                ("dh / gh", "→ silent"),
-                ("aoi", "→ 'ee'"),
-                ("fh", "→ silent"),
+                ("bh / mh", "'v'"),
+                ("dh / gh", "silent"),
+                ("aoi", "'ee'"),
+                ("fh", "silent"),
             ]
         },
         "Gàidhlig": {
             "subtitle": "Scottish Gaelic",
             "color": "#C8A8E8",
             "rules": [
-                ("idh / aidh", "→ silent 'ee'"),
-                ("eo", "→ 'aw'"),
-                ("gh", "→ silent"),
-                ("mh", "→ 'v'"),
+                ("idh / aidh", "silent 'ee'"),
+                ("eo", "'aw'"),
+                ("gh", "silent"),
+                ("mh", "'v'"),
             ]
         },
         "Français": {
             "subtitle": "Canadian French",
             "color": "#F5B7C5",
             "rules": [
-                ("é / è", "→ 'ay'"),
-                ("-ique", "→ 'eek'"),
-                ("oi", "→ 'wa'"),
-                ("ç", "→ 's'"),
+                ("é / è", "'ay'"),
+                ("-ique", "'eek'"),
+                ("oi", "'wa'"),
+                ("ç", "'s'"),
             ]
         },
         "Te Reo": {
             "subtitle": "Māori",
             "color": "#F5C878",
             "rules": [
-                ("ng-", "→ one sound (ŋ)"),
-                ("wh", "→ 'f'"),
-                ("au", "→ 'ow'"),
-                ("vowels", "→ all pronounced"),
+                ("ng-", "one sound"),
+                ("wh", "'f'"),
+                ("au", "'ow'"),
+                ("vowels", "all said"),
             ]
         },
         "Cymraeg": {
             "subtitle": "Welsh",
             "color": "#F5D68A",
             "rules": [
-                ("ff", "→ 'f'"),
-                ("f", "→ 'v'"),
-                ("ll", "→ breathy 'l'"),
-                ("dd", "→ 'th'"),
+                ("ff", "'f'"),
+                ("f", "'v'"),
+                ("ll", "breathy 'l'"),
+                ("dd", "'th'"),
             ]
         },
     }
 
-    # Jukebox selector (pills)
+    # Pills selector
     station_names = list(stations.keys())
     selected_station = st.pills(
         "Select a language",
@@ -617,37 +616,60 @@ def render():
         color = station["color"]
         rules = station["rules"]
 
-        # Compact phonetic rules card
+        # Build music sheet SVG + HTML
+        num_notes = len(rules)
+        sheet_width = 100  # percentage
+        note_spacing = sheet_width / (num_notes + 1)
+
+        # SVG staff lines + notes
+        svg_width = 600
+        svg_height = 120
+        staff_top = 25
+        staff_gap = 12
+        note_y = staff_top + staff_gap * 2  # notes sit on middle line
+
+        # Build SVG
+        svg = '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;">'
+
+        # 5 staff lines
+        for i in range(5):
+            y = staff_top + i * staff_gap
+            svg += '<line x1="50" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
+
+        # Treble clef (simplified text)
+        svg += '<text x="18" y="' + str(staff_top + staff_gap * 2 + 8) + '" font-size="42" fill="#A0AEC0" font-family="serif">𝄞</text>'
+
+        # Notes on the staff
+        for i, (pattern, result) in enumerate(rules):
+            x = 90 + i * ((svg_width - 140) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
+            # Note head (filled circle)
+            svg += '<circle cx="' + str(x) + '" cy="' + str(note_y) + '" r="8" fill="' + color + '"/>'
+            # Note stem
+            svg += '<line x1="' + str(x + 7) + '" y1="' + str(note_y) + '" x2="' + str(x + 7) + '" y2="' + str(note_y - 30) + '" stroke="' + color + '" stroke-width="2"/>'
+            # Pattern text (above)
+            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 22) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
+            # Result text (below)
+            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 5) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
+
+        svg += '</svg>'
+
+        # Wrap in a card
         card_html = (
-            '<div style="background: linear-gradient(135deg, #F8FAFC, #EEF2FF, #F0FFF4);'
-            'border-radius: 12px; padding: 24px; border: 1px solid #E2E8F0;'
+            '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
+            'border-radius: 12px; padding: 20px 24px; border: 1px solid #E8DFC0;'
             'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
             # Header
-            '<div style="margin-bottom: 16px;">'
+            '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">'
             '<span style="font-size: 1.1rem; font-weight: 700; color: #2D3748;">'
             + selected_station + '</span>'
-            '<span style="font-size: .8rem; color: #718096; margin-left: 10px;">'
+            '<span style="font-size: .8rem; color: #718096;">'
             + subtitle + '</span>'
             '</div>'
-            # Rules table
-            '<div style="display: grid; grid-template-columns: auto 1fr; gap: 0; '
-            'background: white; border-radius: 8px; border: 1px solid #E2E8F0; overflow: hidden;">'
+            # SVG sheet
+            + svg +
+            '</div>'
         )
 
-        for i, (pattern, result) in enumerate(rules):
-            border_bottom = 'border-bottom: 1px solid #E2E8F0;' if i < len(rules) - 1 else ''
-            card_html += (
-                # Pattern column
-                '<div style="padding: 14px 18px; font-family: monospace; font-size: 1rem;'
-                'font-weight: 700; color: #2D3748; background: ' + color + '12; ' + border_bottom + '">'
-                + pattern + '</div>'
-                # Result column
-                '<div style="padding: 14px 18px; font-size: .95rem; font-weight: 600;'
-                'color: #4A5568; ' + border_bottom + '">'
-                + result + '</div>'
-            )
-
-        card_html += '</div></div>'
         st.markdown(card_html, unsafe_allow_html=True)
 
 
