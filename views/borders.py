@@ -31,7 +31,7 @@ def render():
     data_2023 = df[df["year"] == 2023]
 
         # ══════════════════════════════════════════════════════════════
-    # SECTION 1: QUIZ — Hybrid (HTML card + native buttons)
+    # SECTION 1: QUIZ — Three-column layout
     # ══════════════════════════════════════════════════════════════
 
     # Pronunciation challenge data
@@ -104,14 +104,13 @@ def render():
         "they'll never leave their home country. Give it a try!"
     )
 
-    # ─── HTML gradient card (vinyl + name) ────────────────────────
-    st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);
-                border-radius: 16px; padding: 36px 28px; margin: 12px 0;
-                border: 1px solid #E2E8F0;
-                display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
-        <div style="flex-shrink: 0;">
-            <svg width="180" height="180" viewBox="0 0 220 220">
+    # ─── Three columns: Vinyl | Name | Buttons ────────────────────
+    col_vinyl, col_name, col_buttons = st.columns([1, 1.2, 0.8], vertical_alignment="center")
+
+    with col_vinyl:
+        st.markdown(f"""
+        <div style="text-align: center;">
+            <svg width="160" height="160" viewBox="0 0 220 220">
                 <circle cx="110" cy="110" r="100" fill="#2D3748" stroke="#4A5568" stroke-width="1"/>
                 <circle cx="110" cy="110" r="90" fill="none" stroke="#3D4A5C" stroke-width="0.5"/>
                 <circle cx="110" cy="110" r="80" fill="none" stroke="#354258" stroke-width="0.5"/>
@@ -125,35 +124,33 @@ def render():
                 <circle cx="110" cy="110" r="3" fill="#2D3748"/>
             </svg>
         </div>
-        <div style="text-align: center; min-width: 180px;">
+        """, unsafe_allow_html=True)
+
+    with col_name:
+        st.markdown(f"""
+        <div style="text-align: center;">
             <div style="font-size: 0.7em; color: #718096; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 6px;">
                 SIDE {c_idx} OF {c_total}
             </div>
-            <div style="font-size: 2.5em; font-weight: 800; color: #2D3748; font-family: Georgia, serif; margin: 6px 0;">
+            <div style="font-size: 2.4em; font-weight: 800; color: #2D3748; font-family: Georgia, serif; margin: 4px 0;">
                 {c_name}
             </div>
             <div style="font-size: 1em; color: #4A5568; margin-top: 4px;">
                 {c_country}
             </div>
-            <div style="background: rgba(124,159,214,0.12); border-radius: 8px; padding: 5px 14px; margin-top: 14px; display: inline-block; border: 1px solid rgba(124,159,214,0.25);">
+            <div style="background: rgba(124,159,214,0.12); border-radius: 8px; padding: 5px 14px; margin-top: 12px; display: inline-block; border: 1px solid rgba(124,159,214,0.25);">
                 <span style="font-size: 0.72em; color: #5A82BE; letter-spacing: 1px;">🎵 LOCAL VINYL RECORDS</span>
             </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    # ─── Native buttons ───────────────────────────────────────────
-    col_hint, col_reveal, col_next = st.columns([1, 1, 1])
-
-    with col_hint:
+    with col_buttons:
         if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
             st.session_state.show_hint = True
 
-    with col_reveal:
         if st.button("🔊 Reveal", use_container_width=True, key="btn_reveal"):
             st.session_state.revealed = True
 
-    with col_next:
         if st.button("➡️ Next", use_container_width=True, key="btn_next"):
             st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
             st.session_state.revealed = False
