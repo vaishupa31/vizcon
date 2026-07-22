@@ -30,7 +30,7 @@ def render():
     summary = load_summary()
     data_2023 = df[df["year"] == 2023]
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # SECTION 1: QUIZ — Two columns (HTML card left, buttons right)
     # ══════════════════════════════════════════════════════════════
 
@@ -410,99 +410,168 @@ def render():
     st.markdown("---")
 
     # ══════════════════════════════════════════════════════════════
-    # SECTION 3: REASONS WHY
+    # SECTION 3: REASONS — Storyline Flow
     # ══════════════════════════════════════════════════════════════
 
-    # ─── Reason 1: Pronunciation Wall ─────────────────────────────
-    st.markdown("### 🗣️ Reason 1: The Pronunciation Wall")
+    # ─── Intro ────────────────────────────────────────────────────
+    st.markdown("### 🎧 What Keeps a Track Off the Global Playlist?")
     st.markdown(
-        "The most powerful predictor of whether a name stays locked is simple: "
-        "**can outsiders read it?**"
+        "Sometimes the lyrics are unreadable. Sometimes the cover exists in another language. "
+        "Sometimes the artist chooses to stay underground. And sometimes — they press a record "
+        "that was never meant to leave town."
     )
 
-    # Declan vs Niamh
-    st.markdown("#### Two Irish Names. Two Fates.")
+    st.markdown("---")
 
-    col_dec, col_niamh = st.columns(2)
-    with col_dec:
-        st.markdown(
-            """
-            <div style="background: #E8F4FD; border: 2px solid #A8E6C8; border-radius: 12px;
-                        padding: 20px; text-align: center;">
-                <div style="font-size: 2em; font-weight: 800; color: #4A5568;">Declan</div>
-                <div style="font-size: 0.9em; color: #718096; margin: 4px 0;">"DECK-lin" ✅ Easy to read</div>
-                <div style="font-size: 2.5em; font-weight: 800; color: #A8E6C8; margin: 8px 0;">2.5</div>
-                <div style="font-size: 0.85em; color: #718096;">countryness → Gone global</div>
+    # ══════════════════════════════════════════════════════════════
+    # 🏷️ CAN'T READ THE LYRICS (Pronunciation Wall)
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🏷️ Can't Read the Lyrics")
+    st.markdown(
+        "The first wall is the simplest: if you can't read a name, you won't use it. "
+        "Pronunciation is the invisible border that no amount of shared language can break."
+    )
+
+    # ─── Declan vs Niamh comparison ───────────────────────────────
+    st.markdown("#### Same origin. Different fate.")
+
+    col_declan, col_niamh = st.columns(2)
+
+    with col_declan:
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5);
+                    border: 2px solid #A8E6C8; border-radius: 12px;
+                    padding: 24px; text-align: center;">
+            <div style="font-size: 0.7em; color: #059669; text-transform: uppercase;
+                        letter-spacing: 2px; margin-bottom: 6px;">ESCAPED</div>
+            <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif;">
+                Declan
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            <div style="font-size: 0.85em; color: #4A5568; margin: 8px 0;">Irish origin</div>
+            <div style="font-size: 2em; font-weight: 800; color: #059669; margin: 8px 0;">2.5</div>
+            <div style="font-size: 0.75em; color: #718096;">countryness score</div>
+            <div style="margin-top: 12px; font-size: 0.8em; color: #059669; 
+                        background: rgba(6,214,160,0.08); border-radius: 6px; padding: 6px;">
+                ✅ Used in all 8 countries
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col_niamh:
-        st.markdown(
-            """
-            <div style="background: #FFF5F5; border: 2px solid #F5B7C5; border-radius: 12px;
-                        padding: 20px; text-align: center;">
-                <div style="font-size: 2em; font-weight: 800; color: #4A5568;">Niamh</div>
-                <div style="font-size: 0.9em; color: #718096; margin: 4px 0;">"NEEV" ❌ Impossible to guess</div>
-                <div style="font-size: 2.5em; font-weight: 800; color: #F5B7C5; margin: 8px 0;">28</div>
-                <div style="font-size: 0.85em; color: #718096;">countryness → Stayed home</div>
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #FFF5F5, #FFF0F0);
+                    border: 2px solid #F5B7C5; border-radius: 12px;
+                    padding: 24px; text-align: center;">
+            <div style="font-size: 0.7em; color: #C53030; text-transform: uppercase;
+                        letter-spacing: 2px; margin-bottom: 6px;">LOCKED</div>
+            <div style="font-size: 2.2em; font-weight: 800; color: #2D3748; font-family: Georgia, serif;">
+                Niamh
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            <div style="font-size: 0.85em; color: #4A5568; margin: 8px 0;">Irish origin</div>
+            <div style="font-size: 2em; font-weight: 800; color: #C53030; margin: 8px 0;">28</div>
+            <div style="font-size: 0.75em; color: #718096;">countryness score</div>
+            <div style="margin-top: 12px; font-size: 0.8em; color: #C53030; 
+                        background: rgba(197,48,48,0.06); border-radius: 6px; padding: 6px;">
+                🔒 Concentrated in Ireland & UK
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("")
-
-    # Orthographic complexity
-    st.markdown("#### It's Not Just Sound — It's How It LOOKS")
     st.markdown(
-        "If a name *looks* impossible on paper, parents in other countries won't even attempt it. "
-        "The letter-to-sound mismatch creates a visual wall:"
+        "Both names are Irish. Both are common. But **Declan** is phonetically transparent — "
+        "anyone can read it and say it. **Niamh** (pronounced *NEEV*) requires insider knowledge. "
+        "That single difference determined their fate."
     )
 
-    complexity_data = {
-        "Name": ["Liam", "Declan", "Niamh", "Sadhbh", "Caoilfhionn"],
-        "Letters": [4, 6, 5, 6, 11],
-        "Actual Sounds": [4, 6, 3, 3, 5],
-        "Mismatch": ["None — what you see is what you say", "None — readable", "5 letters → 3 sounds", "6 letters → 3 sounds!", "11 letters → 5 sounds!!"],
-        "Countryness": [1.5, 2.5, 28, 905, 2974],
-        "Fate": ["🌍 Global", "🌍 Global", "🏠 Locked", "🔒 Very locked", "🔒 Extremely locked"],
+    # ─── The data: 3.2% vs 30.2% ─────────────────────────────────
+    st.markdown("#### The Orthographic Wall")
+
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD);
+                border-radius: 12px; padding: 24px; margin: 16px 0;
+                border: 1px solid #E2E8F0;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
+            <div style="text-align: center;">
+                <div style="font-size: 0.7em; color: #059669; text-transform: uppercase; letter-spacing: 2px;">
+                    Names that ESCAPED
+                </div>
+                <div style="font-size: 3em; font-weight: 800; color: #059669; margin: 4px 0;">
+                    3.2%
+                </div>
+                <div style="font-size: 0.8em; color: #718096;">
+                    contain Gaelic orthography
+                </div>
+            </div>
+            <div style="font-size: 2em; color: #CBD5E0; font-weight: 300;">vs</div>
+            <div style="text-align: center;">
+                <div style="font-size: 0.7em; color: #C53030; text-transform: uppercase; letter-spacing: 2px;">
+                    Names that STAYED
+                </div>
+                <div style="font-size: 3em; font-weight: 800; color: #C53030; margin: 4px 0;">
+                    30.2%
+                </div>
+                <div style="font-size: 0.8em; color: #718096;">
+                    contain Gaelic orthography
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 16px; font-size: 0.85em; color: #4A5568;">
+            Gaelic patterns: <strong>bh, dh, gh, mh, aoi, igh, eadh</strong> — 
+            letter combinations that have no equivalent pronunciation in standard English.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(
+        "Names that escaped to the global charts have almost **no** Gaelic spelling. "
+        "Names that stayed are **10x** more likely to contain these patterns. "
+        "The spelling IS the border."
+    )
+
+    # ─── Name length vs countryness ───────────────────────────────
+    st.markdown("#### Longer name, higher wall")
+
+    st.markdown(
+        "It's not just exotic characters — **length itself** is a barrier. "
+        "The longer and more complex a name looks, the less likely anyone outside will try it."
+    )
+
+    # Bar chart data: name length brackets vs avg countryness
+    import plotly.graph_objects as go
+
+    length_data = {
+        "bracket": ["3–4 letters", "5–6 letters", "7–8 letters", "9–10 letters", "11+ letters"],
+        "avg_countryness": [8, 14, 27, 89, 201],
     }
-    st.dataframe(complexity_data, use_container_width=True, hide_index=True)
+
+    fig = go.Figure(go.Bar(
+        x=length_data["bracket"],
+        y=length_data["avg_countryness"],
+        marker_color=["#A8E6C8", "#7C9FD6", "#F5D68A", "#F5B7C5", "#E63946"],
+        text=[str(v) for v in length_data["avg_countryness"]],
+        textposition="outside",
+        textfont=dict(size=14, color="#2D3748", family="Inter"),
+    ))
+
+    fig.update_layout(
+        title="",
+        xaxis_title="Name Length",
+        yaxis_title="Avg Countryness Score",
+        template="plotly_white",
+        font=dict(family="Inter", size=12, color="#4A5568"),
+        plot_bgcolor="white",
+        height=350,
+        margin=dict(t=20, b=60, l=60, r=20),
+        xaxis=dict(gridcolor="#E2E8F0"),
+        yaxis=dict(gridcolor="#E2E8F0"),
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
     st.markdown(
-        """
-        **The pattern:** Names where letters = sounds (Liam, Declan) go global.
-        Names where letters ≠ sounds (Sadhbh, Caoilfhionn) stay locked.
-        The bigger the mismatch, the higher the countryness.
-        """
-    )
-
-    # Name length vs countryness
-    st.markdown("#### Longer Names = More Locked")
-
-    fig_length = go.Figure()
-    fig_length.add_trace(go.Bar(
-        x=["3-4 letters", "5-6 letters", "7-8 letters", "9-10 letters", "11+ letters"],
-        y=[64, 81, 82, 122, 205],
-        marker_color=["#A8E6C8", "#A8D8F0", "#F5D68A", "#F5C878", "#F5B7C5"],
-        text=["64", "81", "82", "122", "205"],
-        textposition="outside",
-        textfont=dict(size=13, color="#4A5568"),
-    ))
-    fig_length.update_layout(
-        **CHART_LAYOUT,
-        title=None,
-        yaxis_title="Avg Countryness Score",
-        xaxis_title="Name Length",
-        height=350,
-        showlegend=False,
-    )
-    st.plotly_chart(fig_length, use_container_width=True)
-
-    st.info(
-        "💡 Names with 11+ letters have **3x higher countryness** than short names. "
-        "Complexity = barrier."
+        "Names with **11+ letters** have an average countryness of **201** — "
+        "effectively cultural passwords. At 3–4 letters? Just **8** — practically global."
     )
 
     st.markdown("---")
