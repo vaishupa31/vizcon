@@ -266,7 +266,7 @@ def render():
         st.markdown(
             """
             <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD); 
-                        border-radius: 12px; padding: 20px 16px; margin: 0;
+                        border-radius: 12px; padding: 56px 16px; margin: 0;
                         border: 1px solid #E2E8F0; text-align: center; height: 100%;">
                 <div style="font-size: 0.7em; color: #7C9FD6; text-transform: uppercase; 
                             letter-spacing: 2px; margin-bottom: 8px;">HOW WE MEASURED IT</div>
