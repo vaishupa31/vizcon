@@ -94,7 +94,8 @@ def render():
         st.session_state.challenge_idx = 0
     if "revealed" not in st.session_state:
         st.session_state.revealed = False
-
+    if "show_hint" not in st.session_state:
+        st.session_state.show_hint = False
     challenge = challenges[st.session_state.challenge_idx]
 
     # Compact layout — centered
@@ -104,41 +105,44 @@ def render():
         # Vinyl sleeve card
         st.markdown(
             f"""
-            <div style="background: #1a1a2e; border-radius: 16px; padding: 30px; 
+            <div style="background: linear-gradient(135deg, #3D3A50, #2E2B3F); 
+                        border-radius: 16px; padding: 35px; 
                         text-align: center; margin: 15px auto; position: relative;
-                        box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
-                <svg width="120" height="120" viewBox="0 0 120 120" style="margin-bottom: 15px;">
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+                        border: 1px solid rgba(124,159,214,0.2);">
+                <svg width="130" height="130" viewBox="0 0 130 130" style="margin-bottom: 15px;">
                     <!-- Outer disc -->
-                    <circle cx="60" cy="60" r="56" fill="#111" stroke="#333" stroke-width="2"/>
+                    <circle cx="65" cy="65" r="60" fill="#1E1E2E" stroke="#4A5568" stroke-width="1.5"/>
                     <!-- Grooves -->
-                    <circle cx="60" cy="60" r="50" fill="none" stroke="#222" stroke-width="0.5"/>
-                    <circle cx="60" cy="60" r="46" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
-                    <circle cx="60" cy="60" r="42" fill="none" stroke="#222" stroke-width="0.5"/>
-                    <circle cx="60" cy="60" r="38" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
-                    <circle cx="60" cy="60" r="34" fill="none" stroke="#222" stroke-width="0.5"/>
-                    <circle cx="60" cy="60" r="30" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
-                    <circle cx="60" cy="60" r="26" fill="none" stroke="#222" stroke-width="0.5"/>
-                    <!-- Shine / light reflection -->
-                    <ellipse cx="45" cy="45" rx="18" ry="12" fill="rgba(255,255,255,0.03)" transform="rotate(-30 45 45)"/>
-                    <!-- Label area -->
-                    <circle cx="60" cy="60" r="18" fill="#2d2d44"/>
-                    <circle cx="60" cy="60" r="17" fill="none" stroke="#F5B7C5" stroke-width="1" opacity="0.6"/>
-                    <circle cx="60" cy="60" r="14" fill="#1a1a2e"/>
-                    <!-- Spindle hole -->
-                    <circle cx="60" cy="60" r="3" fill="#333"/>
-                    <circle cx="60" cy="60" r="2" fill="#1a1a2e"/>
+                    <circle cx="65" cy="65" r="54" fill="none" stroke="#2A2A3A" stroke-width="0.6"/>
+                    <circle cx="65" cy="65" r="49" fill="none" stroke="#232333" stroke-width="0.6"/>
+                    <circle cx="65" cy="65" r="44" fill="none" stroke="#2A2A3A" stroke-width="0.6"/>
+                    <circle cx="65" cy="65" r="39" fill="none" stroke="#232333" stroke-width="0.6"/>
+                    <circle cx="65" cy="65" r="34" fill="none" stroke="#2A2A3A" stroke-width="0.6"/>
+                    <circle cx="65" cy="65" r="29" fill="none" stroke="#232333" stroke-width="0.6"/>
+                    <!-- Shine -->
+                    <ellipse cx="48" cy="48" rx="20" ry="13" fill="rgba(255,255,255,0.03)" transform="rotate(-30 48 48)"/>
+                    <!-- Label — pastel pink like theme -->
+                    <circle cx="65" cy="65" r="20" fill="#F5B7C5" opacity="0.85"/>
+                    <circle cx="65" cy="65" r="15" fill="none" stroke="#E8919F" stroke-width="0.8"/>
+                    <!-- Label text area -->
+                    <circle cx="65" cy="65" r="12" fill="#3D3A50"/>
+                    <!-- Spindle -->
+                    <circle cx="65" cy="65" r="3.5" fill="#4A5568"/>
+                    <circle cx="65" cy="65" r="2" fill="#2E2B3F"/>
                 </svg>
-                <div style="font-size: 0.7em; color: #888; text-transform: uppercase; 
+                <div style="font-size: 0.7em; color: #A0AEC0; text-transform: uppercase; 
                             letter-spacing: 3px;">SIDE {st.session_state.challenge_idx + 1} OF {len(challenges)}</div>
-                <div style="font-size: 2.2em; font-weight: 800; color: #ffffff; 
+                <div style="font-size: 2.2em; font-weight: 800; color: #F0F8FF; 
                             margin: 10px 0; font-family: Georgia, serif;">
                     {challenge['name']}
                 </div>
-                <div style="font-size: 0.85em; color: #aaa;">
+                <div style="font-size: 0.85em; color: #A0AEC0;">
                     {challenge['country']}
                 </div>
-                <div style="background: rgba(255,255,255,0.05); border-radius: 8px; 
-                            padding: 6px 12px; margin-top: 12px; display: inline-block;">
+                <div style="background: rgba(124,159,214,0.1); border-radius: 8px; 
+                            padding: 6px 12px; margin-top: 12px; display: inline-block;
+                            border: 1px solid rgba(124,159,214,0.2);">
                     <span style="font-size: 0.75em; color: #7C9FD6; letter-spacing: 1px;">
                         🎵 LOCAL VINYL RECORDS
                     </span>
@@ -153,18 +157,23 @@ def render():
 
         with col_hint:
             if st.button("💡 Hint", use_container_width=True, key="btn_hint"):
-                st.info(f"💡 {challenge['hint']}")
+                st.session_state.show_hint = True
 
         with col_reveal:
             if st.button("🔊 Reveal", use_container_width=True, key="btn_reveal"):
                 st.session_state.revealed = True
-                st.rerun()
+                # NO st.rerun() here — let Streamlit re-render naturally
 
         with col_next:
             if st.button("➡️ Next", use_container_width=True, key="btn_next"):
                 st.session_state.challenge_idx = (st.session_state.challenge_idx + 1) % len(challenges)
                 st.session_state.revealed = False
-                st.rerun()
+                st.session_state.show_hint = False
+                st.rerun()  # rerun is fine here since we're NOT autoplaying
+
+        # Show hint if requested
+        if st.session_state.get("show_hint"):
+            st.info(f"💡 {challenge['hint']}")
 
         # Reveal section
         if st.session_state.revealed:
