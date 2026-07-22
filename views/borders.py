@@ -89,7 +89,7 @@ def render():
     challenge = challenges[st.session_state.challenge_idx]
 
     # Display the challenge card
-        st.markdown(
+    st.markdown(
         f"""
         <div style="background: linear-gradient(135deg, #F0F8FF, #E8F4FD); 
                     border: 2px solid #7C9FD6; border-radius: 16px; 
