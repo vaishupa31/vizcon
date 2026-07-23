@@ -826,132 +826,180 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-        # ─── Part 3: The longer the name, the higher the wall ─────────
+            # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "Think of it like vinyl — short names are lightweight singles that spin fast and travel everywhere. "
-        "Long names are heavy LPs that barely leave the shelf."
+        "Think of it like an amplifier — short names are cranked to 11, heard everywhere. "
+        "Long names? The volume barely registers."
     )
 
-    # Turntable RPM visual — 5 records of increasing size
-    # Each represents a name-length bracket
-    records = [
-        ("3–4", 8, "78", "#A8E6C8", 40),     # small, fast, green
-        ("5–6", 14, "45", "#7C9FD6", 52),     # medium-small, blue
-        ("7–8", 27, "33", "#F5D68A", 64),     # standard LP, yellow
-        ("9–10", 89, "16", "#F5B7C5", 76),    # heavy, pink
-        ("11+", 201, "—", "#E63946", 88),     # stopped/massive, red
+    # Amp Knob visual — 5 knobs at different positions
+    # Each knob represents a name-length bracket
+    # Short names = cranked high (11), Long names = barely on (1)
+    import math
+
+    knobs = [
+        ("3–4", 8, 11, "#A8E6C8"),    # cranked to max
+        ("5–6", 14, 8, "#7C9FD6"),     # high
+        ("7–8", 27, 5, "#F5D68A"),     # middle
+        ("9–10", 89, 2, "#F5B7C5"),    # low
+        ("11+", 201, 0, "#E63946"),    # off/barely
     ]
 
     svg_width = 900
-    svg_height = 280
-    base_y = 130  # vertical center for records
+    svg_height = 320
+    knob_y = 150  # vertical center
 
     svg = (
         '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height)
         + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
     )
 
-    # Distribute 5 records evenly
-    num = len(records)
+    # Title
+    svg += (
+        '<text x="' + str(svg_width // 2) + '" y="28" text-anchor="middle"'
+        ' font-size="14" fill="#718096" letter-spacing="2" font-weight="600">'
+        'GLOBAL REACH AMPLIFIER</text>'
+    )
+
+    num = len(knobs)
     spacing = svg_width / (num + 1)
 
-    for i, (bracket, score, rpm, color, radius) in enumerate(records):
+    for i, (bracket, score, volume, color) in enumerate(knobs):
         cx = int(spacing * (i + 1))
-        cy = base_y
+        cy = knob_y
+        knob_r = 45
 
-        # Platter shadow
-        svg += (
-            '<circle cx="' + str(cx + 3) + '" cy="' + str(cy + 3)
-            + '" r="' + str(radius) + '" fill="#00000015"/>'
-        )
+        # Knob position: volume 0-11 maps to angle
+        # 0 = 7 o'clock (225°), 11 = 5 o'clock (315° through 0° to 315°)
+        # Actually: 0 = bottom-left (~220°), 11 = bottom-right (~320°)
+        # Range: 220° to 320° (going clockwise through top)
+        min_angle = 220  # 0 position (7 o'clock)
+        max_angle = 320  # 11 position (5 o'clock)
+        # Since we go clockwise through top: 220 → 270 → 320
+        # But angles > 360 wrap, so: 220° → 360° → 320° = 220° + 280° range
+        # Simpler: treat as 220 to 500 (500-360=140, i.e., 140° = ~5 o'clock)
+        angle_range = 280
+        knob_angle = min_angle + (volume / 11.0) * angle_range
+        # Convert to radians (SVG uses math convention: 0=right, counter-clockwise)
+        # But for rotation we just need the indicator line angle
+        rad = math.radians(knob_angle)
+        # Indicator points outward from center
+        ind_x = cx + (knob_r - 12) * math.cos(rad)
+        ind_y = cy - (knob_r - 12) * math.sin(rad)
 
-        # Outer disc (vinyl black)
+        # Actually let's use a simpler approach:
+        # 0 = 7 o'clock = -135° from top (or 225° standard)
+        # 11 = 5 o'clock = -45° from top (or 315° → but going CW past top → 135°)
+        # Map volume 0→11 to rotation -135° to +135° (from 12 o'clock)
+        rotation = -135 + (volume / 11.0) * 270  # -135 to +135
+        # Pointer angle in SVG: 0° = up, positive = clockwise
+        pointer_rad = math.radians(rotation - 90)  # adjust for SVG coords
+        # Actually simpler with transform rotate:
+        # The indicator line starts at center, points up, then rotates
+        # rotation of -135° = volume 0 (left), +135° = volume 11 (right)
+
+        # Background circle (dark)
         svg += (
             '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="' + str(radius) + '" fill="#1A1A2E"/>'
+            + '" r="' + str(knob_r) + '" fill="#1A1A2E" stroke="#2D3748" stroke-width="3"/>'
         )
 
-        # Grooves (concentric circles)
-        for g in range(3, radius - 15, 6):
+        # Tick marks around the knob (0 to 11)
+        for t in range(12):
+            tick_rotation = -135 + (t / 11.0) * 270
+            tick_rad = math.radians(tick_rotation)
+            # Tick from edge inward
+            t_outer_x = cx + (knob_r - 4) * math.sin(tick_rad)
+            t_outer_y = cy - (knob_r - 4) * math.cos(tick_rad)
+            t_inner_x = cx + (knob_r - 12) * math.sin(tick_rad)
+            t_inner_y = cy - (knob_r - 12) * math.cos(tick_rad)
+            tick_color = "#4A5568" if t <= volume else "#2D3748"
             svg += (
-                '<circle cx="' + str(cx) + '" cy="' + str(cy)
-                + '" r="' + str(g + 12) + '" fill="none" stroke="#2D3748" stroke-width="0.8"/>'
+                '<line x1="' + str(round(t_inner_x, 1)) + '" y1="' + str(round(t_inner_y, 1))
+                + '" x2="' + str(round(t_outer_x, 1)) + '" y2="' + str(round(t_outer_y, 1))
+                + '" stroke="' + tick_color + '" stroke-width="2"/>'
             )
 
-        # Center label (colored circle with RPM)
-        label_r = min(22, radius - 10)
+        # Inner knob circle (raised look)
         svg += (
             '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="' + str(label_r) + '" fill="' + color + '"/>'
+            + '" r="' + str(knob_r - 16) + '" fill="#2D3748" stroke="#4A5568" stroke-width="1.5"/>'
         )
 
-        # Spindle hole
+        # Colored glow ring (shows "energy level")
+        glow_opacity = str(round(0.3 + (volume / 11.0) * 0.5, 2))
         svg += (
             '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="3" fill="#1A1A2E"/>'
+            + '" r="' + str(knob_r - 14) + '" fill="none" stroke="' + color
+            + '" stroke-width="2" opacity="' + glow_opacity + '"/>'
         )
 
-        # RPM text in center
-        rpm_size = "14" if rpm != "—" else "16"
+        # Pointer/indicator line
+        pointer_rotation = -135 + (volume / 11.0) * 270
+        p_rad = math.radians(pointer_rotation)
+        p_x = cx + (knob_r - 20) * math.sin(p_rad)
+        p_y = cy - (knob_r - 20) * math.cos(p_rad)
         svg += (
-            '<text x="' + str(cx) + '" y="' + str(cy - 4)
-            + '" text-anchor="middle" font-size="' + rpm_size
-            + '" font-weight="800" fill="#2D3748">' + rpm + '</text>'
+            '<line x1="' + str(cx) + '" y1="' + str(cy)
+            + '" x2="' + str(round(p_x, 1)) + '" y2="' + str(round(p_y, 1))
+            + '" stroke="' + color + '" stroke-width="3" stroke-linecap="round"/>'
         )
 
-        # "RPM" label (skip for stopped)
-        if rpm != "—":
-            svg += (
-                '<text x="' + str(cx) + '" y="' + str(cy + 10)
-                + '" text-anchor="middle" font-size="8" fill="#4A5568" font-weight="600">RPM</text>'
-            )
-        else:
-            svg += (
-                '<text x="' + str(cx) + '" y="' + str(cy + 10)
-                + '" text-anchor="middle" font-size="8" fill="#4A5568" font-weight="600">STOP</text>'
-            )
-
-        # Bracket label below record
+        # Center dot
         svg += (
-            '<text x="' + str(cx) + '" y="' + str(cy + radius + 22)
-            + '" text-anchor="middle" font-size="14" font-weight="700" fill="#2D3748">'
+            '<circle cx="' + str(cx) + '" cy="' + str(cy)
+            + '" r="4" fill="' + color + '"/>'
+        )
+
+        # Volume number below knob
+        svg += (
+            '<text x="' + str(cx) + '" y="' + str(cy + knob_r + 22)
+            + '" text-anchor="middle" font-size="20" font-weight="800" fill="' + color + '">'
+            + str(volume) + '</text>'
+        )
+
+        # Bracket label
+        svg += (
+            '<text x="' + str(cx) + '" y="' + str(cy + knob_r + 42)
+            + '" text-anchor="middle" font-size="13" font-weight="600" fill="#2D3748">'
             + bracket + ' letters</text>'
         )
 
-        # Score below that
+        # Countryness score
         svg += (
-            '<text x="' + str(cx) + '" y="' + str(cy + radius + 40)
-            + '" text-anchor="middle" font-size="13" fill="#718096">'
-            'score: ' + str(score) + '</text>'
+            '<text x="' + str(cx) + '" y="' + str(cy + knob_r + 58)
+            + '" text-anchor="middle" font-size="11" fill="#718096">'
+            'countryness: ' + str(score) + '</text>'
         )
 
-    # Speed label on left
+    # Scale labels
     svg += (
-        '<text x="30" y="30" font-size="12" fill="#059669" font-weight="600">'
-        '← FAST (travels far)</text>'
+        '<text x="30" y="' + str(svg_height - 10)
+        + '" font-size="12" fill="#059669" font-weight="600">'
+        '← CRANKED (heard everywhere)</text>'
     )
-    # Slow label on right
     svg += (
-        '<text x="' + str(svg_width - 30) + '" y="30" text-anchor="end" font-size="12" fill="#E63946" font-weight="600">'
-        'SLOW (stays local) →</text>'
+        '<text x="' + str(svg_width - 30) + '" y="' + str(svg_height - 10)
+        + '" text-anchor="end" font-size="12" fill="#E63946" font-weight="600">'
+        "SILENT (can't get through) →</text>"
     )
 
     svg += '</svg>'
 
     # Render in card
     st.markdown(
-        '<div style="background: linear-gradient(135deg, #F8FAFC, #EEF2FF, #F0FFF4);'
-        'border-radius: 12px; padding: 24px 16px; border: 1px solid #E2E8F0;'
-        'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
+        '<div style="background: linear-gradient(145deg, #1A1A2E, #16213E, #1A1A2E);'
+        'border-radius: 12px; padding: 24px 16px; border: 1px solid #2D3748;'
+        'box-shadow: 0 8px 24px rgba(0,0,0,.3);">'
         + svg + '</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        "Names with **11+ letters** average a countryness of **201** — the record has stopped spinning. "
-        "At 3–4 letters? Just **8** — a 78 RPM single that plays on every radio in the world."
+        "Names with **11+ letters** average a countryness of **201** — the amp is off, nobody hears it. "
+        "At 3–4 letters? Just **8** — cranked to 11, playing on every station in the world."
     )
 
     st.markdown("---")
