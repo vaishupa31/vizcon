@@ -611,9 +611,9 @@ def render():
         # SVG dimensions
         SVG_WIDTH = 1000
         SVG_HEIGHT = 540
-        STAFF_LEFT = 40
-        STAFF_RIGHT = 990
-        STAFF_TOP = 80
+        STAFF_LEFT = 20
+        STAFF_RIGHT = 995
+        STAFF_TOP = 100
         STAFF_GAP = 24
 
         # Staff note positions — snapped to lines and spaces
