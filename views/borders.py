@@ -7,6 +7,16 @@ from utils.charts import CHART_LAYOUT, COLORS, COUNTRY_COLORS
 
 
 def render():
+    # Fixed-width container — consistent layout across laptop/desktop
+    st.markdown("""
+    <style>
+        .block-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+    </style>
+    """, unsafe_allow_html=True)
     # ─── Header ───────────────────────────────────────────────────
     st.markdown(
         """
@@ -399,7 +409,7 @@ def render():
 
     st.markdown("---")
 
-        # ══════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # 🏷️ CAN'T READ THE LYRICS (Pronunciation Wall)
     # ══════════════════════════════════════════════════════════════
 
@@ -609,12 +619,12 @@ def render():
 
         # Build SVG
         svg = (
-            '<svg width="100%" viewBox="0 0 '
+            '<svg width="880" height="300" viewBox="0 0 '
             + str(SVG_WIDTH) + ' ' + str(SVG_HEIGHT)
-            + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
+            + '" style="display:block; max-width:100%;">'
             '<style>'
-            '.note { transition: transform 0.15s ease, filter 0.15s ease; cursor:pointer; }'
-            '.note:hover { transform:scale(1.12); filter:drop-shadow(0 0 10px ' + color + '); }'
+            '.note { cursor:pointer; }'
+            '.note:hover { opacity:0.7; }'
             '.staff-line { stroke:#B8C5D4; stroke-width:2; }'
             '.bar-line { stroke:' + color + '; stroke-width:2.5; opacity:0.25; }'
             '.rule-text { font-size:20px; font-weight:700; fill:#2D3748; font-family:monospace; }'
@@ -655,6 +665,8 @@ def render():
                 # Single filled note + stem
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
+                    '<rect x="' + str(x - 20) + '" y="' + str(note_y - 65)
+                    + '" width="40" height="80" fill="transparent"/>'
                     '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
                     + '" rx="14" ry="10" fill="' + color
                     + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
@@ -668,6 +680,8 @@ def render():
                 # Single note + stem + flag
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
+                    '<rect x="' + str(x - 20) + '" y="' + str(note_y - 65)
+                    + '" width="40" height="80" fill="transparent"/>'
                     '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
                     + '" rx="14" ry="10" fill="' + color
                     + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
@@ -686,6 +700,8 @@ def render():
                 x2 = x + 14
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
+                    '<rect x="' + str(x1 - 15) + '" y="' + str(note_y - 60)
+                    + '" width="' + str(x2 - x1 + 40) + '" height="80" fill="transparent"/>'
                     # Note 1
                     '<ellipse cx="' + str(x1) + '" cy="' + str(note_y)
                     + '" rx="12" ry="9" fill="' + color
@@ -713,6 +729,8 @@ def render():
                 # Quarter rest — zigzag shape
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
+                    '<rect x="' + str(x - 20) + '" y="' + str(note_y - 30)
+                    + '" width="40" height="70" fill="transparent"/>'
                     '<path d="M' + str(x - 5) + ' ' + str(note_y - 25)
                     + ' l8 12 l-8 12 l8 12 l-8 12'
                     + '" fill="none" stroke="' + color + '" stroke-width="4" stroke-linecap="round"/>'
@@ -844,6 +862,7 @@ def render():
     )
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
