@@ -10,10 +10,11 @@ def render():
     # Fixed-width container — consistent layout across laptop/desktop
     st.markdown("""
     <style>
-        .block-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
+        .stTabs [data-baseweb="tab-list"] {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: #F0F8FF;
         }
     </style>
     """, unsafe_allow_html=True)
