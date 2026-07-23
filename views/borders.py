@@ -610,7 +610,7 @@ def render():
 
         # SVG dimensions
         SVG_WIDTH = 1000
-        SVG_HEIGHT = 540
+        SVG_HEIGHT = 420
         STAFF_LEFT = 20
         STAFF_RIGHT = 995
         STAFF_TOP = 100
@@ -633,9 +633,8 @@ def render():
         rest_y = STAFF_TOP + STAFF_GAP * 2
 
         num_notes = len(rules)
-        margin = 90
-        note_start = STAFF_LEFT + margin
-        note_end = STAFF_RIGHT - margin
+        note_start = STAFF_LEFT + 160
+        note_end = STAFF_RIGHT - 60
         note_spacing = (note_end - note_start) / (num_notes - 1) if num_notes > 1 else 0
 
         # Build SVG
@@ -825,7 +824,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=460, scrolling=False)
+        components.html(full_html, height=380, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
@@ -869,6 +868,7 @@ def render():
     )
 
     st.markdown("---")
+
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
