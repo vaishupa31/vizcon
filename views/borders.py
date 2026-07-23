@@ -512,21 +512,22 @@ def render():
         "Pick a country to hear the phonetics behind their names:"
     )
 
-    # ─── Part 2: Music Sheet Phonetics (large SVG, clickable) ─────
+    # ─── Part 2: Music Sheet Phonetics (large SVG, varied notes) ──
     import streamlit.components.v1 as components
     import base64
 
-    # Station data
+    # Station data — each rule has (pattern, sound, y_position, note_type)
+    # note_type: "quarter" (consonant), "eighth" (vowel), "double" (diphthong), "rest" (silent)
     stations = {
         "Ireland": {
             "language": "Gaeilge",
             "subtitle": "Irish Gaelic",
             "color": "#4CAF78",
             "rules": [
-                ("bh / mh", "'v'", 155),
-                ("dh / gh", "silent", 190),
-                ("aoi", "'ee'", 140),
-                ("fh", "silent", 175),
+                ("bh / mh", "'v'", 148, "quarter"),
+                ("dh / gh", "silent", 190, "rest"),
+                ("aoi", "'ee'", 128, "eighth"),
+                ("fh", "silent", 170, "rest"),
             ]
         },
         "Scotland": {
@@ -534,10 +535,10 @@ def render():
             "subtitle": "Scottish Gaelic",
             "color": "#9B6FD4",
             "rules": [
-                ("idh / aidh", "silent 'ee'", 190),
-                ("eo", "'aw'", 155),
-                ("gh", "silent", 175),
-                ("mh", "'v'", 140),
+                ("idh / aidh", "silent 'ee'", 180, "rest"),
+                ("eo", "'aw'", 140, "eighth"),
+                ("gh", "silent", 168, "rest"),
+                ("mh", "'v'", 148, "quarter"),
             ]
         },
         "Canada": {
@@ -545,10 +546,10 @@ def render():
             "subtitle": "Canadian French",
             "color": "#E07098",
             "rules": [
-                ("é / è", "'ay'", 145),
-                ("-ique", "'eek'", 165),
-                ("oi", "'wa'", 185),
-                ("ç", "'s'", 155),
+                ("é / è", "'ay'", 135, "eighth"),
+                ("-ique", "'eek'", 155, "eighth"),
+                ("oi", "'wa'", 175, "double"),
+                ("ç", "'s'", 145, "quarter"),
             ]
         },
         "New Zealand": {
@@ -556,10 +557,10 @@ def render():
             "subtitle": "Māori",
             "color": "#D4940F",
             "rules": [
-                ("ng-", "one sound", 170),
-                ("wh", "'f'", 145),
-                ("au", "'ow'", 190),
-                ("vowels", "all said", 155),
+                ("ng-", "one sound", 160, "quarter"),
+                ("wh", "'f'", 138, "quarter"),
+                ("au", "'ow'", 180, "double"),
+                ("vowels", "all said", 148, "eighth"),
             ]
         },
         "Wales": {
@@ -567,10 +568,10 @@ def render():
             "subtitle": "Welsh",
             "color": "#C4920F",
             "rules": [
-                ("ff", "'f'", 150),
-                ("ll", "breathy 'l'", 175),
-                ("dd", "'th'", 140),
-                ("f", "'v'", 190),
+                ("ff", "'f'", 140, "quarter"),
+                ("ll", "breathy 'l'", 168, "quarter"),
+                ("dd", "'th'", 130, "quarter"),
+                ("f", "'v'", 185, "quarter"),
             ]
         },
     }
@@ -592,30 +593,32 @@ def render():
         color = station["color"]
         rules = station["rules"]
 
-        # SVG dimensions — large and readable
-        SVG_WIDTH = 1400
-        SVG_HEIGHT = 420
-        STAFF_LEFT = 120
-        STAFF_RIGHT = 1280
-        STAFF_TOP = 120
-        STAFF_GAP = 28
+        # SVG dimensions — wide and uses full space
+        SVG_WIDTH = 1000
+        SVG_HEIGHT = 340
+        STAFF_LEFT = 80
+        STAFF_RIGHT = 960
+        STAFF_TOP = 80
+        STAFF_GAP = 24
 
         num_notes = len(rules)
+        # Notes spread wide — from 180 to STAFF_RIGHT - 60
+        note_start = 180
+        note_end = STAFF_RIGHT - 60
+        note_spacing = (note_end - note_start) / (num_notes - 1) if num_notes > 1 else 0
 
         # Build SVG
         svg = (
-            '<svg width="100%" height="360" viewBox="0 0 '
+            '<svg width="100%" viewBox="0 0 '
             + str(SVG_WIDTH) + ' ' + str(SVG_HEIGHT)
-            + '" preserveAspectRatio="xMidYMid meet">'
-            # Styles
+            + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
             '<style>'
-            '.note:hover { cursor:pointer; transform:scale(1.15); transform-origin:center; '
-            'filter:drop-shadow(0 0 8px ' + color + '); }'
-            '.note { transition: transform 0.15s ease, filter 0.15s ease; }'
-            '.rule { font-size:22px; font-weight:700; fill:#2D3748; font-family:monospace; }'
-            '.sound { font-size:17px; fill:#718096; font-style:italic; }'
-            '.staff { stroke:#AAB7C4; stroke-width:2.5; }'
-            '.bar { stroke:' + color + '; stroke-width:3; opacity:0.3; }'
+            '.note { transition: transform 0.15s ease, filter 0.15s ease; cursor:pointer; }'
+            '.note:hover { transform:scale(1.12); filter:drop-shadow(0 0 10px ' + color + '); }'
+            '.staff-line { stroke:#B8C5D4; stroke-width:2; }'
+            '.bar-line { stroke:' + color + '; stroke-width:2.5; opacity:0.25; }'
+            '.rule-text { font-size:20px; font-weight:700; fill:#2D3748; font-family:monospace; }'
+            '.sound-text { font-size:16px; fill:#718096; font-style:italic; }'
             '</style>'
         )
 
@@ -625,72 +628,125 @@ def render():
             svg += (
                 '<line x1="' + str(STAFF_LEFT) + '" y1="' + str(y)
                 + '" x2="' + str(STAFF_RIGHT) + '" y2="' + str(y)
-                + '" class="staff"/>'
+                + '" class="staff-line"/>'
             )
 
-        # Treble clef (large)
+        # Treble clef
         svg += (
-            '<text x="40" y="' + str(STAFF_TOP + 85)
-            + '" font-size="130" fill="#8092AF" font-family="serif" style="user-select:none;">'
-            '&#119070;</text>'
+            '<text x="20" y="' + str(STAFF_TOP + 72)
+            + '" font-size="110" fill="#8092AF" font-family="serif"'
+            ' style="user-select:none;">&#119070;</text>'
         )
 
         # Bar lines between notes
-        note_spacing = (STAFF_RIGHT - 240) / num_notes
         for i in range(1, num_notes):
-            bar_x = 240 + int(i * note_spacing) - int(note_spacing / 2)
+            bar_x = note_start + int(i * note_spacing) - int(note_spacing / 2)
             svg += (
-                '<line x1="' + str(bar_x) + '" y1="' + str(STAFF_TOP - 15)
-                + '" x2="' + str(bar_x) + '" y2="' + str(STAFF_TOP + 4 * STAFF_GAP + 15)
-                + '" class="bar"/>'
+                '<line x1="' + str(bar_x) + '" y1="' + str(STAFF_TOP - 12)
+                + '" x2="' + str(bar_x) + '" y2="' + str(STAFF_TOP + 4 * STAFF_GAP + 12)
+                + '" class="bar-line"/>'
             )
 
-        # Draw notes
-        for i, (pattern, sound, note_y) in enumerate(rules):
-            x = 280 + int(i * note_spacing)
+        # Draw different note shapes
+        for i, (pattern, sound, note_y, ntype) in enumerate(rules):
+            x = note_start + int(i * note_spacing)
 
-            # Quarter note: ellipse + stem
-            svg += (
-                '<g class="note" data-idx="' + str(i) + '">'
-                '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
-                + '" rx="16" ry="12" fill="' + color
-                + '" transform="rotate(-22 ' + str(x) + ' ' + str(note_y) + ')"/>'
-                '<line x1="' + str(x + 14) + '" y1="' + str(note_y)
-                + '" x2="' + str(x + 14) + '" y2="' + str(note_y - 70)
-                + '" stroke="' + color + '" stroke-width="4"/>'
-                '</g>'
-            )
+            if ntype == "quarter":
+                # Single filled note + stem
+                svg += (
+                    '<g class="note" data-idx="' + str(i) + '">'
+                    '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
+                    + '" rx="14" ry="10" fill="' + color
+                    + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
+                    '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
+                    + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    '</g>'
+                )
 
-            # Pattern label
-            label_y = STAFF_TOP + 5 * STAFF_GAP + 35
+            elif ntype == "eighth":
+                # Single note + stem + flag
+                svg += (
+                    '<g class="note" data-idx="' + str(i) + '">'
+                    '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
+                    + '" rx="14" ry="10" fill="' + color
+                    + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
+                    '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
+                    + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    # Flag (curved line from top of stem)
+                    '<path d="M' + str(x + 12) + ' ' + str(note_y - 60)
+                    + ' q 12 15 4 35" fill="none" stroke="' + color + '" stroke-width="3"/>'
+                    '</g>'
+                )
+
+            elif ntype == "double":
+                # Two notes beamed together
+                x1 = x - 14
+                x2 = x + 14
+                svg += (
+                    '<g class="note" data-idx="' + str(i) + '">'
+                    # Note 1
+                    '<ellipse cx="' + str(x1) + '" cy="' + str(note_y)
+                    + '" rx="12" ry="9" fill="' + color
+                    + '" transform="rotate(-20 ' + str(x1) + ' ' + str(note_y) + ')"/>'
+                    '<line x1="' + str(x1 + 10) + '" y1="' + str(note_y)
+                    + '" x2="' + str(x1 + 10) + '" y2="' + str(note_y - 55)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    # Note 2
+                    '<ellipse cx="' + str(x2) + '" cy="' + str(note_y)
+                    + '" rx="12" ry="9" fill="' + color
+                    + '" transform="rotate(-20 ' + str(x2) + ' ' + str(note_y) + ')"/>'
+                    '<line x1="' + str(x2 + 10) + '" y1="' + str(note_y)
+                    + '" x2="' + str(x2 + 10) + '" y2="' + str(note_y - 55)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    # Beam
+                    '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 55)
+                    + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
+                    # Double beam
+                    '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 48)
+                    + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
+                    '</g>'
+                )
+
+            elif ntype == "rest":
+                # Quarter rest — zigzag shape
+                svg += (
+                    '<g class="note" data-idx="' + str(i) + '">'
+                    '<path d="M' + str(x - 5) + ' ' + str(note_y - 25)
+                    + ' l8 12 l-8 12 l8 12 l-8 12'
+                    + '" fill="none" stroke="' + color + '" stroke-width="4" stroke-linecap="round"/>'
+                    '</g>'
+                )
+
+            # Labels below staff
+            label_y = STAFF_TOP + 5 * STAFF_GAP + 25
+            sound_y = label_y + 24
             svg += (
                 '<text x="' + str(x) + '" y="' + str(label_y)
-                + '" text-anchor="middle" class="rule">' + pattern + '</text>'
+                + '" text-anchor="middle" class="rule-text">' + pattern + '</text>'
             )
-
-            # Sound label
-            sound_y = label_y + 28
             svg += (
                 '<text x="' + str(x) + '" y="' + str(sound_y)
-                + '" text-anchor="middle" class="sound">' + sound + '</text>'
+                + '" text-anchor="middle" class="sound-text">' + sound + '</text>'
             )
 
-        # Footer text
+        # Footer
         svg += (
-            '<text x="' + str(SVG_WIDTH // 2) + '" y="400" text-anchor="middle"'
-            ' font-size="16" fill="#A0AEC0" font-style="italic">'
+            '<text x="' + str(SVG_WIDTH // 2) + '" y="' + str(SVG_HEIGHT - 10)
+            + '" text-anchor="middle" font-size="14" fill="#A0AEC0" font-style="italic">'
             'Click any note to hear its pronunciation</text>'
         )
 
         svg += '</svg>'
 
-        # Audio tags
+        # Audio
         audio_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "assets", "audio"
         )
         audio_tags = ""
-        for i, (pattern, sound, note_y) in enumerate(rules):
+        for i, (pattern, sound, note_y, ntype) in enumerate(rules):
             safe_pattern = pattern.replace(" / ", "_").replace("-", "").replace(" ", "").lower()
             audio_filename = safe_pattern + ".wav"
             audio_path = os.path.join(audio_dir, audio_filename)
@@ -712,9 +768,9 @@ def render():
         </script>
         """
 
-        # Title bar
+        # Title
         title_html = (
-            '<div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px; padding:0 10px;">'
+            '<div style="display:flex; align-items:baseline; gap:10px; margin-bottom:4px; padding:0 10px;">'
             '<span style="font-size:1.2rem; font-weight:700; color:#2D3748;">'
             + language + '</span>'
             '<span style="font-size:.85rem; color:#718096;">'
@@ -726,9 +782,9 @@ def render():
 
         # Full HTML
         full_html = (
-            '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#FFFEF5;">'
+            '<!DOCTYPE html><html><body style="margin:0;padding:0;">'
             '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
-            'border-radius: 12px; padding: 20px 16px; border: 1px solid #E8DFC0;'
+            'border-radius: 12px; padding: 16px 12px; border: 1px solid #E8DFC0;'
             'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
             + title_html + svg +
             '</div>'
@@ -736,7 +792,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=400, scrolling=False)
+        components.html(full_html, height=380, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
