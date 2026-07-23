@@ -611,8 +611,8 @@ def render():
         # SVG dimensions
         SVG_WIDTH = 1000
         SVG_HEIGHT = 520
-        STAFF_LEFT = 80
-        STAFF_RIGHT = 960
+        STAFF_LEFT = 60
+        STAFF_RIGHT = 980
         STAFF_TOP = 80
         STAFF_GAP = 24
 
@@ -633,15 +633,16 @@ def render():
         rest_y = STAFF_TOP + STAFF_GAP * 2
 
         num_notes = len(rules)
-        note_start = 180
-        note_end = 900
+        margin = 90
+        note_start = STAFF_LEFT + margin
+        note_end = STAFF_RIGHT - margin
         note_spacing = (note_end - note_start) / (num_notes - 1) if num_notes > 1 else 0
 
         # Build SVG
         svg = (
-            '<svg width="880" height="440" viewBox="0 0 '
+            '<svg width="100%" height="380" viewBox="0 0 '
             + str(SVG_WIDTH) + ' ' + str(SVG_HEIGHT)
-            + '" style="display:block; max-width:100%;">'
+            + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
             '<style>'
             '.note { cursor:pointer; }'
             '.note:hover { opacity:0.7; }'
