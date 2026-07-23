@@ -415,7 +415,7 @@ def render():
 
     st.markdown("---")
 
-         # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # 🏷️ CAN'T READ THE LYRICS (Pronunciation Wall)
     # ══════════════════════════════════════════════════════════════
 
@@ -646,10 +646,10 @@ def render():
             '<style>'
             '.note { cursor:pointer; }'
             '.note:hover { opacity:0.7; }'
-            '.staff-line { stroke:#B8C5D4; stroke-width:2; }'
-            '.bar-line { stroke:' + color + '; stroke-width:2.5; opacity:0.25; }'
-            '.rule-text { font-size:22px; font-weight:700; fill:#2D3748; font-family:monospace; }'
-            '.sound-text { font-size:18px; fill:#718096; font-style:italic; }'
+            '.staff-line { stroke:#B8C5D4; stroke-width:3; }'
+            '.bar-line { stroke:' + color + '; stroke-width:3; opacity:0.25; }'
+            '.rule-text { font-size:26px; font-weight:700; fill:#2D3748; font-family:monospace; }'
+            '.sound-text { font-size:20px; fill:#718096; font-style:italic; }'
             '</style>'
         )
 
@@ -665,7 +665,7 @@ def render():
         # Treble clef
         svg += (
             '<text x="20" y="' + str(STAFF_TOP + 72)
-            + '" font-size="110" fill="#8092AF" font-family="serif"'
+            + '" font-size="130" fill="#8092AF" font-family="serif"'
             ' style="user-select:none;">&#119070;</text>'
         )
 
@@ -689,11 +689,11 @@ def render():
                     '<rect x="' + str(x - 20) + '" y="' + str(note_y - 65)
                     + '" width="40" height="80" fill="transparent"/>'
                     '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
-                    + '" rx="14" ry="10" fill="' + color
+                    + '" rx="18" ry="13" fill="' + color
                     + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
                     + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
-                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    + '" stroke="' + color + '" stroke-width="4.5"/>'
                     '</g>'
                 )
 
@@ -703,13 +703,13 @@ def render():
                     '<rect x="' + str(x - 20) + '" y="' + str(note_y - 65)
                     + '" width="40" height="80" fill="transparent"/>'
                     '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
-                    + '" rx="14" ry="10" fill="' + color
+                    + '" rx="18" ry="13" fill="' + color
                     + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
                     + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
-                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    + '" stroke="' + color + '" stroke-width="4.5"/>'
                     '<path d="M' + str(x + 12) + ' ' + str(note_y - 60)
-                    + ' q 12 15 4 35" fill="none" stroke="' + color + '" stroke-width="3"/>'
+                    + ' q 12 15 4 35" fill="none" stroke="' + color + '" stroke-width="4"/>'
                     '</g>'
                 )
 
@@ -721,17 +721,17 @@ def render():
                     '<rect x="' + str(x1 - 15) + '" y="' + str(note_y - 60)
                     + '" width="' + str(x2 - x1 + 40) + '" height="80" fill="transparent"/>'
                     '<ellipse cx="' + str(x1) + '" cy="' + str(note_y)
-                    + '" rx="12" ry="9" fill="' + color
+                    + '" rx="15" ry="11" fill="' + color
                     + '" transform="rotate(-20 ' + str(x1) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x1 + 10) + '" y1="' + str(note_y)
                     + '" x2="' + str(x1 + 10) + '" y2="' + str(note_y - 55)
-                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    + '" stroke="' + color + '" stroke-width="4.5"/>'
                     '<ellipse cx="' + str(x2) + '" cy="' + str(note_y)
-                    + '" rx="12" ry="9" fill="' + color
+                    + '" rx="15" ry="11" fill="' + color
                     + '" transform="rotate(-20 ' + str(x2) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x2 + 10) + '" y1="' + str(note_y)
                     + '" x2="' + str(x2 + 10) + '" y2="' + str(note_y - 55)
-                    + '" stroke="' + color + '" stroke-width="3.5"/>'
+                    + '" stroke="' + color + '" stroke-width="4.5"/>'
                     '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 55)
                     + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
                     '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 48)
@@ -747,7 +747,7 @@ def render():
                     + '" width="40" height="70" fill="transparent"/>'
                     '<path d="M' + str(x - 5) + ' ' + str(rest_y - 12)
                     + ' l4 6 l-4 6 l4 6 l-4 6'
-                    + '" fill="none" stroke="' + color + '" stroke-width="4" stroke-linecap="round"/>'
+                    + '" fill="none" stroke="' + color + '" stroke-width="5" stroke-linecap="round"/>'
                     '</g>'
                 )
 
@@ -778,13 +778,13 @@ def render():
             # Item 1: Quarter note
             '<ellipse cx="' + str(key_start_x + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + 8) + ' ' + str(key_y_base + 5) + ')"/>'
             '<line x1="' + str(key_start_x + 13) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + 13) + '" y2="' + str(key_y_base - 10) + '" stroke="' + color + '" stroke-width="2"/>'
-            '<text x="' + str(key_start_x + 22) + '" y="' + str(key_y_base + 9) + '" font-size="14" fill="#4A5568">A single clear beat</text>'
+            '<text x="' + str(key_start_x + 22) + '" y="' + str(key_y_base + 9) + '" font-size="16" fill="#4A5568">A single clear beat</text>'
 
             # Item 2: Eighth note
             '<ellipse cx="' + str(key_start_x + item_gap + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + item_gap + 8) + ' ' + str(key_y_base + 5) + ')"/>'
             '<line x1="' + str(key_start_x + item_gap + 13) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap + 13) + '" y2="' + str(key_y_base - 10) + '" stroke="' + color + '" stroke-width="2"/>'
             '<path d="M' + str(key_start_x + item_gap + 13) + ' ' + str(key_y_base - 10) + ' q 5 5 2 12" fill="none" stroke="' + color + '" stroke-width="1.5"/>'
-            '<text x="' + str(key_start_x + item_gap + 22) + '" y="' + str(key_y_base + 9) + '" font-size="14" fill="#4A5568">A lighter, shorter note</text>'
+            '<text x="' + str(key_start_x + item_gap + 22) + '" y="' + str(key_y_base + 9) + '" font-size="16" fill="#4A5568">A lighter, shorter note</text>'
 
             # Item 3: Double beam
             '<ellipse cx="' + str(key_start_x + item_gap * 2 + 5) + '" cy="' + str(key_y_base + 5) + '" rx="5" ry="3.5" fill="' + color + '"/>'
@@ -793,11 +793,11 @@ def render():
             '<line x1="' + str(key_start_x + item_gap * 2 + 19) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap * 2 + 19) + '" y2="' + str(key_y_base - 8) + '" stroke="' + color + '" stroke-width="2"/>'
             '<rect x="' + str(key_start_x + item_gap * 2 + 9) + '" y="' + str(key_y_base - 8) + '" width="10" height="2.5" fill="' + color + '"/>'
             '<rect x="' + str(key_start_x + item_gap * 2 + 9) + '" y="' + str(key_y_base - 4) + '" width="10" height="2.5" fill="' + color + '"/>'
-            '<text x="' + str(key_start_x + item_gap * 2 + 28) + '" y="' + str(key_y_base + 9) + '" font-size="14" fill="#4A5568">Two notes as one phrase</text>'
+            '<text x="' + str(key_start_x + item_gap * 2 + 28) + '" y="' + str(key_y_base + 9) + '" font-size="16" fill="#4A5568">Two notes as one phrase</text>'
 
             # Item 4: Rest
             '<path d="M' + str(key_start_x + item_gap * 3 + 6) + ' ' + str(key_y_base - 6) + ' l3 5 l-3 5 l3 5" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
-            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="14" fill="#4A5568">Silence \u2014 nothing plays</text>'
+            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="16" fill="#4A5568">Silence \u2014 nothing plays</text>'
 
             '</g>'
         )
@@ -807,9 +807,9 @@ def render():
         # Title
         title_html = (
             '<div style="display:flex; align-items:baseline; gap:10px; margin-bottom:4px; padding:0 10px;">'
-            '<span style="font-size:1.2rem; font-weight:700; color:#2D3748;">'
+            '<span style="font-size:1.4rem; font-weight:700; color:#2D3748;">'
             + language + '</span>'
-            '<span style="font-size:.85rem; color:#718096;">'
+            '<span style="font-size:1rem; color:#718096;">'
             + subtitle + '</span>'
             '</div>'
         )
