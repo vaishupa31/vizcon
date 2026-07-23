@@ -525,8 +525,7 @@ def render():
 
     # ─── Part 2: Music Sheet Phonetics (large SVG, varied notes) ──
     import streamlit.components.v1 as components
-    import base64
-
+    
     # Station data — each rule has (pattern, sound, y_position, note_type)
     # note_type: "quarter" (consonant), "eighth" (vowel), "double" (diphthong), "rest" (silent)
     stations = {
@@ -750,50 +749,42 @@ def render():
                 + '" text-anchor="middle" class="sound-text">' + sound + '</text>'
             )
 
-        # Footer
+        # Key/Legend on the right side
+        key_x = SVG_WIDTH - 200
+        key_y = STAFF_TOP + 10
         svg += (
-            '<text x="' + str(SVG_WIDTH // 2) + '" y="' + str(SVG_HEIGHT - 10)
-            + '" text-anchor="middle" font-size="14" fill="#A0AEC0" font-style="italic">'
-            'Click any note to hear its pronunciation</text>'
+            '<g>'
+            # Key box background
+            '<rect x="' + str(key_x - 10) + '" y="' + str(key_y - 15)
+            + '" width="190" height="130" rx="6" fill="#FFFEF5" stroke="#E8DFC0" stroke-width="1" opacity="0.9"/>'
+            # Title
+            '<text x="' + str(key_x) + '" y="' + str(key_y)
+            + '" font-size="11" font-weight="700" fill="#8D7555" letter-spacing="1">KEY</text>'
+            # Quarter note symbol + meaning
+            '<ellipse cx="' + str(key_x + 8) + '" cy="' + str(key_y + 22) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_x + 8) + ' ' + str(key_y + 22) + ')"/>'
+            '<line x1="' + str(key_x + 13) + '" y1="' + str(key_y + 22) + '" x2="' + str(key_x + 13) + '" y2="' + str(key_y + 6) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 26) + '" font-size="11" fill="#4A5568">A single clear beat</text>'
+            # Eighth note symbol + meaning
+            '<ellipse cx="' + str(key_x + 8) + '" cy="' + str(key_y + 48) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_x + 8) + ' ' + str(key_y + 48) + ')"/>'
+            '<line x1="' + str(key_x + 13) + '" y1="' + str(key_y + 48) + '" x2="' + str(key_x + 13) + '" y2="' + str(key_y + 32) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<path d="M' + str(key_x + 13) + ' ' + str(key_y + 32) + ' q 5 6 2 14" fill="none" stroke="' + color + '" stroke-width="1.5"/>'
+            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 52) + '" font-size="11" fill="#4A5568">A lighter, shorter note</text>'
+            # Double beam symbol + meaning
+            '<ellipse cx="' + str(key_x + 5) + '" cy="' + str(key_y + 74) + '" rx="5" ry="3.5" fill="' + color + '"/>'
+            '<ellipse cx="' + str(key_x + 15) + '" cy="' + str(key_y + 74) + '" rx="5" ry="3.5" fill="' + color + '"/>'
+            '<line x1="' + str(key_x + 9) + '" y1="' + str(key_y + 74) + '" x2="' + str(key_x + 9) + '" y2="' + str(key_y + 60) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<line x1="' + str(key_x + 19) + '" y1="' + str(key_y + 74) + '" x2="' + str(key_x + 19) + '" y2="' + str(key_y + 60) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<rect x="' + str(key_x + 9) + '" y="' + str(key_y + 60) + '" width="10" height="3" fill="' + color + '"/>'
+            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 78) + '" font-size="11" fill="#4A5568">Two notes as one phrase</text>'
+            # Rest symbol + meaning
+            '<path d="M' + str(key_x + 6) + ' ' + str(key_y + 88) + ' l4 6 l-4 6 l4 6" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
+            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 100) + '" font-size="11" fill="#4A5568">Silence — nothing plays</text>'
+            '</g>'
         )
 
         svg += '</svg>'
 
-        # Audio filename mapping — matches actual filenames in assets/audio/
-        audio_name_map = {
-            "Ireland": {"bh / mh": "ireland_bh_mh", "dh / gh": "ireland_dh_gh", "aoi": "ireland_aoi", "fh": "ireland_fh"},
-            "Scotland": {"idh / aidh": "scotland_idh_aidh", "eo": "scotland_eo", "gh": "scotland_gh", "mh": "scotland_mh"},
-            "Canada": {"é / è": "canada_e_accent", "-ique": "canada_ique", "oi": "canada_oi", "ç": "canada_c_cedilla"},
-            "New Zealand": {"ng-": "new_zealand_ng", "wh": "new_zealand_wh", "au": "new_zealand_au", "vowels": "new_zealand_vowels"},
-            "Wales": {"ff": "wales_ff", "ll": "wales_ll", "dd": "wales_dd", "f": "wales_f"},
-        }
-
-        # Audio
-        audio_dir = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "assets", "audio"
-        )
-        audio_tags = ""
-        for i, (pattern, sound, note_y, ntype) in enumerate(rules):
-            audio_filename = audio_name_map.get(selected_country, {}).get(pattern, "") + ".wav"
-            audio_path = os.path.join(audio_dir, audio_filename)
-            if os.path.exists(audio_path):
-                with open(audio_path, "rb") as af:
-                    audio_b64 = base64.b64encode(af.read()).decode()
-                audio_tags += '<audio id="audio_' + str(i) + '" src="data:audio/wav;base64,' + audio_b64 + '"></audio>'
-
-        # JavaScript
-        js_code = """
-        <script>
-        document.querySelectorAll('.note').forEach(function(el) {
-            el.addEventListener('click', function() {
-                var idx = this.getAttribute('data-idx');
-                var audio = document.getElementById('audio_' + idx);
-                if (audio) { audio.currentTime = 0; audio.play(); }
-            });
-        });
-        </script>
-        """
+        js_code = ""
 
         # Title
         title_html = (
@@ -802,8 +793,6 @@ def render():
             + language + '</span>'
             '<span style="font-size:.85rem; color:#718096;">'
             + subtitle + '</span>'
-            '<span style="font-size:.75rem; color:#A0AEC0; margin-left:auto;">'
-            + selected_country + '</span>'
             '</div>'
         )
 
@@ -815,7 +804,7 @@ def render():
             'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
             + title_html + svg +
             '</div>'
-            + audio_tags + js_code +
+            +
             '</body></html>'
         )
 
