@@ -610,9 +610,9 @@ def render():
 
         # SVG dimensions
         SVG_WIDTH = 1000
-        SVG_HEIGHT = 560
-        STAFF_LEFT = 60
-        STAFF_RIGHT = 980
+        SVG_HEIGHT = 540
+        STAFF_LEFT = 40
+        STAFF_RIGHT = 990
         STAFF_TOP = 80
         STAFF_GAP = 24
 
@@ -765,7 +765,7 @@ def render():
 
         # Key/Legend — horizontal row, centered below labels
         key_y_base = STAFF_TOP + STAFF_GAP * 5 + 155
-        key_items_width = 700
+        key_items_width = 920
         key_start_x = (SVG_WIDTH - key_items_width) // 2
         item_gap = key_items_width // 4
 
@@ -825,7 +825,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=500, scrolling=False)
+        components.html(full_html, height=460, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
@@ -869,7 +869,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
