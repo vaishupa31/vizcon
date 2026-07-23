@@ -525,24 +525,24 @@ def render():
         "nobody knows how to say it. "
         "And this isn't unique to Ireland. Every country in the Anglosphere has its own "
         "phonetic code — a set of spelling rules that only locals can decode. "
-        "Pick a country to hear the phonetics behind their names:"
+        "Pick a country to see the phonetics behind their names:"
     )
 
-    # ─── Part 2: Music Sheet Phonetics (large SVG, varied notes) ──
+    # ─── Part 2: Music Sheet Phonetics (staff-snapped notes) ──────
     import streamlit.components.v1 as components
-    
-    # Station data — each rule has (pattern, sound, y_position, note_type)
-    # note_type: "quarter" (consonant), "eighth" (vowel), "double" (diphthong), "rest" (silent)
+
+    # Station data — each rule: (pattern, sound, note_position, note_type)
+    # note_position = staff line/space name (snaps to real staff positions)
     stations = {
         "Ireland": {
             "language": "Gaeilge",
             "subtitle": "Irish Gaelic",
             "color": "#4CAF78",
             "rules": [
-                ("bh / mh", "'v'", 148, "quarter"),
-                ("dh / gh", "silent", 190, "rest"),
-                ("aoi", "'ee'", 128, "eighth"),
-                ("fh", "silent", 170, "rest"),
+                ("bh / mh", "'v'", "B", "quarter"),
+                ("dh / gh", "silent", "G", "rest"),
+                ("aoi", "'ee'", "F", "eighth"),
+                ("fh", "silent", "A", "rest"),
             ]
         },
         "Scotland": {
@@ -550,10 +550,10 @@ def render():
             "subtitle": "Scottish Gaelic",
             "color": "#9B6FD4",
             "rules": [
-                ("idh / aidh", "silent 'ee'", 180, "rest"),
-                ("eo", "'aw'", 140, "eighth"),
-                ("gh", "silent", 168, "rest"),
-                ("mh", "'v'", 148, "quarter"),
+                ("idh / aidh", "silent 'ee'", "A", "rest"),
+                ("eo", "'aw'", "E", "eighth"),
+                ("gh", "silent", "C", "rest"),
+                ("mh", "'v'", "B", "quarter"),
             ]
         },
         "Canada": {
@@ -561,10 +561,10 @@ def render():
             "subtitle": "Canadian French",
             "color": "#E07098",
             "rules": [
-                ("é / è", "'ay'", 135, "eighth"),
-                ("-ique", "'eek'", 155, "eighth"),
-                ("oi", "'wa'", 175, "double"),
-                ("ç", "'s'", 145, "quarter"),
+                ("é / è", "'ay'", "F", "eighth"),
+                ("-ique", "'eek'", "D", "eighth"),
+                ("oi", "'wa'", "A", "double"),
+                ("ç", "'s'", "E", "quarter"),
             ]
         },
         "New Zealand": {
@@ -572,10 +572,10 @@ def render():
             "subtitle": "Māori",
             "color": "#D4940F",
             "rules": [
-                ("ng-", "one sound", 160, "quarter"),
-                ("wh", "'f'", 138, "quarter"),
-                ("au", "'ow'", 180, "double"),
-                ("vowels", "all said", 148, "eighth"),
+                ("ng-", "one sound", "D", "quarter"),
+                ("wh", "'f'", "F", "quarter"),
+                ("au", "'ow'", "A", "double"),
+                ("vowels", "all said", "B", "eighth"),
             ]
         },
         "Wales": {
@@ -583,10 +583,10 @@ def render():
             "subtitle": "Welsh",
             "color": "#C4920F",
             "rules": [
-                ("ff", "'f'", 140, "quarter"),
-                ("ll", "breathy 'l'", 168, "quarter"),
-                ("dd", "'th'", 130, "quarter"),
-                ("f", "'v'", 185, "quarter"),
+                ("ff", "'f'", "E", "quarter"),
+                ("ll", "breathy 'l'", "B", "quarter"),
+                ("dd", "'th'", "G2", "quarter"),
+                ("f", "'v'", "A", "quarter"),
             ]
         },
     }
@@ -608,23 +608,38 @@ def render():
         color = station["color"]
         rules = station["rules"]
 
-        # SVG dimensions — wide and uses full space
+        # SVG dimensions
         SVG_WIDTH = 1000
-        SVG_HEIGHT = 420
+        SVG_HEIGHT = 520
         STAFF_LEFT = 80
         STAFF_RIGHT = 960
         STAFF_TOP = 80
         STAFF_GAP = 24
 
+        # Staff note positions — snapped to lines and spaces
+        STAFF_Y = {
+            "G": STAFF_TOP + STAFF_GAP * 4,       # bottom line
+            "A": STAFF_TOP + STAFF_GAP * 3.5,     # space
+            "B": STAFF_TOP + STAFF_GAP * 3,       # line
+            "C": STAFF_TOP + STAFF_GAP * 2.5,     # space
+            "D": STAFF_TOP + STAFF_GAP * 2,       # middle line
+            "E": STAFF_TOP + STAFF_GAP * 1.5,     # space
+            "F": STAFF_TOP + STAFF_GAP * 1,       # line
+            "G2": STAFF_TOP + STAFF_GAP * 0.5,    # space
+            "A2": STAFF_TOP,                       # top line
+        }
+
+        # Rest symbol always at middle of staff
+        rest_y = STAFF_TOP + STAFF_GAP * 2
+
         num_notes = len(rules)
-        # Notes spread evenly across staff
-        note_start = 200
-        note_end = 780
+        note_start = 180
+        note_end = 900
         note_spacing = (note_end - note_start) / (num_notes - 1) if num_notes > 1 else 0
 
         # Build SVG
         svg = (
-            '<svg width="880" height="380" viewBox="0 0 '
+            '<svg width="880" height="440" viewBox="0 0 '
             + str(SVG_WIDTH) + ' ' + str(SVG_HEIGHT)
             + '" style="display:block; max-width:100%;">'
             '<style>'
@@ -662,12 +677,12 @@ def render():
                 + '" class="bar-line"/>'
             )
 
-        # Draw different note shapes
-        for i, (pattern, sound, note_y, ntype) in enumerate(rules):
+        # Draw notes
+        for i, (pattern, sound, note_pos, ntype) in enumerate(rules):
             x = note_start + int(i * note_spacing)
+            note_y = STAFF_Y[note_pos]
 
             if ntype == "quarter":
-                # Single filled note + stem
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
                     '<rect x="' + str(x - 20) + '" y="' + str(note_y - 65)
@@ -682,7 +697,6 @@ def render():
                 )
 
             elif ntype == "eighth":
-                # Single note + stem + flag
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
                     '<rect x="' + str(x - 20) + '" y="' + str(note_y - 65)
@@ -693,58 +707,52 @@ def render():
                     '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
                     + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
                     + '" stroke="' + color + '" stroke-width="3.5"/>'
-                    # Flag (curved line from top of stem)
                     '<path d="M' + str(x + 12) + ' ' + str(note_y - 60)
                     + ' q 12 15 4 35" fill="none" stroke="' + color + '" stroke-width="3"/>'
                     '</g>'
                 )
 
             elif ntype == "double":
-                # Two notes beamed together
                 x1 = x - 14
                 x2 = x + 14
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
                     '<rect x="' + str(x1 - 15) + '" y="' + str(note_y - 60)
                     + '" width="' + str(x2 - x1 + 40) + '" height="80" fill="transparent"/>'
-                    # Note 1
                     '<ellipse cx="' + str(x1) + '" cy="' + str(note_y)
                     + '" rx="12" ry="9" fill="' + color
                     + '" transform="rotate(-20 ' + str(x1) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x1 + 10) + '" y1="' + str(note_y)
                     + '" x2="' + str(x1 + 10) + '" y2="' + str(note_y - 55)
                     + '" stroke="' + color + '" stroke-width="3.5"/>'
-                    # Note 2
                     '<ellipse cx="' + str(x2) + '" cy="' + str(note_y)
                     + '" rx="12" ry="9" fill="' + color
                     + '" transform="rotate(-20 ' + str(x2) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x2 + 10) + '" y1="' + str(note_y)
                     + '" x2="' + str(x2 + 10) + '" y2="' + str(note_y - 55)
                     + '" stroke="' + color + '" stroke-width="3.5"/>'
-                    # Beam
                     '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 55)
                     + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
-                    # Double beam
                     '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 48)
                     + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
                     '</g>'
                 )
 
             elif ntype == "rest":
-                # Quarter rest — zigzag shape
+                # Rest always centered on middle staff line
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
-                    '<rect x="' + str(x - 20) + '" y="' + str(note_y - 30)
+                    '<rect x="' + str(x - 20) + '" y="' + str(rest_y - 30)
                     + '" width="40" height="70" fill="transparent"/>'
-                    '<path d="M' + str(x - 5) + ' ' + str(note_y - 25)
-                    + ' l8 12 l-8 12 l8 12 l-8 12'
+                    '<path d="M' + str(x - 5) + ' ' + str(rest_y - 12)
+                    + ' l4 6 l-4 6 l4 6 l-4 6'
                     + '" fill="none" stroke="' + color + '" stroke-width="4" stroke-linecap="round"/>'
                     '</g>'
                 )
 
             # Labels below staff
-            label_y = STAFF_TOP + 5 * STAFF_GAP + 25
-            sound_y = label_y + 24
+            label_y = STAFF_TOP + STAFF_GAP * 5 + 55
+            sound_y = label_y + 28
             svg += (
                 '<text x="' + str(x) + '" y="' + str(label_y)
                 + '" text-anchor="middle" class="rule-text">' + pattern + '</text>'
@@ -754,15 +762,14 @@ def render():
                 + '" text-anchor="middle" class="sound-text">' + sound + '</text>'
             )
 
-        # Key items in a horizontal row, centered below staff
-        key_y_base = STAFF_TOP + 5 * STAFF_GAP + 80
+        # Key/Legend — horizontal row, centered below labels
+        key_y_base = STAFF_TOP + STAFF_GAP * 5 + 120
         key_items_width = 700
         key_start_x = (SVG_WIDTH - key_items_width) // 2
         item_gap = key_items_width // 4
 
         svg += (
             '<g>'
-            # Subtle line separator
             '<line x1="' + str(key_start_x) + '" y1="' + str(key_y_base - 15)
             + '" x2="' + str(key_start_x + key_items_width) + '" y2="' + str(key_y_base - 15)
             + '" stroke="#E8DFC0" stroke-width="1"/>'
@@ -770,13 +777,13 @@ def render():
             # Item 1: Quarter note
             '<ellipse cx="' + str(key_start_x + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + 8) + ' ' + str(key_y_base + 5) + ')"/>'
             '<line x1="' + str(key_start_x + 13) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + 13) + '" y2="' + str(key_y_base - 10) + '" stroke="' + color + '" stroke-width="2"/>'
-            '<text x="' + str(key_start_x + 22) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">A single clear beat</text>'
+            '<text x="' + str(key_start_x + 22) + '" y="' + str(key_y_base + 9) + '" font-size="12" fill="#4A5568">A single clear beat</text>'
 
             # Item 2: Eighth note
             '<ellipse cx="' + str(key_start_x + item_gap + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + item_gap + 8) + ' ' + str(key_y_base + 5) + ')"/>'
             '<line x1="' + str(key_start_x + item_gap + 13) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap + 13) + '" y2="' + str(key_y_base - 10) + '" stroke="' + color + '" stroke-width="2"/>'
             '<path d="M' + str(key_start_x + item_gap + 13) + ' ' + str(key_y_base - 10) + ' q 5 5 2 12" fill="none" stroke="' + color + '" stroke-width="1.5"/>'
-            '<text x="' + str(key_start_x + item_gap + 22) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">A lighter, shorter note</text>'
+            '<text x="' + str(key_start_x + item_gap + 22) + '" y="' + str(key_y_base + 9) + '" font-size="12" fill="#4A5568">A lighter, shorter note</text>'
 
             # Item 3: Double beam
             '<ellipse cx="' + str(key_start_x + item_gap * 2 + 5) + '" cy="' + str(key_y_base + 5) + '" rx="5" ry="3.5" fill="' + color + '"/>'
@@ -785,18 +792,16 @@ def render():
             '<line x1="' + str(key_start_x + item_gap * 2 + 19) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap * 2 + 19) + '" y2="' + str(key_y_base - 8) + '" stroke="' + color + '" stroke-width="2"/>'
             '<rect x="' + str(key_start_x + item_gap * 2 + 9) + '" y="' + str(key_y_base - 8) + '" width="10" height="2.5" fill="' + color + '"/>'
             '<rect x="' + str(key_start_x + item_gap * 2 + 9) + '" y="' + str(key_y_base - 4) + '" width="10" height="2.5" fill="' + color + '"/>'
-            '<text x="' + str(key_start_x + item_gap * 2 + 28) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">Two notes as one phrase</text>'
+            '<text x="' + str(key_start_x + item_gap * 2 + 28) + '" y="' + str(key_y_base + 9) + '" font-size="12" fill="#4A5568">Two notes as one phrase</text>'
 
             # Item 4: Rest
             '<path d="M' + str(key_start_x + item_gap * 3 + 6) + ' ' + str(key_y_base - 6) + ' l3 5 l-3 5 l3 5" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
-            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">Silence \u2014 nothing plays</text>'
+            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="12" fill="#4A5568">Silence \u2014 nothing plays</text>'
 
             '</g>'
         )
 
         svg += '</svg>'
-
-        js_code = ""
 
         # Title
         title_html = (
@@ -816,11 +821,10 @@ def render():
             'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
             + title_html + svg +
             '</div>'
-            +
             '</body></html>'
         )
 
-        components.html(full_html, height=340, scrolling=False)
+        components.html(full_html, height=500, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
