@@ -524,10 +524,10 @@ def render():
             "subtitle": "Irish Gaelic",
             "color": "#4CAF78",
             "rules": [
-                ("bh / mh", "'v'", 75, "quarter"),
-                ("dh / gh", "silent", 110, "rest"),
-                ("aoi", "'ee'", 60, "eighth"),
-                ("fh", "silent", 95, "rest"),
+                ("bh / mh", "'v'", 148, "quarter"),
+                ("dh / gh", "silent", 190, "rest"),
+                ("aoi", "'ee'", 128, "eighth"),
+                ("fh", "silent", 170, "rest"),
             ]
         },
         "Scotland": {
@@ -535,10 +535,10 @@ def render():
             "subtitle": "Scottish Gaelic",
             "color": "#9B6FD4",
             "rules": [
-                ("idh / aidh", "silent 'ee'", 108, "rest"),
-                ("eo", "'aw'", 68, "eighth"),
-                ("gh", "silent", 92, "rest"),
-                ("mh", "'v'", 78, "quarter"),
+                ("idh / aidh", "silent 'ee'", 180, "rest"),
+                ("eo", "'aw'", 140, "eighth"),
+                ("gh", "silent", 168, "rest"),
+                ("mh", "'v'", 148, "quarter"),
             ]
         },
         "Canada": {
@@ -546,10 +546,10 @@ def render():
             "subtitle": "Canadian French",
             "color": "#E07098",
             "rules": [
-                ("é / è", "'ay'", 65, "eighth"),
-                ("-ique", "'eek'", 85, "eighth"),
-                ("oi", "'wa'", 112, "double"),
-                ("ç", "'s'", 72, "quarter"),
+                ("é / è", "'ay'", 135, "eighth"),
+                ("-ique", "'eek'", 155, "eighth"),
+                ("oi", "'wa'", 175, "double"),
+                ("ç", "'s'", 145, "quarter"),
             ]
         },
         "New Zealand": {
@@ -557,10 +557,10 @@ def render():
             "subtitle": "Māori",
             "color": "#D4940F",
             "rules": [
-                ("ng-", "one sound", 90, "quarter"),
-                ("wh", "'f'", 65, "quarter"),
-                ("au", "'ow'", 115, "double"),
-                ("vowels", "all said", 78, "eighth"),
+                ("ng-", "one sound", 160, "quarter"),
+                ("wh", "'f'", 138, "quarter"),
+                ("au", "'ow'", 180, "double"),
+                ("vowels", "all said", 148, "eighth"),
             ]
         },
         "Wales": {
@@ -568,10 +568,10 @@ def render():
             "subtitle": "Welsh",
             "color": "#C4920F",
             "rules": [
-                ("ff", "'f'", 68, "quarter"),
-                ("ll", "breathy 'l'", 98, "quarter"),
-                ("dd", "'th'", 55, "quarter"),
-                ("f", "'v'", 120, "quarter"),
+                ("ff", "'f'", 140, "quarter"),
+                ("ll", "breathy 'l'", 168, "quarter"),
+                ("dd", "'th'", 130, "quarter"),
+                ("f", "'v'", 185, "quarter"),
             ]
         },
     }
@@ -594,17 +594,17 @@ def render():
         rules = station["rules"]
 
         # SVG dimensions — wide and uses full space
-        SVG_WIDTH = 700
-        SVG_HEIGHT = 260
-        STAFF_LEFT = 70
-        STAFF_RIGHT = 660
-        STAFF_TOP = 50
-        STAFF_GAP = 20
+        SVG_WIDTH = 1000
+        SVG_HEIGHT = 340
+        STAFF_LEFT = 80
+        STAFF_RIGHT = 960
+        STAFF_TOP = 80
+        STAFF_GAP = 24
 
         num_notes = len(rules)
         # Notes spread evenly across staff
-        note_start = 140
-        note_end = STAFF_RIGHT - 40
+        note_start = 180
+        note_end = STAFF_RIGHT - 60
         note_spacing = (note_end - note_start) / (num_notes - 1) if num_notes > 1 else 0
 
         # Build SVG
@@ -633,8 +633,8 @@ def render():
 
         # Treble clef
         svg += (
-            '<text x="15" y="' + str(STAFF_TOP + 58)
-            + '" font-size="85" fill="#8092AF" font-family="serif"'
+            '<text x="20" y="' + str(STAFF_TOP + 72)
+            + '" font-size="110" fill="#8092AF" font-family="serif"'
             ' style="user-select:none;">&#119070;</text>'
         )
 
@@ -656,11 +656,11 @@ def render():
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
                     '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
-                    + '" rx="11" ry="8" fill="' + color
+                    + '" rx="14" ry="10" fill="' + color
                     + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
-                    + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 45)
-                    + '" stroke="' + color + '" stroke-width="3"/>'
+                    + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
                     '</g>'
                 )
 
@@ -669,14 +669,14 @@ def render():
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
                     '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
-                    + '" rx="11" ry="8" fill="' + color
+                    + '" rx="14" ry="10" fill="' + color
                     + '" transform="rotate(-20 ' + str(x) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x + 12) + '" y1="' + str(note_y)
-                    + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 45)
-                    + '" stroke="' + color + '" stroke-width="3"/>'
+                    + '" x2="' + str(x + 12) + '" y2="' + str(note_y - 60)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
                     # Flag (curved line from top of stem)
-                    '<path d="M' + str(x + 12) + ' ' + str(note_y - 45)
-                    + ' q 10 12 3 28" fill="none" stroke="' + color + '" stroke-width="2.5"/>'
+                    '<path d="M' + str(x + 12) + ' ' + str(note_y - 60)
+                    + ' q 12 15 4 35" fill="none" stroke="' + color + '" stroke-width="3"/>'
                     '</g>'
                 )
 
@@ -688,23 +688,23 @@ def render():
                     '<g class="note" data-idx="' + str(i) + '">'
                     # Note 1
                     '<ellipse cx="' + str(x1) + '" cy="' + str(note_y)
-                    + '" rx="10" ry="7" fill="' + color
+                    + '" rx="12" ry="9" fill="' + color
                     + '" transform="rotate(-20 ' + str(x1) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x1 + 10) + '" y1="' + str(note_y)
-                    + '" x2="' + str(x1 + 10) + '" y2="' + str(note_y - 40)
-                    + '" stroke="' + color + '" stroke-width="3"/>'
+                    + '" x2="' + str(x1 + 10) + '" y2="' + str(note_y - 55)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
                     # Note 2
                     '<ellipse cx="' + str(x2) + '" cy="' + str(note_y)
-                    + '" rx="10" ry="7" fill="' + color
+                    + '" rx="12" ry="9" fill="' + color
                     + '" transform="rotate(-20 ' + str(x2) + ' ' + str(note_y) + ')"/>'
                     '<line x1="' + str(x2 + 10) + '" y1="' + str(note_y)
-                    + '" x2="' + str(x2 + 10) + '" y2="' + str(note_y - 40)
-                    + '" stroke="' + color + '" stroke-width="3"/>'
+                    + '" x2="' + str(x2 + 10) + '" y2="' + str(note_y - 55)
+                    + '" stroke="' + color + '" stroke-width="3.5"/>'
                     # Beam
-                    '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 40)
+                    '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 55)
                     + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
                     # Double beam
-                    '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 33)
+                    '<rect x="' + str(x1 + 10) + '" y="' + str(note_y - 48)
                     + '" width="' + str(x2 - x1) + '" height="5" fill="' + color + '"/>'
                     '</g>'
                 )
@@ -720,15 +720,15 @@ def render():
                 )
 
             # Labels below staff
-            label_y = STAFF_TOP + 5 * STAFF_GAP + 15
-            sound_y = label_y + 20
+            label_y = STAFF_TOP + 5 * STAFF_GAP + 25
+            sound_y = label_y + 24
             svg += (
                 '<text x="' + str(x) + '" y="' + str(label_y)
-                + '" text-anchor="middle" class="rule-text" font-size="16">' + pattern + '</text>'
+                + '" text-anchor="middle" class="rule-text">' + pattern + '</text>'
             )
             svg += (
                 '<text x="' + str(x) + '" y="' + str(sound_y)
-                + '" text-anchor="middle" class="sound-text" font-size="13">' + sound + '</text>'
+                + '" text-anchor="middle" class="sound-text">' + sound + '</text>'
             )
 
         # Footer
@@ -740,6 +740,15 @@ def render():
 
         svg += '</svg>'
 
+        # Audio filename mapping — matches actual filenames in assets/audio/
+        audio_name_map = {
+            "Ireland": {"bh / mh": "ireland_bh_mh", "dh / gh": "ireland_dh_gh", "aoi": "ireland_aoi", "fh": "ireland_fh"},
+            "Scotland": {"idh / aidh": "scotland_idh_aidh", "eo": "scotland_eo", "gh": "scotland_gh", "mh": "scotland_mh"},
+            "Canada": {"é / è": "canada_e_accent", "-ique": "canada_ique", "oi": "canada_oi", "ç": "canada_c_cedilla"},
+            "New Zealand": {"ng-": "new_zealand_ng", "wh": "new_zealand_wh", "au": "new_zealand_au", "vowels": "new_zealand_vowels"},
+            "Wales": {"ff": "wales_ff", "ll": "wales_ll", "dd": "wales_dd", "f": "wales_f"},
+        }
+
         # Audio
         audio_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -747,8 +756,7 @@ def render():
         )
         audio_tags = ""
         for i, (pattern, sound, note_y, ntype) in enumerate(rules):
-            safe_pattern = pattern.replace(" / ", "_").replace("-", "").replace(" ", "").lower()
-            audio_filename = safe_pattern + ".wav"
+            audio_filename = audio_name_map.get(selected_country, {}).get(pattern, "") + ".wav"
             audio_path = os.path.join(audio_dir, audio_filename)
             if os.path.exists(audio_path):
                 with open(audio_path, "rb") as af:
@@ -792,7 +800,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=280, scrolling=False)
+        components.html(full_html, height=380, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
@@ -836,7 +844,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
