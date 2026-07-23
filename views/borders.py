@@ -410,9 +410,20 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
+        # ══════════════════════════════════════════════════════════════
     # 🏷️ CAN'T READ THE LYRICS (Pronunciation Wall)
     # ══════════════════════════════════════════════════════════════
+
+    # Fixed-width container — consistent layout across laptop/desktop
+    st.markdown("""
+    <style>
+        .block-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
     st.markdown("### 🏷️ Can't Read the Lyrics")
     st.markdown(
@@ -605,7 +616,7 @@ def render():
 
         # SVG dimensions — wide and uses full space
         SVG_WIDTH = 1000
-        SVG_HEIGHT = 340
+        SVG_HEIGHT = 420
         STAFF_LEFT = 80
         STAFF_RIGHT = 960
         STAFF_TOP = 80
@@ -619,7 +630,7 @@ def render():
 
         # Build SVG
         svg = (
-            '<svg width="880" height="300" viewBox="0 0 '
+            '<svg width="880" height="380" viewBox="0 0 '
             + str(SVG_WIDTH) + ' ' + str(SVG_HEIGHT)
             + '" style="display:block; max-width:100%;">'
             '<style>'
@@ -749,36 +760,43 @@ def render():
                 + '" text-anchor="middle" class="sound-text">' + sound + '</text>'
             )
 
-        # Key/Legend on the right side
-        key_x = SVG_WIDTH - 200
-        key_y = STAFF_TOP + 10
+        # Key items in a horizontal row, centered below staff
+        key_y_base = STAFF_TOP + 5 * STAFF_GAP + 55
+        key_items_width = 700
+        key_start_x = (SVG_WIDTH - key_items_width) // 2
+        item_gap = key_items_width // 4
+
         svg += (
             '<g>'
-            # Key box background
-            '<rect x="' + str(key_x - 10) + '" y="' + str(key_y - 15)
-            + '" width="190" height="130" rx="6" fill="#FFFEF5" stroke="#E8DFC0" stroke-width="1" opacity="0.9"/>'
-            # Title
-            '<text x="' + str(key_x) + '" y="' + str(key_y)
-            + '" font-size="11" font-weight="700" fill="#8D7555" letter-spacing="1">KEY</text>'
-            # Quarter note symbol + meaning
-            '<ellipse cx="' + str(key_x + 8) + '" cy="' + str(key_y + 22) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_x + 8) + ' ' + str(key_y + 22) + ')"/>'
-            '<line x1="' + str(key_x + 13) + '" y1="' + str(key_y + 22) + '" x2="' + str(key_x + 13) + '" y2="' + str(key_y + 6) + '" stroke="' + color + '" stroke-width="2"/>'
-            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 26) + '" font-size="11" fill="#4A5568">A single clear beat</text>'
-            # Eighth note symbol + meaning
-            '<ellipse cx="' + str(key_x + 8) + '" cy="' + str(key_y + 48) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_x + 8) + ' ' + str(key_y + 48) + ')"/>'
-            '<line x1="' + str(key_x + 13) + '" y1="' + str(key_y + 48) + '" x2="' + str(key_x + 13) + '" y2="' + str(key_y + 32) + '" stroke="' + color + '" stroke-width="2"/>'
-            '<path d="M' + str(key_x + 13) + ' ' + str(key_y + 32) + ' q 5 6 2 14" fill="none" stroke="' + color + '" stroke-width="1.5"/>'
-            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 52) + '" font-size="11" fill="#4A5568">A lighter, shorter note</text>'
-            # Double beam symbol + meaning
-            '<ellipse cx="' + str(key_x + 5) + '" cy="' + str(key_y + 74) + '" rx="5" ry="3.5" fill="' + color + '"/>'
-            '<ellipse cx="' + str(key_x + 15) + '" cy="' + str(key_y + 74) + '" rx="5" ry="3.5" fill="' + color + '"/>'
-            '<line x1="' + str(key_x + 9) + '" y1="' + str(key_y + 74) + '" x2="' + str(key_x + 9) + '" y2="' + str(key_y + 60) + '" stroke="' + color + '" stroke-width="2"/>'
-            '<line x1="' + str(key_x + 19) + '" y1="' + str(key_y + 74) + '" x2="' + str(key_x + 19) + '" y2="' + str(key_y + 60) + '" stroke="' + color + '" stroke-width="2"/>'
-            '<rect x="' + str(key_x + 9) + '" y="' + str(key_y + 60) + '" width="10" height="3" fill="' + color + '"/>'
-            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 78) + '" font-size="11" fill="#4A5568">Two notes as one phrase</text>'
-            # Rest symbol + meaning
-            '<path d="M' + str(key_x + 6) + ' ' + str(key_y + 88) + ' l4 6 l-4 6 l4 6" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
-            '<text x="' + str(key_x + 25) + '" y="' + str(key_y + 100) + '" font-size="11" fill="#4A5568">Silence — nothing plays</text>'
+            # Subtle line separator
+            '<line x1="' + str(key_start_x) + '" y1="' + str(key_y_base - 15)
+            + '" x2="' + str(key_start_x + key_items_width) + '" y2="' + str(key_y_base - 15)
+            + '" stroke="#E8DFC0" stroke-width="1"/>'
+
+            # Item 1: Quarter note
+            '<ellipse cx="' + str(key_start_x + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + 8) + ' ' + str(key_y_base + 5) + ')"/>'
+            '<line x1="' + str(key_start_x + 13) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + 13) + '" y2="' + str(key_y_base - 10) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<text x="' + str(key_start_x + 22) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">A single clear beat</text>'
+
+            # Item 2: Eighth note
+            '<ellipse cx="' + str(key_start_x + item_gap + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + item_gap + 8) + ' ' + str(key_y_base + 5) + ')"/>'
+            '<line x1="' + str(key_start_x + item_gap + 13) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap + 13) + '" y2="' + str(key_y_base - 10) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<path d="M' + str(key_start_x + item_gap + 13) + ' ' + str(key_y_base - 10) + ' q 5 5 2 12" fill="none" stroke="' + color + '" stroke-width="1.5"/>'
+            '<text x="' + str(key_start_x + item_gap + 22) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">A lighter, shorter note</text>'
+
+            # Item 3: Double beam
+            '<ellipse cx="' + str(key_start_x + item_gap * 2 + 5) + '" cy="' + str(key_y_base + 5) + '" rx="5" ry="3.5" fill="' + color + '"/>'
+            '<ellipse cx="' + str(key_start_x + item_gap * 2 + 15) + '" cy="' + str(key_y_base + 5) + '" rx="5" ry="3.5" fill="' + color + '"/>'
+            '<line x1="' + str(key_start_x + item_gap * 2 + 9) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap * 2 + 9) + '" y2="' + str(key_y_base - 8) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<line x1="' + str(key_start_x + item_gap * 2 + 19) + '" y1="' + str(key_y_base + 5) + '" x2="' + str(key_start_x + item_gap * 2 + 19) + '" y2="' + str(key_y_base - 8) + '" stroke="' + color + '" stroke-width="2"/>'
+            '<rect x="' + str(key_start_x + item_gap * 2 + 9) + '" y="' + str(key_y_base - 8) + '" width="10" height="2.5" fill="' + color + '"/>'
+            '<rect x="' + str(key_start_x + item_gap * 2 + 9) + '" y="' + str(key_y_base - 4) + '" width="10" height="2.5" fill="' + color + '"/>'
+            '<text x="' + str(key_start_x + item_gap * 2 + 28) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">Two notes as one phrase</text>'
+
+            # Item 4: Rest
+            '<path d="M' + str(key_start_x + item_gap * 3 + 6) + ' ' + str(key_y_base - 6) + ' l3 5 l-3 5 l3 5" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
+            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="11" fill="#4A5568">Silence \u2014 nothing plays</text>'
+
             '</g>'
         )
 
@@ -808,7 +826,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=380, scrolling=False)
+        components.html(full_html, height=440, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
@@ -852,7 +870,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
