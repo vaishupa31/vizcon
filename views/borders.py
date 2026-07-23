@@ -618,8 +618,8 @@ def render():
 
         num_notes = len(rules)
         # Notes spread evenly across staff
-        note_start = 180
-        note_end = STAFF_RIGHT - 60
+        note_start = 200
+        note_end = 780
         note_spacing = (note_end - note_start) / (num_notes - 1) if num_notes > 1 else 0
 
         # Build SVG
@@ -755,7 +755,7 @@ def render():
             )
 
         # Key items in a horizontal row, centered below staff
-        key_y_base = STAFF_TOP + 5 * STAFF_GAP + 55
+        key_y_base = STAFF_TOP + 5 * STAFF_GAP + 80
         key_items_width = 700
         key_start_x = (SVG_WIDTH - key_items_width) // 2
         item_gap = key_items_width // 4
@@ -820,7 +820,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=440, scrolling=False)
+        components.html(full_html, height=340, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
