@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import os
+import streamlit.components.v1 as components
 from utils.data_loader import load_metrics, load_summary
 from utils.charts import CHART_LAYOUT, COLORS, COUNTRY_COLORS
 
@@ -23,6 +24,7 @@ def render():
         }
     </style>
     """, unsafe_allow_html=True)
+
     # ─── Header ───────────────────────────────────────────────────
     st.markdown(
         """
@@ -240,93 +242,24 @@ def render():
 
     st.markdown("---")
 
-
     # ══════════════════════════════════════════════════════════════
     # SECTION 2: WHAT STAYED IN THE SHOP
     # ══════════════════════════════════════════════════════════════
 
     st.markdown("### 🏪 What Stayed in the Shop?")
     st.markdown(
-        "Could you read all of those? Probably not — and that's the point. "
-        "But before we explore *why*, we need a way to **measure** how locked a name is."
+        "*Some tracks were never meant to tour. They were recorded in a home studio, "
+        "pressed in small batches, and sold to people who already knew the lyrics.*"
     )
 
-    # ─── Formula + Classification side by side ────────────────────
-    st.markdown("""
-    <style>
-    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
-    .info-card{background:linear-gradient(135deg,#EEF2FF,#E8F4FD);border:1px solid #E2E8F0;border-radius:12px;display:flex;flex-direction:column;padding:24px;box-sizing:border-box;}
-    .small-title{text-transform:uppercase;letter-spacing:2px;font-size:0.72rem;color:#7C9FD6;text-align:center;margin-bottom:8px;}
-    .main-title{text-align:center;font-size:1.45rem;font-weight:800;color:#2D3748;margin-bottom:4px;}
-    .subtitle{text-align:center;color:#4A5568;font-size:.88rem;margin-bottom:18px;}
-    .formula-box{background:white;border-radius:8px;border:1px solid #E2E8F0;padding:18px;}
-    .formula-top{text-align:center;font-family:Courier New;color:#7C9FD6;font-weight:700;border-bottom:2px solid #2D3748;padding-bottom:8px;}
-    .formula-bottom{text-align:center;font-family:Courier New;color:#718096;font-weight:700;padding-top:8px;}
-    .note-box{margin-top:18px;padding:12px;background:rgba(124,159,214,.08);border-radius:8px;font-size:.8rem;line-height:1.6;color:#4A5568;}
-    .info-card table{width:100%;border-collapse:collapse;font-size:.83rem;}
-    .info-card th{text-align:left;padding:8px;border-bottom:2px solid #CBD5E0;color:#4A5568;}
-    .info-card td{padding:8px;border-bottom:1px solid #E2E8F0;color:#4A5568;}
-    .info-card tr:last-child td{border-bottom:none;}
-    @media (max-width:900px){.info-grid{grid-template-columns:1fr;}}
-    </style>
-
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="small-title">HOW WE MEASURED IT</div>
-        <div class="main-title">The Countryness Score</div>
-        <div class="subtitle">How many times more popular is this name at <strong>home</strong> vs <strong>abroad</strong>?</div>
-        <div class="formula-box">
-          <div class="formula-top">proportion in top country</div>
-          <div class="formula-bottom">avg proportion in other countries</div>
-        </div>
-        <div class="note-box">
-          <b style="color:#7C9FD6;">Proportion</b> = how many babies out of ALL babies born that year received the name.
-          <br><br>
-          Example: <b>2,450 Niamhs</b> out of <b>100,000 Irish babies</b> = <b>0.0245</b> (2.45%)
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div class="small-title">HOW WE CLASSIFIED THEM</div>
-        <div class="main-title">The Classification</div>
-        <div class="subtitle">Not all locked names are locked equally.</div>
-        <table>
-          <thead>
-            <tr><th>Label</th><th>Score</th><th>Meaning</th></tr>
-          </thead>
-          <tbody>
-            <tr><td style="color:#059669;font-weight:600;">✅ Global</td><td><b>&lt;5</b></td><td><b>Shared — no single home</b></td></tr>
-            <tr><td style="color:#B7791F;font-weight:600;">⚠️ Leaning</td><td><b>5–10</b></td><td><b>Concentrating in one place</b></td></tr>
-            <tr><td style="color:#C53030;font-weight:600;">🔒 Locked</td><td><b>10–100</b></td><td><b>Clearly belongs to one country</b></td></tr>
-            <tr><td style="color:#9B2C2C;font-weight:600;">🔐 Very Locked</td><td><b>100–1,000</b></td><td><b>Barely exists elsewhere</b></td></tr>
-            <tr><td style="color:#742A2A;font-weight:600;">🚫 Extreme</td><td><b>1,000+</b></td><td><b>A cultural password</b></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # ─── Paragraph explanation (full width below) ─────────────────
     st.markdown(
-        "A score below **5** means a name is genuinely shared — it's roughly equally popular "
-        "across all countries. Think *Liam*, *Thomas*, *Emily*. No single country owns them. "
-        "Once a name crosses **5**, something shifts. Over **62%** of all babies with that name "
-        "are concentrated in a single country. It's no longer shared — it's *leaning*. "
-        "By the time you hit **50–100**, nearly **88%** of the name's usage is in one place. "
-        "These names — like *Siobhan* or *Conor* — are clearly Irish, clearly Scottish, clearly somewhere specific. "
-        "And at **1,000+**? Over **97%** of all babies with that name live in one country. "
-        "These are cultural passwords — names like *Narelle* (Australia) or *Sadhbh* (Ireland) "
-        "that effectively don't exist anywhere else on Earth. "
-        "We drew the line at **5** because that's the tipping point: "
-        "below it, a name belongs to everyone. Above it, one country **owns** it."
+        "Every name below has a **countryness score** — a number that tells you how many times "
+        "more popular it is in its home country than anywhere else in the Anglosphere. "
+        "The higher the number, the more locked it is to one place."
     )
 
     # ─── Sample Local Collection: CD Cases (HTML) ─────────────────
-    st.markdown("#### 🎵 Sample Local Collection")
-    st.markdown(
-        "Just like B-side tracks, these are names that are hardly listened to "
-        "outside their home country."
-    )
+    st.markdown("#### 🎵 Local Collections")
 
     tapes = [
         ("Northern Ireland", "65%", "#9FE6C8", [("Éireann", 1414), ("Roisé", 1373), ("Dáithí", 892), ("Ruadhán", 756), ("Cianán", 623)]),
@@ -406,7 +339,7 @@ def render():
     # ══════════════════════════════════════════════════════════════
 
     # ─── Intro ────────────────────────────────────────────────────
-    st.markdown("### 🎧 What Keeps a Track Off the Global Playlist?")
+    st.markdown("### 🎧 Why Do Some Tracks Never Make the Global Playlist?")
     st.markdown(
         "Sometimes the lyrics are unreadable. Sometimes the cover exists in another language. "
         "Sometimes the artist chooses to stay underground. And sometimes — they press a record "
@@ -429,8 +362,8 @@ def render():
 
     def mini_distribution_sheet(track, score, catalog, date, status, status_color, status_angle, shipped_count):
         html = (
-            '<div style="background:linear-gradient(135deg,#F5F0E4,#EDE8D8,#F8F4EA);'
-            'border:1px solid #C4AD82;border-radius:6px;padding:16px 18px;'
+            '<div style="background:linear-gradient(135deg,#EEF2FF,#E8F4FD,#F0FFF4);'
+            'border:1px solid #E2E8F0;border-radius:6px;padding:16px 18px;'
             'font-family:Courier New,monospace;box-shadow:0 4px 12px rgba(0,0,0,.08);'
             'position:relative;overflow:hidden;">'
             '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate('
@@ -438,15 +371,15 @@ def render():
             + status_color + ';opacity:.10;white-space:nowrap;">' + status + '</div>'
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
             '<div>'
-            '<div style="font-size:.5rem;letter-spacing:3px;color:#8D7555;font-weight:700;">POLARIS RECORDS</div>'
-            '<div style="font-size:.45rem;color:#A89268;margin-top:1px;">DISTRIBUTION DEPT.</div>'
+            '<div style="font-size:.5rem;letter-spacing:3px;color:#718096;font-weight:700;">POLARIS RECORDS</div>'
+            '<div style="font-size:.45rem;color:#A0AEC0;margin-top:1px;">DISTRIBUTION DEPT.</div>'
             '</div>'
             '<div style="text-align:right;">'
-            '<div style="font-size:.5rem;color:#8D7555;font-weight:600;">' + catalog + '</div>'
-            '<div style="font-size:.45rem;color:#A89268;margin-top:1px;">' + date + '</div>'
+            '<div style="font-size:.5rem;color:#718096;font-weight:600;">' + catalog + '</div>'
+            '<div style="font-size:.45rem;color:#A0AEC0;margin-top:1px;">' + date + '</div>'
             '</div>'
             '</div>'
-            '<div style="text-align:center;border-top:1px solid #CBB996;border-bottom:1px solid #CBB996;'
+            '<div style="text-align:center;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0;'
             'padding:10px 0;margin-bottom:10px;">'
             '<div style="display:inline-flex;align-items:center;gap:8px;">'
             '<svg width="18" height="18" viewBox="0 0 24 24">'
@@ -456,18 +389,18 @@ def render():
             '</svg>'
             '<span style="font-size:1.4rem;font-weight:800;font-family:Georgia;color:#2D3748;">' + track + '</span>'
             '</div>'
-            '<div style="font-size:.65rem;color:#7B6A54;margin-top:4px;">'
+            '<div style="font-size:.65rem;color:#718096;margin-top:4px;">'
             'Origin: Ireland &nbsp;|&nbsp; Countryness: <b>' + score + '</b>'
             '</div></div>'
             '<div style="display:flex;justify-content:space-between;align-items:center;">'
-            '<div style="font-size:.65rem;color:#8D7555;">'
+            '<div style="font-size:.65rem;color:#718096;">'
             'Shipped to <b>' + shipped_count + '</b> of 8 territories'
             '</div>'
             '<span style="padding:4px 10px;border:1.5px solid ' + status_color + ';border-radius:3px;'
             'font-weight:800;letter-spacing:1.5px;font-size:.55rem;color:' + status_color + ';">'
             + status + '</span>'
             '</div>'
-            '<div style="margin-top:10px;padding-top:8px;border-top:1px solid #CBB996;text-align:right;">'
+            '<div style="margin-top:10px;padding-top:8px;border-top:1px solid #E2E8F0;text-align:right;">'
             '<svg width="50" height="14" viewBox="0 0 50 14">'
             '<rect x="0" y="0" width="1.5" height="12" fill="#2D3748"/>'
             '<rect x="3" y="0" width="1" height="12" fill="#2D3748"/>'
@@ -529,10 +462,8 @@ def render():
     )
 
     # ─── Part 2: Music Sheet Phonetics (staff-snapped notes) ──────
-    import streamlit.components.v1 as components
 
     # Station data — each rule: (pattern, sound, note_position, note_type)
-    # note_position = staff line/space name (snaps to real staff positions)
     stations = {
         "Ireland": {
             "language": "Gaeilge",
@@ -739,7 +670,6 @@ def render():
                 )
 
             elif ntype == "rest":
-                # Rest always centered on middle staff line
                 svg += (
                     '<g class="note" data-idx="' + str(i) + '">'
                     '<rect x="' + str(x - 20) + '" y="' + str(rest_y - 30)
@@ -772,7 +702,7 @@ def render():
             '<g>'
             '<line x1="' + str(key_start_x) + '" y1="' + str(key_y_base - 15)
             + '" x2="' + str(key_start_x + key_items_width) + '" y2="' + str(key_y_base - 15)
-            + '" stroke="#E8DFC0" stroke-width="1"/>'
+            + '" stroke="#E2E8F0" stroke-width="1"/>'
 
             # Item 1: Quarter note
             '<ellipse cx="' + str(key_start_x + 8) + '" cy="' + str(key_y_base + 5) + '" rx="6" ry="4" fill="' + color + '" transform="rotate(-20 ' + str(key_start_x + 8) + ' ' + str(key_y_base + 5) + ')"/>'
@@ -813,11 +743,11 @@ def render():
             '</div>'
         )
 
-        # Full HTML
+        # Full HTML — PASTEL GRADIENT
         full_html = (
             '<!DOCTYPE html><html><body style="margin:0;padding:0;">'
-            '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
-            'border-radius: 12px; padding: 16px 12px; border: 1px solid #E8DFC0;'
+            '<div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);'
+            'border-radius: 12px; padding: 16px 12px; border: 1px solid #E2E8F0;'
             'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
             + title_html + svg +
             '</div>'
@@ -826,7 +756,7 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-            # ─── Part 3: The longer the name, the higher the wall ─────────
+    # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
@@ -835,7 +765,6 @@ def render():
     )
 
     # Signal bars — like phone reception
-    # Short names = full bars, long names = no signal
     bars_data = [
         ("3–4", 8, 5, "#A8E6C8"),     # 5 bars — full signal
         ("5–6", 14, 4, "#7C9FD6"),     # 4 bars
@@ -846,7 +775,7 @@ def render():
 
     svg_width = 900
     svg_height = 320
-    base_y = 220   # bottom of bars
+    base_y = 220
 
     svg = (
         '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height)
@@ -870,54 +799,46 @@ def render():
     for i, (bracket, score, signal_bars, color) in enumerate(bars_data):
         cx = int(spacing * (i + 1))
 
-        # Draw 5 bar slots (filled bars = signal, empty = no signal)
         total_bars_width = max_bars * bar_width + (max_bars - 1) * bar_gap
         start_x = cx - total_bars_width // 2
 
         for b in range(max_bars):
             bx = start_x + b * (bar_width + bar_gap)
-            # Bar height increases left to right (like real signal icon)
             bar_h = int(max_bar_height * (b + 1) / max_bars)
             by = base_y - bar_h
 
             if b < signal_bars:
-                # Filled bar (has signal)
                 svg += (
                     '<rect x="' + str(bx) + '" y="' + str(by)
                     + '" width="' + str(bar_width) + '" height="' + str(bar_h)
                     + '" rx="3" fill="' + color + '"/>'
                 )
             else:
-                # Empty bar (no signal) — just outline
                 svg += (
                     '<rect x="' + str(bx) + '" y="' + str(by)
                     + '" width="' + str(bar_width) + '" height="' + str(bar_h)
                     + '" rx="3" fill="none" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="3 2"/>'
                 )
 
-        # "X" mark for no signal
         if signal_bars == 0:
             svg += (
                 '<text x="' + str(cx) + '" y="' + str(base_y - max_bar_height // 2 + 5)
                 + '" text-anchor="middle" font-size="28" fill="#E63946" font-weight="700">'
-                '✕</text>'
+                '\u2715</text>'
             )
 
-        # Score (big number below bars)
         svg += (
             '<text x="' + str(cx) + '" y="' + str(base_y + 30)
             + '" text-anchor="middle" font-size="22" font-weight="800" fill="' + color + '">'
             + str(score) + '</text>'
         )
 
-        # Bracket label
         svg += (
             '<text x="' + str(cx) + '" y="' + str(base_y + 52)
             + '" text-anchor="middle" font-size="14" font-weight="600" fill="#2D3748">'
             + bracket + ' letters</text>'
         )
 
-    # Left/right labels
     svg += (
         '<text x="' + str(int(spacing)) + '" y="' + str(base_y + 75)
         + '" text-anchor="middle" font-size="11" fill="#059669" font-weight="600">'
@@ -931,10 +852,10 @@ def render():
 
     svg += '</svg>'
 
-    # Render in card
+    # Render in pastel gradient card
     st.markdown(
-        '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
-        'border-radius: 12px; padding: 20px 16px; border: 1px solid #E8DFC0;'
+        '<div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);'
+        'border-radius: 12px; padding: 20px 24px; border: 1px solid #E2E8F0;'
         'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
         + svg + '</div>',
         unsafe_allow_html=True
@@ -953,10 +874,14 @@ def render():
     )
 
     # ─── Saint Patrick watercolor illustration ────────────────────
-    saint_img = "artifacts/image_063.png"
-    col_spacer_l, col_img, col_spacer_r = st.columns([1, 2, 1])
-    with col_img:
-        st.image(saint_img, caption="St. Patrick — one saint, two spellings, two fates", use_container_width=True)
+    saint_img = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "assets", "image_063.png"
+    )
+    if os.path.exists(saint_img):
+        col_spacer_l, col_img, col_spacer_r = st.columns([1, 2, 1])
+        with col_img:
+            st.image(saint_img, caption="St. Patrick — one saint, two spellings, two fates", use_container_width=True)
 
     # ─── Album cover cards: Original vs International Remix ───────
     col_original, col_remix = st.columns(2)
@@ -966,14 +891,11 @@ def render():
         <div style="background: linear-gradient(145deg, #1A1A2E, #16213E);
                     border-radius: 8px; padding: 24px; text-align: center;
                     box-shadow: 0 8px 24px rgba(0,0,0,.3); position: relative; overflow: hidden;">
-            <!-- Subtle texture -->
             <div style="position:absolute; inset:0; opacity:.04;
                         background:repeating-linear-gradient(45deg, #fff 0px, #fff 1px, transparent 1px, transparent 6px);"></div>
-            <!-- Label -->
             <div style="font-size:.55rem; letter-spacing:4px; color:#E63946; font-weight:700; margin-bottom:12px;">
                 ● ORIGINAL PRESSING
             </div>
-            <!-- Album art area -->
             <div style="background: linear-gradient(135deg, #0F3443, #34e89e20);
                         border-radius: 6px; padding: 30px 20px; margin: 10px 0;">
                 <div style="font-size: 2.4em; font-weight: 800; color: #F0FFF4; font-family: Georgia, serif;
@@ -984,13 +906,11 @@ def render():
                     /PAW-drig/
                 </div>
             </div>
-            <!-- Details -->
             <div style="margin-top: 14px; font-size: .7rem; color: #A0AEC0; font-family: 'Courier New', monospace;">
                 Origin: Irish Gaelic<br>
                 Countryness: <b style="color:#E63946;">343</b><br>
                 Markets: Ireland, N. Ireland only
             </div>
-            <!-- Status -->
             <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #E63946; border-radius: 3px;
                         display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #E63946;">
                 LIMITED RELEASE
@@ -1003,14 +923,11 @@ def render():
         <div style="background: linear-gradient(145deg, #1A1A2E, #16213E);
                     border-radius: 8px; padding: 24px; text-align: center;
                     box-shadow: 0 8px 24px rgba(0,0,0,.3); position: relative; overflow: hidden;">
-            <!-- Subtle texture -->
             <div style="position:absolute; inset:0; opacity:.04;
                         background:repeating-linear-gradient(45deg, #fff 0px, #fff 1px, transparent 1px, transparent 6px);"></div>
-            <!-- Label -->
             <div style="font-size:.55rem; letter-spacing:4px; color:#059669; font-weight:700; margin-bottom:12px;">
                 ● INTERNATIONAL REMIX
             </div>
-            <!-- Album art area -->
             <div style="background: linear-gradient(135deg, #0F3443, #7C9FD620);
                         border-radius: 6px; padding: 30px 20px; margin: 10px 0;">
                 <div style="font-size: 2.4em; font-weight: 800; color: #F0FFF4; font-family: Georgia, serif;
@@ -1021,13 +938,11 @@ def render():
                     /PAT-rik/
                 </div>
             </div>
-            <!-- Details -->
             <div style="margin-top: 14px; font-size: .7rem; color: #A0AEC0; font-family: 'Courier New', monospace;">
                 Origin: English adaptation<br>
                 Countryness: <b style="color:#059669;">2</b><br>
                 Markets: All 8 countries
             </div>
-            <!-- Status -->
             <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #059669; border-radius: 3px;
                         display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #059669;">
                 WORLDWIDE RELEASE
@@ -1044,8 +959,11 @@ def render():
 
     st.markdown("---")
 
-    # ─── Reason 3: Political Identity ─────────────────────────────
-    st.markdown("### 🏴 Reason 3: Political Identity")
+    # ══════════════════════════════════════════════════════════════
+    # 🎸 GOING INDEPENDENT (Political Identity)
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🎸 Going Independent")
     st.markdown(
         "If pronunciation and tradition were the only factors, all Celtic countries "
         "would behave the same. But they don't. Look at **Northern Ireland vs Ireland**:"
@@ -1119,8 +1037,11 @@ def render():
 
     st.markdown("---")
 
-    # ─── Reason 4: Active Cultural Revival ────────────────────────
-    st.markdown("### 📜 Reason 4: Active Cultural Revival")
+    # ══════════════════════════════════════════════════════════════
+    # 💿 PRESSING NEW VINYL (Cultural Revival)
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 💿 Pressing New Vinyl")
     st.markdown(
         "It's not just old names surviving — communities are actively **inventing** "
         "brand-new names designed to never leave."
