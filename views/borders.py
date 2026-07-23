@@ -405,10 +405,11 @@ def render():
 
     st.markdown("### 🏷️ Can't Read the Lyrics")
     st.markdown(
-        "The first wall is the simplest: if you can't read a name, you won't use it."
+        "The first wall is the simplest: if you can't read a name, you won't use it. "
+        "**Same origin. Different fate.**"
     )
 
-    # ─── Part 1: Same origin, different fate (mini distribution sheets) ───
+    # ─── Part 1: Mini distribution sheets ─────────────────────────
 
     def mini_distribution_sheet(track, score, catalog, date, status, status_color, status_angle, shipped_count):
         html = (
@@ -510,15 +511,15 @@ def render():
         "anyone can read it and say it. **Niamh** (pronounced *NEEV*) requires insider knowledge. "
         "Even the 3 countries it reached — England, Ireland, and Northern Ireland — all have "
         "significant Irish-speaking communities. Outside that circle, nobody picks it up because "
-        "nobody knows how to say it."
-    )
-    st.markdown(
+        "nobody knows how to say it. "
         "And this isn't unique to Ireland. Every country in the Anglosphere has its own "
         "phonetic code — a set of spelling rules that only locals can decode. "
-        "Pick a country below to see what keeps their names locked in:"
+        "Pick a country to see the phonetics behind their names:"
     )
 
-    # ─── Part 2: Music Sheet Phonetics (with audio on click) ──────
+    # ─── Part 2: Music Sheet Phonetics (clickable notes) ──────────
+    import streamlit.components.v1 as components
+    import base64
 
     # Station data — pills show country names
     stations = {
@@ -579,7 +580,7 @@ def render():
         },
     }
 
-    # Pills — country names, no "Select a language" label
+    # Pills — country names
     country_names = list(stations.keys())
     selected_country = st.pills(
         "Each country's phonetic code",
@@ -596,56 +597,69 @@ def render():
         color = station["color"]
         rules = station["rules"]
 
-        # Symbol mapping
-        symbol_map = {
-            "rest": "𝄾",
-            "vowel": "♬",
-            "consonant": "♩",
-            "diphthong": "♫",
-        }
+        # Symbol + position mapping
+        symbol_map = {"rest": "𝄾", "vowel": "♬", "consonant": "♩", "diphthong": "♫"}
+        pos_map = {"rest": 30, "vowel": 54, "consonant": 66, "diphthong": 42}
 
-        # Vertical position by type
-        pos_map = {
-            "rest": 30,
-            "vowel": 54,
-            "consonant": 66,
-            "diphthong": 42,
-        }
+        # Try to load audio files for this country's patterns
+        audio_dir = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "assets", "audio"
+        )
 
-        # Build music sheet SVG
+        # Build the interactive HTML with clickable notes
         num_notes = len(rules)
         svg_width = 600
         svg_height = 130
         staff_top = 30
         staff_gap = 12
 
-        svg = '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;">'
-
-        # 5 staff lines
+        # Build SVG elements as list for embedding in HTML
+        svg_lines = ""
         for i in range(5):
             y = staff_top + i * staff_gap
-            svg += '<line x1="50" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
+            svg_lines += '<line x1="50" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
 
-        # Treble clef
-        svg += '<text x="12" y="' + str(staff_top + staff_gap * 2 + 10) + '" font-size="44" fill="#A0AEC0" font-family="serif">𝄞</text>'
+        svg_lines += '<text x="12" y="' + str(staff_top + staff_gap * 2 + 10) + '" font-size="44" fill="#A0AEC0" font-family="serif">𝄞</text>'
 
-        # Notes
+        note_elements = ""
+        audio_tags = ""
         for i, (pattern, result, stype) in enumerate(rules):
             x = 100 + i * ((svg_width - 160) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
             note_y = pos_map[stype]
             symbol = symbol_map[stype]
 
-            svg += '<text x="' + str(x) + '" y="' + str(note_y + 8) + '" text-anchor="middle" font-size="28" fill="' + color + '" style="cursor:pointer;">' + symbol + '</text>'
-            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 22) + '" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
-            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 6) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
+            # Check for audio file
+            audio_id = "audio_" + str(i)
+            safe_pattern = pattern.replace(" / ", "_").replace("-", "").replace(" ", "").lower()
+            audio_filename = safe_pattern + ".wav"
+            audio_path = os.path.join(audio_dir, audio_filename)
 
-        svg += '</svg>'
+            has_audio = os.path.exists(audio_path)
+            if has_audio:
+                with open(audio_path, "rb") as af:
+                    audio_b64 = base64.b64encode(af.read()).decode()
+                audio_tags += '<audio id="' + audio_id + '" src="data:audio/wav;base64,' + audio_b64 + '"></audio>'
 
-        # Card
-        card_html = (
+            # Clickable note group
+            cursor_style = "pointer" if has_audio else "default"
+            onclick = ' onclick="document.getElementById(\'' + audio_id + '\').play()"' if has_audio else ''
+            hover_title = ' title="Click to hear"' if has_audio else ''
+
+            note_elements += (
+                '<g style="cursor:' + cursor_style + ';"' + onclick + hover_title + '>'
+                '<text x="' + str(x) + '" y="' + str(note_y + 8) + '" text-anchor="middle" font-size="28" fill="' + color + '">' + symbol + '</text>'
+                '</g>'
+            )
+            # Labels below
+            note_elements += '<text x="' + str(x) + '" y="' + str(svg_height - 22) + '" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
+            note_elements += '<text x="' + str(x) + '" y="' + str(svg_height - 6) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
+
+        # Full HTML component
+        full_html = (
             '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
             'border-radius: 12px; padding: 20px 24px; border: 1px solid #E8DFC0;'
-            'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
+            'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, sans-serif;">'
             '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px;">'
             '<span style="font-size: 1.1rem; font-weight: 700; color: #2D3748;">'
             + language + '</span>'
@@ -654,7 +668,9 @@ def render():
             '<span style="font-size: .7rem; color: #A0AEC0; margin-left: auto;">— '
             + selected_country + '</span>'
             '</div>'
-            + svg +
+            '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;">'
+            + svg_lines + note_elements +
+            '</svg>'
             '<div style="display: flex; gap: 16px; margin-top: 6px; justify-content: center;">'
             '<span style="font-size: .65rem; color: #A0AEC0;">♩ consonant shift</span>'
             '<span style="font-size: .65rem; color: #A0AEC0;">♬ vowel shift</span>'
@@ -662,33 +678,16 @@ def render():
             '<span style="font-size: .65rem; color: #A0AEC0;">𝄾 silent</span>'
             '</div>'
             '</div>'
+            + audio_tags
         )
 
-        st.markdown(card_html, unsafe_allow_html=True)
-
-        # Audio playback — click a note to hear the sound
-        st.markdown("")
-        audio_cols = st.columns(num_notes)
-        for i, (pattern, result, stype) in enumerate(rules):
-            with audio_cols[i]:
-                if st.button("🔊 " + pattern, key="audio_" + selected_country + "_" + str(i), use_container_width=True):
-                    # Check if audio file exists for this pattern
-                    audio_filename = selected_country.lower().replace(" ", "_") + "_" + pattern.replace(" / ", "_").replace("-", "").replace(" ", "").lower() + ".wav"
-                    audio_path = os.path.join(
-                        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                        "assets", "audio", audio_filename
-                    )
-                    if os.path.exists(audio_path):
-                        with open(audio_path, "rb") as af:
-                            st.audio(af.read(), format="audio/wav", autoplay=True)
-                    else:
-                        st.caption("Audio coming soon")
+        components.html(full_html, height=220, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "It's not just exotic characters — visual length itself is a barrier."
+        "Visual length and spelling complexity work together as a pronunciation filter."
     )
 
     length_data = {
