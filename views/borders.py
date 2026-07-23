@@ -826,12 +826,12 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-        # ─── Part 3: The longer the name, the higher the wall ─────────
+            # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "Think of it like a broadcast signal — short names have full bars, reaching every station. "
-        "Long names? No signal. Can't get through."
+        "Names with **11+ letters** average a countryness of **201** — no signal, can't broadcast. "
+        "At 3–4 letters? Just **8** — full bars, received loud and clear in every country."
     )
 
     # Signal bars — like phone reception
@@ -933,16 +933,11 @@ def render():
 
     # Render in card
     st.markdown(
-        '<div style="background: linear-gradient(135deg, #F8FAFC, #EEF2FF, #F0FFF4);'
-        'border-radius: 12px; padding: 20px 16px; border: 1px solid #E2E8F0;'
+        '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
+        'border-radius: 12px; padding: 20px 16px; border: 1px solid #E8DFC0;'
         'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
         + svg + '</div>',
         unsafe_allow_html=True
-    )
-
-    st.markdown(
-        "Names with **11+ letters** average a countryness of **201** — no signal, can't broadcast. "
-        "At 3–4 letters? Just **8** — full bars, received loud and clear in every country."
     )
 
     st.markdown("---")
