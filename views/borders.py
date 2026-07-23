@@ -7,7 +7,7 @@ from utils.charts import CHART_LAYOUT, COLORS, COUNTRY_COLORS
 
 
 def render():
-    # Fixed-width container — consistent layout across laptop/desktop
+    # Fixed layout — sticky tabs + wider content
     st.markdown("""
     <style>
         .stTabs [data-baseweb="tab-list"] {
@@ -15,6 +15,11 @@ def render():
             top: 0;
             z-index: 999;
             background: #F0F8FF;
+        }
+        .block-container {
+            max-width: 1200px;
+            padding-left: 2rem;
+            padding-right: 2rem;
         }
     </style>
     """, unsafe_allow_html=True)
