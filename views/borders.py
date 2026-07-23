@@ -824,7 +824,7 @@ def render():
             '</body></html>'
         )
 
-        components.html(full_html, height=380, scrolling=False)
+        components.html(full_html, height=460, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
