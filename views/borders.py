@@ -406,7 +406,7 @@ def render():
     st.markdown("### 🏷️ Can't Read the Lyrics")
     st.markdown(
         "The first wall is the simplest: if you can't read a name, you won't use it. "
-        "**Same origin. Different fate.**"
+        "**Same origin. Different fate.** Here's what that looks like:"
     )
 
     # ─── Part 1: Mini distribution sheets ─────────────────────────
@@ -517,11 +517,11 @@ def render():
         "Pick a country to see the phonetics behind their names:"
     )
 
-    # ─── Part 2: Music Sheet Phonetics (clickable notes) ──────────
+    # ─── Part 2: Music Sheet Phonetics (clickable SVG notes) ──────
     import streamlit.components.v1 as components
     import base64
 
-    # Station data — pills show country names
+    # Station data
     stations = {
         "Ireland": {
             "language": "Gaeilge",
@@ -597,91 +597,161 @@ def render():
         color = station["color"]
         rules = station["rules"]
 
-        # Symbol + position mapping
-        symbol_map = {"rest": "𝄾", "vowel": "♬", "consonant": "♩", "diphthong": "♫"}
-        pos_map = {"rest": 30, "vowel": 54, "consonant": 66, "diphthong": 42}
+        # Note SVG shapes by type (drawn paths, not unicode)
+        # Quarter note (consonant): filled oval + stem
+        # Beamed eighth notes (vowel): two notes with beam
+        # Double eighth (diphthong): two notes with double beam
+        # Rest (silent): quarter rest shape
 
-        # Try to load audio files for this country's patterns
+        def draw_quarter_note(x, y, fill):
+            """♩ Single note with stem — consonant shift"""
+            return (
+                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
+                '<ellipse cx="' + str(x) + '" cy="' + str(y) + '" rx="8" ry="6" fill="' + fill + '" transform="rotate(-15 ' + str(x) + ' ' + str(y) + ')"/>'
+                '<line x1="' + str(x + 7) + '" y1="' + str(y) + '" x2="' + str(x + 7) + '" y2="' + str(y - 32) + '" stroke="' + fill + '" stroke-width="2"/>'
+                '</g>'
+            )
+
+        def draw_beamed_notes(x, y, fill):
+            """♬ Beamed pair — vowel shift"""
+            return (
+                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
+                '<ellipse cx="' + str(x - 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x - 8) + ' ' + str(y) + ')"/>'
+                '<ellipse cx="' + str(x + 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x + 8) + ' ' + str(y) + ')"/>'
+                '<line x1="' + str(x - 2) + '" y1="' + str(y) + '" x2="' + str(x - 2) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
+                '<line x1="' + str(x + 14) + '" y1="' + str(y) + '" x2="' + str(x + 14) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
+                '<rect x="' + str(x - 2) + '" y="' + str(y - 30) + '" width="16" height="3" fill="' + fill + '"/>'
+                '</g>'
+            )
+
+        def draw_double_beam(x, y, fill):
+            """♫ Double beamed — diphthong"""
+            return (
+                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
+                '<ellipse cx="' + str(x - 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x - 8) + ' ' + str(y) + ')"/>'
+                '<ellipse cx="' + str(x + 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x + 8) + ' ' + str(y) + ')"/>'
+                '<line x1="' + str(x - 2) + '" y1="' + str(y) + '" x2="' + str(x - 2) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
+                '<line x1="' + str(x + 14) + '" y1="' + str(y) + '" x2="' + str(x + 14) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
+                '<rect x="' + str(x - 2) + '" y="' + str(y - 30) + '" width="16" height="3" fill="' + fill + '"/>'
+                '<rect x="' + str(x - 2) + '" y="' + str(y - 25) + '" width="16" height="3" fill="' + fill + '"/>'
+                '</g>'
+            )
+
+        def draw_rest(x, y, fill):
+            """𝄾 Quarter rest — silent"""
+            return (
+                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
+                '<path d="M' + str(x - 4) + ' ' + str(y - 14)
+                + ' l4 7 l-4 7 l4 7 l-4 7" fill="none" stroke="' + fill + '" stroke-width="2.5" stroke-linecap="round"/>'
+                '</g>'
+            )
+
+        draw_map = {
+            "consonant": draw_quarter_note,
+            "vowel": draw_beamed_notes,
+            "diphthong": draw_double_beam,
+            "rest": draw_rest,
+        }
+
+        # Y positions on staff
+        pos_map = {"rest": 48, "vowel": 42, "consonant": 60, "diphthong": 48}
+
+        num_notes = len(rules)
+        svg_width = 580
+        svg_height = 150
+        staff_top = 35
+        staff_gap = 12
+
+        # Staff lines
+        svg_lines = ""
+        for i in range(5):
+            y = staff_top + i * staff_gap
+            svg_lines += '<line x1="60" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
+
+        # Treble clef (SVG path simplified)
+        svg_lines += (
+            '<text x="20" y="' + str(staff_top + staff_gap * 2 + 12)
+            + '" font-size="48" fill="#A0AEC0" font-family="serif" style="user-select:none;">&#119070;</text>'
+        )
+
+        # Draw notes
+        note_elements = ""
+        for i, (pattern, result, stype) in enumerate(rules):
+            x = 120 + i * ((svg_width - 180) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
+            note_y = pos_map[stype]
+            draw_fn = draw_map[stype]
+            note_svg = draw_fn(x, note_y, color).replace('data-idx="IDX"', 'data-idx="' + str(i) + '"')
+            note_elements += note_svg
+
+            # Labels below staff
+            label_y = staff_top + staff_gap * 5 + 18
+            result_y = label_y + 14
+            note_elements += '<text x="' + str(x) + '" y="' + str(label_y) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
+            note_elements += '<text x="' + str(x) + '" y="' + str(result_y) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
+
+        # Check for audio files
         audio_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "assets", "audio"
         )
-
-        # Build the interactive HTML with clickable notes
-        num_notes = len(rules)
-        svg_width = 600
-        svg_height = 130
-        staff_top = 30
-        staff_gap = 12
-
-        # Build SVG elements as list for embedding in HTML
-        svg_lines = ""
-        for i in range(5):
-            y = staff_top + i * staff_gap
-            svg_lines += '<line x1="50" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
-
-        svg_lines += '<text x="12" y="' + str(staff_top + staff_gap * 2 + 10) + '" font-size="44" fill="#A0AEC0" font-family="serif">𝄞</text>'
-
-        note_elements = ""
         audio_tags = ""
         for i, (pattern, result, stype) in enumerate(rules):
-            x = 100 + i * ((svg_width - 160) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
-            note_y = pos_map[stype]
-            symbol = symbol_map[stype]
-
-            # Check for audio file
-            audio_id = "audio_" + str(i)
             safe_pattern = pattern.replace(" / ", "_").replace("-", "").replace(" ", "").lower()
             audio_filename = safe_pattern + ".wav"
             audio_path = os.path.join(audio_dir, audio_filename)
-
-            has_audio = os.path.exists(audio_path)
-            if has_audio:
+            if os.path.exists(audio_path):
                 with open(audio_path, "rb") as af:
                     audio_b64 = base64.b64encode(af.read()).decode()
-                audio_tags += '<audio id="' + audio_id + '" src="data:audio/wav;base64,' + audio_b64 + '"></audio>'
+                audio_tags += '<audio id="audio_' + str(i) + '" src="data:audio/wav;base64,' + audio_b64 + '"></audio>'
 
-            # Clickable note group
-            cursor_style = "pointer" if has_audio else "default"
-            onclick = ' onclick="document.getElementById(\'' + audio_id + '\').play()"' if has_audio else ''
-            hover_title = ' title="Click to hear"' if has_audio else ''
+        # JavaScript for click interaction
+        js_code = """
+        <script>
+        document.querySelectorAll('.note').forEach(function(el) {
+            el.addEventListener('click', function() {
+                var idx = this.getAttribute('data-idx');
+                var audio = document.getElementById('audio_' + idx);
+                if (audio) { audio.currentTime = 0; audio.play(); }
+                // Visual feedback — brief scale pulse
+                this.style.transform = 'scale(1.2)';
+                setTimeout(function() { el.style.transform = 'scale(1)'; }, 200);
+            });
+        });
+        </script>
+        """
 
-            note_elements += (
-                '<g style="cursor:' + cursor_style + ';"' + onclick + hover_title + '>'
-                '<text x="' + str(x) + '" y="' + str(note_y + 8) + '" text-anchor="middle" font-size="28" fill="' + color + '">' + symbol + '</text>'
-                '</g>'
-            )
-            # Labels below
-            note_elements += '<text x="' + str(x) + '" y="' + str(svg_height - 22) + '" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
-            note_elements += '<text x="' + str(x) + '" y="' + str(svg_height - 6) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
-
-        # Full HTML component
+        # Assemble full HTML
         full_html = (
+            '<!DOCTYPE html><html><body style="margin:0;padding:0;">'
             '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
             'border-radius: 12px; padding: 20px 24px; border: 1px solid #E8DFC0;'
-            'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, sans-serif;">'
-            '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px;">'
+            'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
+            # Header
+            '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">'
             '<span style="font-size: 1.1rem; font-weight: 700; color: #2D3748;">'
             + language + '</span>'
             '<span style="font-size: .8rem; color: #718096;">'
             + subtitle + '</span>'
-            '<span style="font-size: .7rem; color: #A0AEC0; margin-left: auto;">— '
+            '<span style="font-size: .7rem; color: #A0AEC0; margin-left: auto;">'
             + selected_country + '</span>'
             '</div>'
-            '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;">'
+            # SVG
+            '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;overflow:visible;">'
             + svg_lines + note_elements +
             '</svg>'
-            '<div style="display: flex; gap: 16px; margin-top: 6px; justify-content: center;">'
-            '<span style="font-size: .65rem; color: #A0AEC0;">♩ consonant shift</span>'
-            '<span style="font-size: .65rem; color: #A0AEC0;">♬ vowel shift</span>'
-            '<span style="font-size: .65rem; color: #A0AEC0;">♫ diphthong</span>'
-            '<span style="font-size: .65rem; color: #A0AEC0;">𝄾 silent</span>'
+            # Legend
+            '<div style="display: flex; gap: 14px; margin-top: 10px; justify-content: center; flex-wrap: wrap;">'
+            '<span style="font-size: .65rem; color: #A0AEC0;">● note = consonant shift</span>'
+            '<span style="font-size: .65rem; color: #A0AEC0;">●● beam = vowel shift</span>'
+            '<span style="font-size: .65rem; color: #A0AEC0;">●● double = diphthong</span>'
+            '<span style="font-size: .65rem; color: #A0AEC0;">~ rest = silent</span>'
             '</div>'
             '</div>'
-            + audio_tags
+            + audio_tags + js_code +
+            '</body></html>'
         )
 
-        components.html(full_html, height=220, scrolling=False)
+        components.html(full_html, height=240, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
