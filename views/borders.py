@@ -826,184 +826,180 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-            # ─── Part 3: The longer the name, the higher the wall ─────────
+    # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "Think of it like an amplifier — short names are cranked to 11, heard everywhere. "
-        "Long names? The volume barely registers."
+        "Think of it like a headphone cable — short names carry a clean signal straight through. "
+        "The longer and more complex the name, the more tangled the signal gets."
     )
 
-    # Amp Knob visual — 5 knobs at different positions
-    # Each knob represents a name-length bracket
-    # Short names = cranked high (11), Long names = barely on (1)
-    import math
-
-    knobs = [
-        ("3–4", 8, 11, "#A8E6C8"),    # cranked to max
-        ("5–6", 14, 8, "#7C9FD6"),     # high
-        ("7–8", 27, 5, "#F5D68A"),     # middle
-        ("9–10", 89, 2, "#F5B7C5"),    # low
-        ("11+", 201, 0, "#E63946"),    # off/barely
+    # Headphone cables — straight to tangled
+    cables = [
+        ("3–4", 8, "#A8E6C8", "straight"),
+        ("5–6", 14, "#7C9FD6", "wave"),
+        ("7–8", 27, "#F5D68A", "loop"),
+        ("9–10", 89, "#F5B7C5", "tangle"),
+        ("11+", 201, "#E63946", "knot"),
     ]
 
     svg_width = 900
-    svg_height = 320
-    knob_y = 150  # vertical center
+    svg_height = 380
+    top_y = 50     # jack position
+    bottom_y = 270  # earpiece position
 
     svg = (
         '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height)
         + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
     )
 
-    # Title
-    svg += (
-        '<text x="' + str(svg_width // 2) + '" y="28" text-anchor="middle"'
-        ' font-size="14" fill="#718096" letter-spacing="2" font-weight="600">'
-        'GLOBAL REACH AMPLIFIER</text>'
-    )
-
-    num = len(knobs)
+    num = len(cables)
     spacing = svg_width / (num + 1)
 
-    for i, (bracket, score, volume, color) in enumerate(knobs):
+    for i, (bracket, score, color, style) in enumerate(cables):
         cx = int(spacing * (i + 1))
-        cy = knob_y
-        knob_r = 45
 
-        # Knob position: volume 0-11 maps to angle
-        # 0 = 7 o'clock (225°), 11 = 5 o'clock (315° through 0° to 315°)
-        # Actually: 0 = bottom-left (~220°), 11 = bottom-right (~320°)
-        # Range: 220° to 320° (going clockwise through top)
-        min_angle = 220  # 0 position (7 o'clock)
-        max_angle = 320  # 11 position (5 o'clock)
-        # Since we go clockwise through top: 220 → 270 → 320
-        # But angles > 360 wrap, so: 220° → 360° → 320° = 220° + 280° range
-        # Simpler: treat as 220 to 500 (500-360=140, i.e., 140° = ~5 o'clock)
-        angle_range = 280
-        knob_angle = min_angle + (volume / 11.0) * angle_range
-        # Convert to radians (SVG uses math convention: 0=right, counter-clockwise)
-        # But for rotation we just need the indicator line angle
-        rad = math.radians(knob_angle)
-        # Indicator points outward from center
-        ind_x = cx + (knob_r - 12) * math.cos(rad)
-        ind_y = cy - (knob_r - 12) * math.sin(rad)
-
-        # Actually let's use a simpler approach:
-        # 0 = 7 o'clock = -135° from top (or 225° standard)
-        # 11 = 5 o'clock = -45° from top (or 315° → but going CW past top → 135°)
-        # Map volume 0→11 to rotation -135° to +135° (from 12 o'clock)
-        rotation = -135 + (volume / 11.0) * 270  # -135 to +135
-        # Pointer angle in SVG: 0° = up, positive = clockwise
-        pointer_rad = math.radians(rotation - 90)  # adjust for SVG coords
-        # Actually simpler with transform rotate:
-        # The indicator line starts at center, points up, then rotates
-        # rotation of -135° = volume 0 (left), +135° = volume 11 (right)
-
-        # Background circle (dark)
+        # Headphone jack at top (3.5mm plug shape)
         svg += (
-            '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="' + str(knob_r) + '" fill="#1A1A2E" stroke="#2D3748" stroke-width="3"/>'
+            '<rect x="' + str(cx - 4) + '" y="' + str(top_y - 12)
+            + '" width="8" height="18" rx="3" fill="#4A5568"/>'
+            '<rect x="' + str(cx - 2) + '" y="' + str(top_y + 4)
+            + '" width="4" height="6" fill="#718096"/>'
         )
 
-        # Tick marks around the knob (0 to 11)
-        for t in range(12):
-            tick_rotation = -135 + (t / 11.0) * 270
-            tick_rad = math.radians(tick_rotation)
-            # Tick from edge inward
-            t_outer_x = cx + (knob_r - 4) * math.sin(tick_rad)
-            t_outer_y = cy - (knob_r - 4) * math.cos(tick_rad)
-            t_inner_x = cx + (knob_r - 12) * math.sin(tick_rad)
-            t_inner_y = cy - (knob_r - 12) * math.cos(tick_rad)
-            tick_color = "#4A5568" if t <= volume else "#2D3748"
-            svg += (
-                '<line x1="' + str(round(t_inner_x, 1)) + '" y1="' + str(round(t_inner_y, 1))
-                + '" x2="' + str(round(t_outer_x, 1)) + '" y2="' + str(round(t_outer_y, 1))
-                + '" stroke="' + tick_color + '" stroke-width="2"/>'
+        # Cable path — varies by style
+        cable_start_y = top_y + 10
+
+        if style == "straight":
+            # Clean straight line
+            path = (
+                'M' + str(cx) + ' ' + str(cable_start_y)
+                + ' L' + str(cx) + ' ' + str(bottom_y)
+            )
+        elif style == "wave":
+            # Gentle S-curve
+            path = (
+                'M' + str(cx) + ' ' + str(cable_start_y)
+                + ' C' + str(cx + 20) + ' ' + str(cable_start_y + 50)
+                + ' ' + str(cx - 20) + ' ' + str(bottom_y - 80)
+                + ' ' + str(cx) + ' ' + str(bottom_y)
+            )
+        elif style == "loop":
+            # One loop in the middle
+            mid_y = (cable_start_y + bottom_y) // 2
+            path = (
+                'M' + str(cx) + ' ' + str(cable_start_y)
+                + ' L' + str(cx) + ' ' + str(mid_y - 40)
+                + ' C' + str(cx + 45) + ' ' + str(mid_y - 30)
+                + ' ' + str(cx + 45) + ' ' + str(mid_y + 30)
+                + ' ' + str(cx) + ' ' + str(mid_y + 20)
+                + ' C' + str(cx - 30) + ' ' + str(mid_y + 40)
+                + ' ' + str(cx - 10) + ' ' + str(bottom_y - 30)
+                + ' ' + str(cx) + ' ' + str(bottom_y)
+            )
+        elif style == "tangle":
+            # Two loops crossing
+            t1 = cable_start_y + 40
+            t2 = cable_start_y + 110
+            path = (
+                'M' + str(cx) + ' ' + str(cable_start_y)
+                + ' L' + str(cx) + ' ' + str(t1 - 10)
+                + ' C' + str(cx + 40) + ' ' + str(t1)
+                + ' ' + str(cx - 35) + ' ' + str(t1 + 15)
+                + ' ' + str(cx + 5) + ' ' + str(t1 + 40)
+                + ' C' + str(cx - 40) + ' ' + str(t2 - 10)
+                + ' ' + str(cx + 35) + ' ' + str(t2 + 15)
+                + ' ' + str(cx - 5) + ' ' + str(t2 + 35)
+                + ' C' + str(cx + 15) + ' ' + str(bottom_y - 20)
+                + ' ' + str(cx - 10) + ' ' + str(bottom_y - 10)
+                + ' ' + str(cx) + ' ' + str(bottom_y)
+            )
+        elif style == "knot":
+            # Messy knot — multiple crossings
+            k1 = cable_start_y + 25
+            k2 = cable_start_y + 70
+            k3 = cable_start_y + 120
+            k4 = cable_start_y + 165
+            path = (
+                'M' + str(cx) + ' ' + str(cable_start_y)
+                + ' C' + str(cx + 35) + ' ' + str(k1)
+                + ' ' + str(cx - 40) + ' ' + str(k1 + 10)
+                + ' ' + str(cx + 10) + ' ' + str(k2 - 10)
+                + ' C' + str(cx - 45) + ' ' + str(k2)
+                + ' ' + str(cx + 50) + ' ' + str(k2 + 20)
+                + ' ' + str(cx - 15) + ' ' + str(k3 - 5)
+                + ' C' + str(cx + 40) + ' ' + str(k3 + 5)
+                + ' ' + str(cx - 35) + ' ' + str(k3 + 25)
+                + ' ' + str(cx + 8) + ' ' + str(k4)
+                + ' C' + str(cx - 25) + ' ' + str(k4 + 15)
+                + ' ' + str(cx + 20) + ' ' + str(bottom_y - 15)
+                + ' ' + str(cx) + ' ' + str(bottom_y)
             )
 
-        # Inner knob circle (raised look)
+        # Draw cable
         svg += (
-            '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="' + str(knob_r - 16) + '" fill="#2D3748" stroke="#4A5568" stroke-width="1.5"/>'
+            '<path d="' + path + '" fill="none" stroke="' + color
+            + '" stroke-width="4" stroke-linecap="round"/>'
         )
 
-        # Colored glow ring (shows "energy level")
-        glow_opacity = str(round(0.3 + (volume / 11.0) * 0.5, 2))
+        # Earpiece at bottom (circle)
         svg += (
-            '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="' + str(knob_r - 14) + '" fill="none" stroke="' + color
-            + '" stroke-width="2" opacity="' + glow_opacity + '"/>'
+            '<circle cx="' + str(cx) + '" cy="' + str(bottom_y + 10)
+            + '" r="12" fill="' + color + '" opacity="0.8"/>'
+            '<circle cx="' + str(cx) + '" cy="' + str(bottom_y + 10)
+            + '" r="5" fill="#2D3748"/>'
         )
 
-        # Pointer/indicator line
-        pointer_rotation = -135 + (volume / 11.0) * 270
-        p_rad = math.radians(pointer_rotation)
-        p_x = cx + (knob_r - 20) * math.sin(p_rad)
-        p_y = cy - (knob_r - 20) * math.cos(p_rad)
-        svg += (
-            '<line x1="' + str(cx) + '" y1="' + str(cy)
-            + '" x2="' + str(round(p_x, 1)) + '" y2="' + str(round(p_y, 1))
-            + '" stroke="' + color + '" stroke-width="3" stroke-linecap="round"/>'
-        )
+        # Signal indicator (small waves from earpiece — more for straight, none for knot)
+        if style in ("straight", "wave"):
+            for w in range(1, 3):
+                svg += (
+                    '<path d="M' + str(cx + 14 + w * 5) + ' ' + str(bottom_y + 4)
+                    + ' q 3 6 0 12" fill="none" stroke="' + color
+                    + '" stroke-width="1.5" opacity="' + str(0.7 - w * 0.2) + '"/>'
+                )
 
-        # Center dot
+        # Bracket label below
         svg += (
-            '<circle cx="' + str(cx) + '" cy="' + str(cy)
-            + '" r="4" fill="' + color + '"/>'
-        )
-
-        # Volume number below knob
-        svg += (
-            '<text x="' + str(cx) + '" y="' + str(cy + knob_r + 22)
-            + '" text-anchor="middle" font-size="20" font-weight="800" fill="' + color + '">'
-            + str(volume) + '</text>'
-        )
-
-        # Bracket label
-        svg += (
-            '<text x="' + str(cx) + '" y="' + str(cy + knob_r + 42)
-            + '" text-anchor="middle" font-size="13" font-weight="600" fill="#2D3748">'
+            '<text x="' + str(cx) + '" y="' + str(bottom_y + 42)
+            + '" text-anchor="middle" font-size="14" font-weight="700" fill="#2D3748">'
             + bracket + ' letters</text>'
         )
 
-        # Countryness score
+        # Score
         svg += (
-            '<text x="' + str(cx) + '" y="' + str(cy + knob_r + 58)
-            + '" text-anchor="middle" font-size="11" fill="#718096">'
-            'countryness: ' + str(score) + '</text>'
+            '<text x="' + str(cx) + '" y="' + str(bottom_y + 60)
+            + '" text-anchor="middle" font-size="12" fill="#718096">'
+            'score: ' + str(score) + '</text>'
         )
 
-    # Scale labels
+    # Labels
     svg += (
-        '<text x="30" y="' + str(svg_height - 10)
-        + '" font-size="12" fill="#059669" font-weight="600">'
-        '← CRANKED (heard everywhere)</text>'
+        '<text x="' + str(int(spacing)) + '" y="35" text-anchor="middle"'
+        ' font-size="11" fill="#059669" font-weight="600">CLEAN SIGNAL</text>'
     )
     svg += (
-        '<text x="' + str(svg_width - 30) + '" y="' + str(svg_height - 10)
-        + '" text-anchor="end" font-size="12" fill="#E63946" font-weight="600">'
-        "SILENT (can't get through) →</text>"
+        '<text x="' + str(int(spacing * num)) + '" y="35" text-anchor="middle"'
+        ' font-size="11" fill="#E63946" font-weight="600">SIGNAL LOST</text>'
     )
 
     svg += '</svg>'
 
     # Render in card
     st.markdown(
-        '<div style="background: linear-gradient(145deg, #1A1A2E, #16213E, #1A1A2E);'
-        'border-radius: 12px; padding: 24px 16px; border: 1px solid #2D3748;'
-        'box-shadow: 0 8px 24px rgba(0,0,0,.3);">'
+        '<div style="background: linear-gradient(135deg, #F8FAFC, #EEF2FF, #F0FFF4);'
+        'border-radius: 12px; padding: 20px 16px; border: 1px solid #E2E8F0;'
+        'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
         + svg + '</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        "Names with **11+ letters** average a countryness of **201** — the amp is off, nobody hears it. "
-        "At 3–4 letters? Just **8** — cranked to 11, playing on every station in the world."
+        "Names with **11+ letters** average a countryness of **201** — the signal is completely lost in the tangle. "
+        "At 3–4 letters? Just **8** — a clean, straight connection to every country."
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
