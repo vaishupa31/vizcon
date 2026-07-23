@@ -1,6 +1,5 @@
 import streamlit as st
 import base64
-import os
 import streamlit.components.v1 as components
 from utils.data_loader import load_metrics
 from utils.charts import countryness_over_time, COLORS
@@ -18,6 +17,22 @@ def render():
     year_max = df["year"].max()
     total_records = len(df)
 
+    #  ───Fixed layout — sticky tabs + wider content  ─────────────────────────────────────────────
+    st.markdown("""
+    <style>
+        .stTabs [data-baseweb="tab-list"] {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: #F0F8FF;
+        }
+        .block-container {
+            max-width: 1200px;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+    </style>
+    """, unsafe_allow_html=True)
     # ─── Hero Section ─────────────────────────────────────────────
     st.markdown(
         """
@@ -26,10 +41,10 @@ def render():
                        background: linear-gradient(135deg, #667eea, #764ba2);
                        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
                        margin-bottom: 5px;">
-                Passport for a Name
+                <span style="-webkit-text-fill-color: initial;"> 📼</span> The Anglosphere Mixtape
             </h1>
             <p style="font-size:1.05em; color:#6b7280; max-width:700px; margin:0 auto;">
-                Some names travel the world. Others never leave home.
+                Where names become hits—or hidden gems.
             </p>
         </div>
         """,
@@ -45,9 +60,11 @@ def render():
             border-radius:10px;
             box-shadow: 0 4px 20px rgba(102,126,234,0.1);">
             <p style="font-size:1.05em; color:#374151; line-height:1.6; margin:0;">
-                Eight nations. One language. The tightest alliance in modern history. They share armies. Intelligence. Borders.
-                &nbsp;&nbsp;But do they share something as simple as... <strong style="color:#667eea;">a baby name?</strong>
-                &nbsp;&nbsp;<span style="font-size:1.1em; font-weight:700; color:#667eea;">This is THAT STORY.</span>
+                Eight nations. One language. Centuries of shared history. Close allies. Shared intelligence. Shared defense.
+                &nbsp;&nbsp;But do they share something as simple as… <strong style="color:#667eea;">a baby name?</strong>
+            </p>
+            <p style="font-size:1.2em; font-weight:700; color:#667eea; margin:12px 0 0; text-align:center;">
+                This is THAT STORY.
             </p>
         </div>
         """,
@@ -56,48 +73,66 @@ def render():
 
     # ─── Anglosphere Context ──────────────────────────────────────
     st.markdown("")
-    st.markdown("### 🌍 The Anglosphere")
     st.markdown(
-        'The term "Anglosphere" was coined by sci-fi writer **Neal Stephenson** '
-        "in his 1995 novel *The Diamond Age*. A fictional concept that became a geopolitical reality. "
-        "Today it represents just **6% of the world's population** — but over **30% of its economy**."
-    )
-    st.markdown(
-        "Every year, millions of babies are named across the English-speaking world — from New York to New Zealand, "
-        "London to Lagos. We had **decades of baby name records** across **8 Anglosphere nations**."
-    )
-    st.markdown(
-        'The question was simple: **Does a name travel — or does it stay home?**'
-    )
-    st.markdown(
-        '"Passport for a Name" is exactly that — we gave every name in our dataset an imaginary passport stamp. '
-        "Names popular across all 8 countries got their passport **approved** ✈️. "
-        "Names locked to just one nation got **denied** 🚫. Explore more to know more."
+        """
+        <div style="padding:28px 32px; background:white; border-radius:14px;
+            border:1px solid #e5e7eb; box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            margin-bottom:1rem;">
+            <h3 style="margin:0 0 14px; color:#1f2937; font-size:1.4rem;">
+                🌍 The Anglosphere
+            </h3>
+            <p style="font-size:1.02rem; color:#374151; line-height:1.8; margin:0 0 12px;">
+                The term "Anglosphere" was coined by sci-fi writer <strong>Neal Stephenson</strong>
+                in his 1995 novel <em>The Diamond Age</em>. A fictional concept that became a geopolitical reality.
+                Today it represents just <strong>6% of the world's population</strong> — but over <strong>30% of its economy</strong>.
+                Every year, millions of babies receive a name across the English-speaking world—from
+                New York to New Zealand, London to Lagos. Our dataset spans <strong>27 years, 8 countries, 117 million babies, and 17,575 unique names.</strong>
+            </p>
+            <p style="font-size:1.02rem; color:#374151; line-height:1.8; margin:0 0 12px;">
+                We asked one simple question: <strong>Which names become global hits</strong>, crossing borders and
+                topping the charts everywhere—and which remain <strong>timeless local favorites</strong>, never leaving home?
+            </p>
+            <p style="font-size:1.02rem; color:#374151; line-height:1.8; margin:0 0 16px;">
+                So we turned every name into a track. Some earned a place on the
+                <strong style="color:#7c9a8e;">Global Playlist</strong>. Others stayed on
+                <strong style="color:#c99e85;">Local Vinyl</strong>.
+            </p>
+            <p style="font-size:1.15rem; font-weight:700; color:#667eea; margin:0; text-align:center;">
+                🎶 Now Playing: The Name Playlist.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    # ─── Map Image (with fallback) ────────────────────────────────
-    if os.path.exists("assets/world_map.png"):
-        st.markdown(
-            """
-            <style>
-                .map-container img {
-                    max-height: 160px;
-                    object-fit: cover;
-                    object-position: center;
-                    border-radius: 10px;
-                }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.markdown('<div class="map-container">', unsafe_allow_html=True)
-        st.image("assets/world_map.png", use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        st.info("🗺️ Map image coming soon — add `assets/world_map.png`")
+    # ─── Map Image (reduced height) ──────────────────────────────
+    st.markdown(
+        """
+        <style>
+            .map-container img {
+                max-height: 50px;
+                object-fit: cover;
+                object-position: center;
+                border-radius: 10px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown('<div class="map-container">', unsafe_allow_html=True)
+    st.image("assets/world_map.png", width="stretch")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ─── The Two Worlds (integrated baby section) ─────────────────
     st.markdown("")
+
+    # ─── Visual Divider ───────────────────────────────────────────
+    st.markdown(
+        """
+        <hr style="border:none; border-top:2px solid #e5e7eb; margin:1rem 0 2rem;">
+        """,
+        unsafe_allow_html=True,
+    )
 
     # ─── Section Header: Two Worlds of Naming ─────────────────────
     st.markdown(
@@ -111,24 +146,20 @@ def render():
                 Same Language. Different Cultures. One Choice.
             </h2>
             <p style="font-size:0.95rem; color:#9ca3af; margin:0;">
-                👆 Click on a baby to explore their world
+               👇 Click on a baby to explore their world
             </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # ─── Helper: encode image/audio to base64 (with fallback) ─────
+    # ─── Helper: encode image to base64 data URI ──────────────────
     def img_to_base64(path):
-        if not os.path.exists(path):
-            return ""
         with open(path, "rb") as f:
             data = base64.b64encode(f.read()).decode()
         return f"data:image/png;base64,{data}"
 
     def audio_to_base64(path):
-        if not os.path.exists(path):
-            return ""
         with open(path, "rb") as f:
             data = base64.b64encode(f.read()).decode()
         return f"data:audio/wav;base64,{data}"
@@ -138,155 +169,138 @@ def render():
     aud_pop = audio_to_base64("assets/audio_pop.wav")
     aud_trad = audio_to_base64("assets/audio_trad.wav")
 
-    # Check if we have the images to show the flip cards
-    if img_pop and img_trad:
-        # ─── Baby Images with flip-on-click + audio ───────────────
-        flip_html = f"""
-        <html>
-        <head>
-        <style>
-            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-            body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
-            .flip-container {{
-                display: flex;
-                gap: 20px;
-                justify-content: center;
-                flex-wrap: wrap;
-                padding: 10px;
-                width: 100%;
-            }}
-            .flip-card {{
-                perspective: 1000px;
-                width: 48%;
-                min-width: 280px;
-                cursor: pointer;
-            }}
-            .flip-card-inner {{
-                position: relative;
-                width: 100%;
-                height: 400px;
-                transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-                transform-style: preserve-3d;
-            }}
-            .flip-card.flipped .flip-card-inner {{
-                transform: rotateY(180deg);
-            }}
-            .flip-card-front, .flip-card-back {{
-                position: absolute;
-                top: 0; left: 0;
-                width: 100%;
-                height: 100%;
-                backface-visibility: hidden;
-                border-radius: 12px;
-                overflow: hidden;
-            }}
-            .flip-card-front img {{
-                width: 100%; height: 100%;
-                object-fit: cover;
-                border-radius: 12px;
-            }}
-            .flip-card-back {{
-                transform: rotateY(180deg);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 24px;
-                border-radius: 12px;
-            }}
-            .flip-card-back.pop-back {{
-                background: #f0fdf4;
-                border: 2px solid #06d6a0;
-            }}
-            .flip-card-back.trad-back {{
-                background: #fef2f2;
-                border: 2px solid #e63946;
-            }}
-        </style>
-        </head>
-        <body>
-        <div class="flip-container">
-            <!-- Pop Culture Card -->
-            <div class="flip-card" id="card-pop">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <img src="{img_pop}" alt="Pop culture babies">
-                    </div>
-                    <div class="flip-card-back pop-back">
-                        <div style="text-align:center;">
-                            <p style="font-size:1.6rem; margin:0;">🎧</p>
-                            <p style="font-size:1rem; color:#374151; margin:6px 0 0; line-height:1.6;">
-                                Some names hit <strong>#1 in all 8 countries</strong> —<br>
-                                like a global chart-topper that plays everywhere.
-                            </p>
-                        </div>
-                    </div>
+    # ─── Baby Images with flip-on-click + audio (using components.html) ───
+    flip_html = f"""
+    <html>
+    <head>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
+        .flip-container {{
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 10px;
+            width: 100%;
+        }}
+        .flip-card {{
+            perspective: 1000px;
+            width: 48%;
+            min-width: 280px;
+            cursor: pointer;
+        }}
+        .flip-card-inner {{
+            position: relative;
+            width: 100%;
+            height: 400px;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }}
+        .flip-card.flipped .flip-card-inner {{
+            transform: rotateY(180deg);
+        }}
+        .flip-card-front, .flip-card-back {{
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+        }}
+        .flip-card-front img {{
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }}
+        .flip-card-back {{
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            border-radius: 12px;
+        }}
+        .flip-card-back.pop-back {{
+            background: #f0fdf4;
+            border: 2px solid #06d6a0;
+        }}
+        .flip-card-back.trad-back {{
+            background: #fef2f2;
+            border: 2px solid #e63946;
+        }}
+    </style>
+    </head>
+    <body>
+    <div class="flip-container">
+        <!-- Pop Culture Card -->
+        <div class="flip-card" id="card-pop">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <img src="{img_pop}" alt="Pop culture babies">
                 </div>
-            </div>
-
-            <!-- Traditional Card -->
-            <div class="flip-card" id="card-trad">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <img src="{img_trad}" alt="Traditional babies">
-                    </div>
-                    <div class="flip-card-back trad-back">
-                        <div style="text-align:center;">
-                            <p style="font-size:1.6rem; margin:0;">💿</p>
-                            <p style="font-size:1rem; color:#374151; margin:6px 0 0; line-height:1.6;">
-                                Some never leave their homeland —<br>
-                                like a vinyl that only plays in <strong>one shop</strong>.
-                            </p>
-                        </div>
+                <div class="flip-card-back pop-back">
+                    <div style="text-align:center;">
+                        <p style="font-size:1.6rem; margin:0;">🎧</p>
+                        <p style="font-size:1rem; color:#374151; margin:6px 0 0; line-height:1.6;">
+                            Some names hit <strong>#1 in all 8 countries</strong> —<br>
+                            like a global chart-topper that plays everywhere.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Audio elements (only if available) -->
-        <audio id="audio-pop" src="{aud_pop}" preload="auto"></audio>
-        <audio id="audio-trad" src="{aud_trad}" preload="auto"></audio>
-
-        <script>
-            document.getElementById('card-pop').addEventListener('click', function() {{
-                this.classList.toggle('flipped');
-                var audio = document.getElementById('audio-pop');
-                if (audio.src && audio.src !== window.location.href) {{ audio.currentTime = 0; audio.play(); }}
-            }});
-            document.getElementById('card-trad').addEventListener('click', function() {{
-                this.classList.toggle('flipped');
-                var audio = document.getElementById('audio-trad');
-                if (audio.src && audio.src !== window.location.href) {{ audio.currentTime = 0; audio.play(); }}
-            }});
-        </script>
-        </body>
-        </html>
-        """
-
-        components.html(flip_html, height=450)
-    else:
-        # Fallback if images not yet added
-        st.markdown(
-            """
-            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 20px 0;">
-                <div style="flex: 1; min-width: 280px; max-width: 48%; background: #f0fdf4; 
-                            border: 2px solid #06d6a0; border-radius: 12px; padding: 40px 24px; text-align: center;">
-                    <p style="font-size: 2.5em; margin: 0;">🎧</p>
-                    <p style="font-size: 1.1em; font-weight: 700; color: #374151; margin: 12px 0 6px;">The Global Playlist</p>
-                    <p style="font-size: 0.9em; color: #6b7280;">Names that hit #1 in all 8 countries — like a chart-topper that plays everywhere.</p>
+        <!-- Traditional Card -->
+        <div class="flip-card" id="card-trad">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <img src="{img_trad}" alt="Traditional babies">
                 </div>
-                <div style="flex: 1; min-width: 280px; max-width: 48%; background: #fef2f2; 
-                            border: 2px solid #e63946; border-radius: 12px; padding: 40px 24px; text-align: center;">
-                    <p style="font-size: 2.5em; margin: 0;">💿</p>
-                    <p style="font-size: 1.1em; font-weight: 700; color: #374151; margin: 12px 0 6px;">The Local Vinyl</p>
-                    <p style="font-size: 0.9em; color: #6b7280;">Names that never leave their homeland — like a vinyl that only plays in one shop.</p>
+                <div class="flip-card-back trad-back">
+                    <div style="text-align:center;">
+                        <p style="font-size:1.6rem; margin:0;">💿</p>
+                        <p style="font-size:1rem; color:#374151; margin:6px 0 0; line-height:1.6;">
+                            Some never leave their homeland —<br>
+                            like a vinyl that only plays in <strong>one shop</strong>.
+                        </p>
+                    </div>
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.caption("📷 Add `assets/baby_popculture.png` and `assets/baby_traditional.png` to enable flip cards.")
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="audio-pop" src="{aud_pop}" preload="auto"></audio>
+    <audio id="audio-trad" src="{aud_trad}" preload="auto"></audio>
+
+    <script>
+        document.getElementById('card-pop').addEventListener('click', function() {{
+            this.classList.toggle('flipped');
+            document.getElementById('audio-pop').currentTime = 0;
+            document.getElementById('audio-pop').play();
+        }});
+        document.getElementById('card-trad').addEventListener('click', function() {{
+            this.classList.toggle('flipped');
+            document.getElementById('audio-trad').currentTime = 0;
+            document.getElementById('audio-trad').play();
+        }});
+    </script>
+    </body>
+    </html>
+    """
+
+    components.html(flip_html, height=450)
 
     # ─── Interactive Name Quiz ────────────────────────────────────
+    st.markdown(
+        """
+        <hr style="border:none; border-top:2px solid #e5e7eb; margin:2rem 0 1.5rem;">
+        """,
+        unsafe_allow_html=True,
+    )
+
     quiz_html = """
     <html>
     <head>
@@ -298,14 +312,22 @@ def render():
             max-width: 100%;
             margin: 0 auto;
         }
+        .quiz-preheading {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #667eea;
+            margin-bottom: 18px;
+        }
         .quiz-question {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: #1f2937;
             margin-bottom: 8px;
         }
         .quiz-subtitle {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             color: #6b7280;
             margin-bottom: 24px;
         }
@@ -330,6 +352,13 @@ def render():
         }
         .quiz-btn.nevaeh:hover { border-color: #06d6a0; color: #06d6a0; }
         .quiz-btn.trevor:hover { border-color: #e63946; color: #e63946; }
+        .quiz-btn span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
         .quiz-result {
             display: none;
             margin-top: 24px;
@@ -379,23 +408,24 @@ def render():
     </head>
     <body>
     <div class="quiz-container">
-        <p class="quiz-question">🔍 Two Names. One Passport. Zero Clues.</p>
-        <p class="quiz-subtitle">Which one do you think got the passport?</p>
+        <p class="quiz-preheading">🎵 Can You Read the Charts?</p>
+        <p class="quiz-question">🔍 Two Names. One Playlist. Zero Clues.</p>
+        <p class="quiz-subtitle">Which one made it to the Global Playlist?</p>
 
         <div class="quiz-options" id="options">
-            <button class="quiz-btn nevaeh" onclick="showResult('global')">Nevaeh</button>
-            <button class="quiz-btn trevor" onclick="showResult('local')">Trevor</button>
+            <button class="quiz-btn nevaeh" onclick="showResult('global')">Nevaeh<span>"heaven" spelled backwards</span></button>
+            <button class="quiz-btn trevor" onclick="showResult('local')">Trevor<span>classic Welsh origin</span></button>
         </div>
 
         <div class="quiz-result global" id="result-global">
             <p class="result-emoji">🎧</p>
-            <p class="result-text">✈️ Passport APPROVED — welcome to The Global Playlist</p>
+            <p class="result-text">🎉 This name became a cross-country favorite.</p>
             <p class="result-cta">👆 Head to the 🎧 Global Playlist tab above to explore →</p>
         </div>
 
         <div class="quiz-result local" id="result-local">
             <p class="result-emoji">💿</p>
-            <p class="result-text">🚫 Passport DENIED — you're on The Local Vinyl</p>
+            <p class="result-text">🏠 This name remained a hometown classic.</p>
             <p class="result-cta">👆 Head to the 💿 Local Vinyl tab above to explore →</p>
         </div>
 
