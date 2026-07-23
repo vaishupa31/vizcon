@@ -417,11 +417,9 @@ def render():
             'border:1px solid #C4AD82;border-radius:6px;padding:16px 18px;'
             'font-family:Courier New,monospace;box-shadow:0 4px 12px rgba(0,0,0,.08);'
             'position:relative;overflow:hidden;">'
-            # Diagonal stamp watermark
             '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate('
             + str(status_angle) + 'deg);font-size:.85rem;font-weight:900;letter-spacing:3px;color:'
             + status_color + ';opacity:.10;white-space:nowrap;">' + status + '</div>'
-            # Header
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
             '<div>'
             '<div style="font-size:.5rem;letter-spacing:3px;color:#8D7555;font-weight:700;">POLARIS RECORDS</div>'
@@ -432,7 +430,6 @@ def render():
             '<div style="font-size:.45rem;color:#A89268;margin-top:1px;">' + date + '</div>'
             '</div>'
             '</div>'
-            # Track name centered
             '<div style="text-align:center;border-top:1px solid #CBB996;border-bottom:1px solid #CBB996;'
             'padding:10px 0;margin-bottom:10px;">'
             '<div style="display:inline-flex;align-items:center;gap:8px;">'
@@ -446,7 +443,6 @@ def render():
             '<div style="font-size:.65rem;color:#7B6A54;margin-top:4px;">'
             'Origin: Ireland &nbsp;|&nbsp; Countryness: <b>' + score + '</b>'
             '</div></div>'
-            # Footer: shipped + status + barcode
             '<div style="display:flex;justify-content:space-between;align-items:center;">'
             '<div style="font-size:.65rem;color:#8D7555;">'
             'Shipped to <b>' + shipped_count + '</b> of 8 territories'
@@ -455,7 +451,6 @@ def render():
             'font-weight:800;letter-spacing:1.5px;font-size:.55rem;color:' + status_color + ';">'
             + status + '</span>'
             '</div>'
-            # Barcode footer
             '<div style="margin-top:10px;padding-top:8px;border-top:1px solid #CBB996;text-align:right;">'
             '<svg width="50" height="14" viewBox="0 0 50 14">'
             '<rect x="0" y="0" width="1.5" height="12" fill="#2D3748"/>'
@@ -514,10 +509,10 @@ def render():
         "nobody knows how to say it. "
         "And this isn't unique to Ireland. Every country in the Anglosphere has its own "
         "phonetic code — a set of spelling rules that only locals can decode. "
-        "Pick a country to see the phonetics behind their names:"
+        "Pick a country to hear the phonetics behind their names:"
     )
 
-    # ─── Part 2: Music Sheet Phonetics (clickable SVG notes) ──────
+    # ─── Part 2: Music Sheet Phonetics (large SVG, clickable) ─────
     import streamlit.components.v1 as components
     import base64
 
@@ -526,56 +521,56 @@ def render():
         "Ireland": {
             "language": "Gaeilge",
             "subtitle": "Irish Gaelic",
-            "color": "#A8E6C8",
+            "color": "#4CAF78",
             "rules": [
-                ("bh / mh", "'v'", "consonant"),
-                ("dh / gh", "silent", "rest"),
-                ("aoi", "'ee'", "vowel"),
-                ("fh", "silent", "rest"),
+                ("bh / mh", "'v'", 155),
+                ("dh / gh", "silent", 190),
+                ("aoi", "'ee'", 140),
+                ("fh", "silent", 175),
             ]
         },
         "Scotland": {
             "language": "Gàidhlig",
             "subtitle": "Scottish Gaelic",
-            "color": "#C8A8E8",
+            "color": "#9B6FD4",
             "rules": [
-                ("idh / aidh", "silent 'ee'", "rest"),
-                ("eo", "'aw'", "vowel"),
-                ("gh", "silent", "rest"),
-                ("mh", "'v'", "consonant"),
+                ("idh / aidh", "silent 'ee'", 190),
+                ("eo", "'aw'", 155),
+                ("gh", "silent", 175),
+                ("mh", "'v'", 140),
             ]
         },
         "Canada": {
             "language": "Français",
             "subtitle": "Canadian French",
-            "color": "#F5B7C5",
+            "color": "#E07098",
             "rules": [
-                ("é / è", "'ay'", "vowel"),
-                ("-ique", "'eek'", "vowel"),
-                ("oi", "'wa'", "diphthong"),
-                ("ç", "'s'", "consonant"),
+                ("é / è", "'ay'", 145),
+                ("-ique", "'eek'", 165),
+                ("oi", "'wa'", 185),
+                ("ç", "'s'", 155),
             ]
         },
         "New Zealand": {
             "language": "Te Reo",
             "subtitle": "Māori",
-            "color": "#F5C878",
+            "color": "#D4940F",
             "rules": [
-                ("ng-", "one sound", "consonant"),
-                ("wh", "'f'", "consonant"),
-                ("au", "'ow'", "diphthong"),
-                ("vowels", "all said", "vowel"),
+                ("ng-", "one sound", 170),
+                ("wh", "'f'", 145),
+                ("au", "'ow'", 190),
+                ("vowels", "all said", 155),
             ]
         },
         "Wales": {
             "language": "Cymraeg",
             "subtitle": "Welsh",
-            "color": "#F5D68A",
+            "color": "#C4920F",
             "rules": [
-                ("ff", "'f'", "consonant"),
-                ("f", "'v'", "consonant"),
-                ("ll", "breathy 'l'", "consonant"),
-                ("dd", "'th'", "consonant"),
+                ("ff", "'f'", 150),
+                ("ll", "breathy 'l'", 175),
+                ("dd", "'th'", 140),
+                ("f", "'v'", 190),
             ]
         },
     }
@@ -597,105 +592,105 @@ def render():
         color = station["color"]
         rules = station["rules"]
 
-        # Note SVG shapes by type (drawn paths, not unicode)
-        # Quarter note (consonant): filled oval + stem
-        # Beamed eighth notes (vowel): two notes with beam
-        # Double eighth (diphthong): two notes with double beam
-        # Rest (silent): quarter rest shape
-
-        def draw_quarter_note(x, y, fill):
-            """♩ Single note with stem — consonant shift"""
-            return (
-                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
-                '<ellipse cx="' + str(x) + '" cy="' + str(y) + '" rx="8" ry="6" fill="' + fill + '" transform="rotate(-15 ' + str(x) + ' ' + str(y) + ')"/>'
-                '<line x1="' + str(x + 7) + '" y1="' + str(y) + '" x2="' + str(x + 7) + '" y2="' + str(y - 32) + '" stroke="' + fill + '" stroke-width="2"/>'
-                '</g>'
-            )
-
-        def draw_beamed_notes(x, y, fill):
-            """♬ Beamed pair — vowel shift"""
-            return (
-                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
-                '<ellipse cx="' + str(x - 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x - 8) + ' ' + str(y) + ')"/>'
-                '<ellipse cx="' + str(x + 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x + 8) + ' ' + str(y) + ')"/>'
-                '<line x1="' + str(x - 2) + '" y1="' + str(y) + '" x2="' + str(x - 2) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
-                '<line x1="' + str(x + 14) + '" y1="' + str(y) + '" x2="' + str(x + 14) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
-                '<rect x="' + str(x - 2) + '" y="' + str(y - 30) + '" width="16" height="3" fill="' + fill + '"/>'
-                '</g>'
-            )
-
-        def draw_double_beam(x, y, fill):
-            """♫ Double beamed — diphthong"""
-            return (
-                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
-                '<ellipse cx="' + str(x - 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x - 8) + ' ' + str(y) + ')"/>'
-                '<ellipse cx="' + str(x + 8) + '" cy="' + str(y) + '" rx="7" ry="5" fill="' + fill + '" transform="rotate(-15 ' + str(x + 8) + ' ' + str(y) + ')"/>'
-                '<line x1="' + str(x - 2) + '" y1="' + str(y) + '" x2="' + str(x - 2) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
-                '<line x1="' + str(x + 14) + '" y1="' + str(y) + '" x2="' + str(x + 14) + '" y2="' + str(y - 30) + '" stroke="' + fill + '" stroke-width="2"/>'
-                '<rect x="' + str(x - 2) + '" y="' + str(y - 30) + '" width="16" height="3" fill="' + fill + '"/>'
-                '<rect x="' + str(x - 2) + '" y="' + str(y - 25) + '" width="16" height="3" fill="' + fill + '"/>'
-                '</g>'
-            )
-
-        def draw_rest(x, y, fill):
-            """𝄾 Quarter rest — silent"""
-            return (
-                '<g style="cursor:pointer;" class="note" data-idx="IDX">'
-                '<path d="M' + str(x - 4) + ' ' + str(y - 14)
-                + ' l4 7 l-4 7 l4 7 l-4 7" fill="none" stroke="' + fill + '" stroke-width="2.5" stroke-linecap="round"/>'
-                '</g>'
-            )
-
-        draw_map = {
-            "consonant": draw_quarter_note,
-            "vowel": draw_beamed_notes,
-            "diphthong": draw_double_beam,
-            "rest": draw_rest,
-        }
-
-        # Y positions on staff
-        pos_map = {"rest": 48, "vowel": 42, "consonant": 60, "diphthong": 48}
+        # SVG dimensions — large and readable
+        SVG_WIDTH = 1400
+        SVG_HEIGHT = 420
+        STAFF_LEFT = 120
+        STAFF_RIGHT = 1280
+        STAFF_TOP = 120
+        STAFF_GAP = 28
 
         num_notes = len(rules)
-        svg_width = 580
-        svg_height = 150
-        staff_top = 35
-        staff_gap = 12
 
-        # Staff lines
-        svg_lines = ""
-        for i in range(5):
-            y = staff_top + i * staff_gap
-            svg_lines += '<line x1="60" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
-
-        # Treble clef (SVG path simplified)
-        svg_lines += (
-            '<text x="20" y="' + str(staff_top + staff_gap * 2 + 12)
-            + '" font-size="48" fill="#A0AEC0" font-family="serif" style="user-select:none;">&#119070;</text>'
+        # Build SVG
+        svg = (
+            '<svg width="100%" height="360" viewBox="0 0 '
+            + str(SVG_WIDTH) + ' ' + str(SVG_HEIGHT)
+            + '" preserveAspectRatio="xMidYMid meet">'
+            # Styles
+            '<style>'
+            '.note:hover { cursor:pointer; transform:scale(1.15); transform-origin:center; '
+            'filter:drop-shadow(0 0 8px ' + color + '); }'
+            '.note { transition: transform 0.15s ease, filter 0.15s ease; }'
+            '.rule { font-size:22px; font-weight:700; fill:#2D3748; font-family:monospace; }'
+            '.sound { font-size:17px; fill:#718096; font-style:italic; }'
+            '.staff { stroke:#AAB7C4; stroke-width:2.5; }'
+            '.bar { stroke:' + color + '; stroke-width:3; opacity:0.3; }'
+            '</style>'
         )
 
+        # 5 staff lines
+        for i in range(5):
+            y = STAFF_TOP + i * STAFF_GAP
+            svg += (
+                '<line x1="' + str(STAFF_LEFT) + '" y1="' + str(y)
+                + '" x2="' + str(STAFF_RIGHT) + '" y2="' + str(y)
+                + '" class="staff"/>'
+            )
+
+        # Treble clef (large)
+        svg += (
+            '<text x="40" y="' + str(STAFF_TOP + 85)
+            + '" font-size="130" fill="#8092AF" font-family="serif" style="user-select:none;">'
+            '&#119070;</text>'
+        )
+
+        # Bar lines between notes
+        note_spacing = (STAFF_RIGHT - 240) / num_notes
+        for i in range(1, num_notes):
+            bar_x = 240 + int(i * note_spacing) - int(note_spacing / 2)
+            svg += (
+                '<line x1="' + str(bar_x) + '" y1="' + str(STAFF_TOP - 15)
+                + '" x2="' + str(bar_x) + '" y2="' + str(STAFF_TOP + 4 * STAFF_GAP + 15)
+                + '" class="bar"/>'
+            )
+
         # Draw notes
-        note_elements = ""
-        for i, (pattern, result, stype) in enumerate(rules):
-            x = 120 + i * ((svg_width - 180) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
-            note_y = pos_map[stype]
-            draw_fn = draw_map[stype]
-            note_svg = draw_fn(x, note_y, color).replace('data-idx="IDX"', 'data-idx="' + str(i) + '"')
-            note_elements += note_svg
+        for i, (pattern, sound, note_y) in enumerate(rules):
+            x = 280 + int(i * note_spacing)
 
-            # Labels below staff
-            label_y = staff_top + staff_gap * 5 + 18
-            result_y = label_y + 14
-            note_elements += '<text x="' + str(x) + '" y="' + str(label_y) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
-            note_elements += '<text x="' + str(x) + '" y="' + str(result_y) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
+            # Quarter note: ellipse + stem
+            svg += (
+                '<g class="note" data-idx="' + str(i) + '">'
+                '<ellipse cx="' + str(x) + '" cy="' + str(note_y)
+                + '" rx="16" ry="12" fill="' + color
+                + '" transform="rotate(-22 ' + str(x) + ' ' + str(note_y) + ')"/>'
+                '<line x1="' + str(x + 14) + '" y1="' + str(note_y)
+                + '" x2="' + str(x + 14) + '" y2="' + str(note_y - 70)
+                + '" stroke="' + color + '" stroke-width="4"/>'
+                '</g>'
+            )
 
-        # Check for audio files
+            # Pattern label
+            label_y = STAFF_TOP + 5 * STAFF_GAP + 35
+            svg += (
+                '<text x="' + str(x) + '" y="' + str(label_y)
+                + '" text-anchor="middle" class="rule">' + pattern + '</text>'
+            )
+
+            # Sound label
+            sound_y = label_y + 28
+            svg += (
+                '<text x="' + str(x) + '" y="' + str(sound_y)
+                + '" text-anchor="middle" class="sound">' + sound + '</text>'
+            )
+
+        # Footer text
+        svg += (
+            '<text x="' + str(SVG_WIDTH // 2) + '" y="400" text-anchor="middle"'
+            ' font-size="16" fill="#A0AEC0" font-style="italic">'
+            'Click any note to hear its pronunciation</text>'
+        )
+
+        svg += '</svg>'
+
+        # Audio tags
         audio_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "assets", "audio"
         )
         audio_tags = ""
-        for i, (pattern, result, stype) in enumerate(rules):
+        for i, (pattern, sound, note_y) in enumerate(rules):
             safe_pattern = pattern.replace(" / ", "_").replace("-", "").replace(" ", "").lower()
             audio_filename = safe_pattern + ".wav"
             audio_path = os.path.join(audio_dir, audio_filename)
@@ -704,7 +699,7 @@ def render():
                     audio_b64 = base64.b64encode(af.read()).decode()
                 audio_tags += '<audio id="audio_' + str(i) + '" src="data:audio/wav;base64,' + audio_b64 + '"></audio>'
 
-        # JavaScript for click interaction
+        # JavaScript
         js_code = """
         <script>
         document.querySelectorAll('.note').forEach(function(el) {
@@ -712,46 +707,36 @@ def render():
                 var idx = this.getAttribute('data-idx');
                 var audio = document.getElementById('audio_' + idx);
                 if (audio) { audio.currentTime = 0; audio.play(); }
-                // Visual feedback — brief scale pulse
-                this.style.transform = 'scale(1.2)';
-                setTimeout(function() { el.style.transform = 'scale(1)'; }, 200);
             });
         });
         </script>
         """
 
-        # Assemble full HTML
-        full_html = (
-            '<!DOCTYPE html><html><body style="margin:0;padding:0;">'
-            '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
-            'border-radius: 12px; padding: 20px 24px; border: 1px solid #E8DFC0;'
-            'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
-            # Header
-            '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">'
-            '<span style="font-size: 1.1rem; font-weight: 700; color: #2D3748;">'
+        # Title bar
+        title_html = (
+            '<div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px; padding:0 10px;">'
+            '<span style="font-size:1.2rem; font-weight:700; color:#2D3748;">'
             + language + '</span>'
-            '<span style="font-size: .8rem; color: #718096;">'
+            '<span style="font-size:.85rem; color:#718096;">'
             + subtitle + '</span>'
-            '<span style="font-size: .7rem; color: #A0AEC0; margin-left: auto;">'
+            '<span style="font-size:.75rem; color:#A0AEC0; margin-left:auto;">'
             + selected_country + '</span>'
             '</div>'
-            # SVG
-            '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;overflow:visible;">'
-            + svg_lines + note_elements +
-            '</svg>'
-            # Legend
-            '<div style="display: flex; gap: 14px; margin-top: 10px; justify-content: center; flex-wrap: wrap;">'
-            '<span style="font-size: .65rem; color: #A0AEC0;">● note = consonant shift</span>'
-            '<span style="font-size: .65rem; color: #A0AEC0;">●● beam = vowel shift</span>'
-            '<span style="font-size: .65rem; color: #A0AEC0;">●● double = diphthong</span>'
-            '<span style="font-size: .65rem; color: #A0AEC0;">~ rest = silent</span>'
-            '</div>'
+        )
+
+        # Full HTML
+        full_html = (
+            '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#FFFEF5;">'
+            '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
+            'border-radius: 12px; padding: 20px 16px; border: 1px solid #E8DFC0;'
+            'box-shadow: 0 4px 16px rgba(0,0,0,.06); font-family: Inter, -apple-system, sans-serif;">'
+            + title_html + svg +
             '</div>'
             + audio_tags + js_code +
             '</body></html>'
         )
 
-        components.html(full_html, height=240, scrolling=False)
+        components.html(full_html, height=400, scrolling=False)
 
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
@@ -795,7 +780,6 @@ def render():
     )
 
     st.markdown("---")
-
 
     # ══════════════════════════════════════════════════════════════
     # 🎵 SAME SONG, DIFFERENT KEY (Patrick vs Pádraig)
