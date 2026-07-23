@@ -826,166 +826,135 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-    # ─── Part 3: The longer the name, the higher the wall ─────────
+        # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "Visual length and spelling complexity work together as a pronunciation filter."
+        "Think of it like vinyl — short names are lightweight singles that spin fast and travel everywhere. "
+        "Long names are heavy LPs that barely leave the shelf."
     )
 
-    # VU Meter / Volume Dial — name length vs countryness
-    # Semi-circular gauge: green (broadcasts) → red (blocked)
-    import math
-
-    dial_data = [
-        ("3–4", 8),
-        ("5–6", 14),
-        ("7–8", 27),
-        ("9–10", 89),
-        ("11+", 201),
+    # Turntable RPM visual — 5 records of increasing size
+    # Each represents a name-length bracket
+    records = [
+        ("3–4", 8, "78", "#A8E6C8", 40),     # small, fast, green
+        ("5–6", 14, "45", "#7C9FD6", 52),     # medium-small, blue
+        ("7–8", 27, "33", "#F5D68A", 64),     # standard LP, yellow
+        ("9–10", 89, "16", "#F5B7C5", 76),    # heavy, pink
+        ("11+", 201, "—", "#E63946", 88),     # stopped/massive, red
     ]
 
-    # Dial geometry
-    cx, cy = 400, 280  # center of arc
-    radius = 220
-    start_angle = math.pi  # left (180°)
-    end_angle = 0  # right (0°)
-
-    # Map countryness values to angle positions on the arc
-    # Use log scale since values range from 8 to 201 (huge range)
-    import math as m
-    min_val = 8
-    max_val = 201
-    log_min = m.log(min_val)
-    log_max = m.log(max_val)
-
-    def val_to_angle(val):
-        """Map countryness value to angle on the semi-circle (pi to 0)"""
-        log_val = m.log(val)
-        t = (log_val - log_min) / (log_max - log_min)  # 0 to 1
-        return start_angle - t * (start_angle - end_angle)  # pi to 0
-
-    # Build SVG
-    svg_width = 800
-    svg_height = 340
+    svg_width = 900
+    svg_height = 280
+    base_y = 130  # vertical center for records
 
     svg = (
         '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height)
         + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
     )
 
-    # Draw the colored arc (green → yellow → red)
-    # Split into segments
-    arc_segments = [
-        (math.pi, math.pi * 0.72, "#A8E6C8"),       # green
-        (math.pi * 0.72, math.pi * 0.5, "#7C9FD6"), # blue
-        (math.pi * 0.5, math.pi * 0.3, "#F5D68A"),  # yellow
-        (math.pi * 0.3, math.pi * 0.12, "#F5B7C5"), # pink
-        (math.pi * 0.12, 0, "#E63946"),              # red
-    ]
+    # Distribute 5 records evenly
+    num = len(records)
+    spacing = svg_width / (num + 1)
 
-    for seg_start, seg_end, seg_color in arc_segments:
-        # Outer arc
-        x1 = cx + radius * m.cos(seg_start)
-        y1 = cy - radius * m.sin(seg_start)
-        x2 = cx + radius * m.cos(seg_end)
-        y2 = cy - radius * m.sin(seg_end)
-        # Inner arc (for thick band)
-        inner_r = radius - 30
-        x3 = cx + inner_r * m.cos(seg_end)
-        y3 = cy - inner_r * m.sin(seg_end)
-        x4 = cx + inner_r * m.cos(seg_start)
-        y4 = cy - inner_r * m.sin(seg_start)
+    for i, (bracket, score, rpm, color, radius) in enumerate(records):
+        cx = int(spacing * (i + 1))
+        cy = base_y
 
-        large_arc = 0  # segments are small
+        # Platter shadow
         svg += (
-            '<path d="M' + str(round(x1, 1)) + ' ' + str(round(y1, 1))
-            + ' A' + str(radius) + ' ' + str(radius) + ' 0 ' + str(large_arc) + ' 1 '
-            + str(round(x2, 1)) + ' ' + str(round(y2, 1))
-            + ' L' + str(round(x3, 1)) + ' ' + str(round(y3, 1))
-            + ' A' + str(inner_r) + ' ' + str(inner_r) + ' 0 ' + str(large_arc) + ' 0 '
-            + str(round(x4, 1)) + ' ' + str(round(y4, 1))
-            + ' Z" fill="' + seg_color + '" opacity="0.8"/>'
+            '<circle cx="' + str(cx + 3) + '" cy="' + str(cy + 3)
+            + '" r="' + str(radius) + '" fill="#00000015"/>'
         )
 
-    # Tick marks + labels for each data point
-    for i, (bracket, score) in enumerate(dial_data):
-        angle = val_to_angle(score)
-        # Tick mark (line from outer edge outward)
-        tick_inner = radius - 35
-        tick_outer = radius + 10
-        tx1 = cx + tick_inner * m.cos(angle)
-        ty1 = cy - tick_inner * m.sin(angle)
-        tx2 = cx + tick_outer * m.cos(angle)
-        ty2 = cy - tick_outer * m.sin(angle)
+        # Outer disc (vinyl black)
         svg += (
-            '<line x1="' + str(round(tx1, 1)) + '" y1="' + str(round(ty1, 1))
-            + '" x2="' + str(round(tx2, 1)) + '" y2="' + str(round(ty2, 1))
-            + '" stroke="#2D3748" stroke-width="3"/>'
+            '<circle cx="' + str(cx) + '" cy="' + str(cy)
+            + '" r="' + str(radius) + '" fill="#1A1A2E"/>'
         )
 
-        # Score label (outside the arc)
-        label_r = radius + 30
-        lx = cx + label_r * m.cos(angle)
-        ly = cy - label_r * m.sin(angle)
+        # Grooves (concentric circles)
+        for g in range(3, radius - 15, 6):
+            svg += (
+                '<circle cx="' + str(cx) + '" cy="' + str(cy)
+                + '" r="' + str(g + 12) + '" fill="none" stroke="#2D3748" stroke-width="0.8"/>'
+            )
+
+        # Center label (colored circle with RPM)
+        label_r = min(22, radius - 10)
         svg += (
-            '<text x="' + str(round(lx, 1)) + '" y="' + str(round(ly, 1))
-            + '" text-anchor="middle" font-size="18" font-weight="800" fill="#2D3748">'
-            + str(score) + '</text>'
+            '<circle cx="' + str(cx) + '" cy="' + str(cy)
+            + '" r="' + str(label_r) + '" fill="' + color + '"/>'
         )
 
-        # Bracket label (inside/below the arc)
-        bracket_r = radius - 55
-        bx = cx + bracket_r * m.cos(angle)
-        by = cy - bracket_r * m.sin(angle)
+        # Spindle hole
         svg += (
-            '<text x="' + str(round(bx, 1)) + '" y="' + str(round(by, 1))
+            '<circle cx="' + str(cx) + '" cy="' + str(cy)
+            + '" r="3" fill="#1A1A2E"/>'
+        )
+
+        # RPM text in center
+        rpm_size = "14" if rpm != "—" else "16"
+        svg += (
+            '<text x="' + str(cx) + '" y="' + str(cy - 4)
+            + '" text-anchor="middle" font-size="' + rpm_size
+            + '" font-weight="800" fill="#2D3748">' + rpm + '</text>'
+        )
+
+        # "RPM" label (skip for stopped)
+        if rpm != "—":
+            svg += (
+                '<text x="' + str(cx) + '" y="' + str(cy + 10)
+                + '" text-anchor="middle" font-size="8" fill="#4A5568" font-weight="600">RPM</text>'
+            )
+        else:
+            svg += (
+                '<text x="' + str(cx) + '" y="' + str(cy + 10)
+                + '" text-anchor="middle" font-size="8" fill="#4A5568" font-weight="600">STOP</text>'
+            )
+
+        # Bracket label below record
+        svg += (
+            '<text x="' + str(cx) + '" y="' + str(cy + radius + 22)
+            + '" text-anchor="middle" font-size="14" font-weight="700" fill="#2D3748">'
+            + bracket + ' letters</text>'
+        )
+
+        # Score below that
+        svg += (
+            '<text x="' + str(cx) + '" y="' + str(cy + radius + 40)
             + '" text-anchor="middle" font-size="13" fill="#718096">'
-            + bracket + '</text>'
+            'score: ' + str(score) + '</text>'
         )
 
-    # Needle pointing to middle (or we can skip needle and just show markers)
-    # Center dot
-    svg += '<circle cx="' + str(cx) + '" cy="' + str(cy) + '" r="8" fill="#2D3748"/>'
-
-    # Labels at extremes
+    # Speed label on left
     svg += (
-        '<text x="' + str(cx - radius - 10) + '" y="' + str(cy + 30)
-        + '" text-anchor="middle" font-size="13" fill="#059669" font-weight="600">'
-        'Heard Everywhere</text>'
+        '<text x="30" y="30" font-size="12" fill="#059669" font-weight="600">'
+        '← FAST (travels far)</text>'
     )
+    # Slow label on right
     svg += (
-        '<text x="' + str(cx + radius + 10) + '" y="' + str(cy + 30)
-        + '" text-anchor="middle" font-size="13" fill="#E63946" font-weight="600">'
-        "Can't Get Through</text>"
-    )
-
-    # Subtitle below center
-    svg += (
-        '<text x="' + str(cx) + '" y="' + str(cy + 30)
-        + '" text-anchor="middle" font-size="14" fill="#718096">'
-        'letters in name</text>'
+        '<text x="' + str(svg_width - 30) + '" y="30" text-anchor="end" font-size="12" fill="#E63946" font-weight="600">'
+        'SLOW (stays local) →</text>'
     )
 
     svg += '</svg>'
 
-    # Render in a card
+    # Render in card
     st.markdown(
         '<div style="background: linear-gradient(135deg, #F8FAFC, #EEF2FF, #F0FFF4);'
-        'border-radius: 12px; padding: 20px; border: 1px solid #E2E8F0;'
+        'border-radius: 12px; padding: 24px 16px; border: 1px solid #E2E8F0;'
         'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
         + svg + '</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        "Names with **11+ letters** average a countryness of **201** — effectively cultural passwords. "
-        "At 3–4 letters? Just **8** — practically global. "
-        "The dial doesn't lie: every extra letter turns the volume down on a name's international reach."
+        "Names with **11+ letters** average a countryness of **201** — the record has stopped spinning. "
+        "At 3–4 letters? Just **8** — a 78 RPM single that plays on every radio in the world."
     )
 
     st.markdown("---")
-
 
 
     # ══════════════════════════════════════════════════════════════
