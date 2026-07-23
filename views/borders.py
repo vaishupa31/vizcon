@@ -826,161 +826,107 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-    # ─── Part 3: The longer the name, the higher the wall ─────────
+        # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown(
         "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "Think of it like a headphone cable — short names carry a clean signal straight through. "
-        "The longer and more complex the name, the more tangled the signal gets."
+        "Think of it like a broadcast signal — short names have full bars, reaching every station. "
+        "Long names? No signal. Can't get through."
     )
 
-    # Headphone cables — straight to tangled
-    cables = [
-        ("3–4", 8, "#A8E6C8", "straight"),
-        ("5–6", 14, "#7C9FD6", "wave"),
-        ("7–8", 27, "#F5D68A", "loop"),
-        ("9–10", 89, "#F5B7C5", "tangle"),
-        ("11+", 201, "#E63946", "knot"),
+    # Signal bars — like phone reception
+    # Short names = full bars, long names = no signal
+    bars_data = [
+        ("3–4", 8, 5, "#A8E6C8"),     # 5 bars — full signal
+        ("5–6", 14, 4, "#7C9FD6"),     # 4 bars
+        ("7–8", 27, 3, "#F5D68A"),     # 3 bars
+        ("9–10", 89, 1, "#F5B7C5"),    # 1 bar
+        ("11+", 201, 0, "#E63946"),    # 0 bars — no signal
     ]
 
     svg_width = 900
-    svg_height = 380
-    top_y = 50     # jack position
-    bottom_y = 270  # earpiece position
+    svg_height = 320
+    base_y = 220   # bottom of bars
 
     svg = (
         '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height)
         + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
     )
 
-    num = len(cables)
-    spacing = svg_width / (num + 1)
+    # Title
+    svg += (
+        '<text x="' + str(svg_width // 2) + '" y="30" text-anchor="middle"'
+        ' font-size="14" fill="#718096" letter-spacing="2" font-weight="600">'
+        'BROADCAST SIGNAL STRENGTH</text>'
+    )
 
-    for i, (bracket, score, color, style) in enumerate(cables):
+    num = len(bars_data)
+    spacing = svg_width / (num + 1)
+    max_bars = 5
+    bar_width = 14
+    bar_gap = 5
+    max_bar_height = 120
+
+    for i, (bracket, score, signal_bars, color) in enumerate(bars_data):
         cx = int(spacing * (i + 1))
 
-        # Headphone jack at top (3.5mm plug shape)
-        svg += (
-            '<rect x="' + str(cx - 4) + '" y="' + str(top_y - 12)
-            + '" width="8" height="18" rx="3" fill="#4A5568"/>'
-            '<rect x="' + str(cx - 2) + '" y="' + str(top_y + 4)
-            + '" width="4" height="6" fill="#718096"/>'
-        )
+        # Draw 5 bar slots (filled bars = signal, empty = no signal)
+        total_bars_width = max_bars * bar_width + (max_bars - 1) * bar_gap
+        start_x = cx - total_bars_width // 2
 
-        # Cable path — varies by style
-        cable_start_y = top_y + 10
+        for b in range(max_bars):
+            bx = start_x + b * (bar_width + bar_gap)
+            # Bar height increases left to right (like real signal icon)
+            bar_h = int(max_bar_height * (b + 1) / max_bars)
+            by = base_y - bar_h
 
-        if style == "straight":
-            # Clean straight line
-            path = (
-                'M' + str(cx) + ' ' + str(cable_start_y)
-                + ' L' + str(cx) + ' ' + str(bottom_y)
-            )
-        elif style == "wave":
-            # Gentle S-curve
-            path = (
-                'M' + str(cx) + ' ' + str(cable_start_y)
-                + ' C' + str(cx + 20) + ' ' + str(cable_start_y + 50)
-                + ' ' + str(cx - 20) + ' ' + str(bottom_y - 80)
-                + ' ' + str(cx) + ' ' + str(bottom_y)
-            )
-        elif style == "loop":
-            # One loop in the middle
-            mid_y = (cable_start_y + bottom_y) // 2
-            path = (
-                'M' + str(cx) + ' ' + str(cable_start_y)
-                + ' L' + str(cx) + ' ' + str(mid_y - 40)
-                + ' C' + str(cx + 45) + ' ' + str(mid_y - 30)
-                + ' ' + str(cx + 45) + ' ' + str(mid_y + 30)
-                + ' ' + str(cx) + ' ' + str(mid_y + 20)
-                + ' C' + str(cx - 30) + ' ' + str(mid_y + 40)
-                + ' ' + str(cx - 10) + ' ' + str(bottom_y - 30)
-                + ' ' + str(cx) + ' ' + str(bottom_y)
-            )
-        elif style == "tangle":
-            # Two loops crossing
-            t1 = cable_start_y + 40
-            t2 = cable_start_y + 110
-            path = (
-                'M' + str(cx) + ' ' + str(cable_start_y)
-                + ' L' + str(cx) + ' ' + str(t1 - 10)
-                + ' C' + str(cx + 40) + ' ' + str(t1)
-                + ' ' + str(cx - 35) + ' ' + str(t1 + 15)
-                + ' ' + str(cx + 5) + ' ' + str(t1 + 40)
-                + ' C' + str(cx - 40) + ' ' + str(t2 - 10)
-                + ' ' + str(cx + 35) + ' ' + str(t2 + 15)
-                + ' ' + str(cx - 5) + ' ' + str(t2 + 35)
-                + ' C' + str(cx + 15) + ' ' + str(bottom_y - 20)
-                + ' ' + str(cx - 10) + ' ' + str(bottom_y - 10)
-                + ' ' + str(cx) + ' ' + str(bottom_y)
-            )
-        elif style == "knot":
-            # Messy knot — multiple crossings
-            k1 = cable_start_y + 25
-            k2 = cable_start_y + 70
-            k3 = cable_start_y + 120
-            k4 = cable_start_y + 165
-            path = (
-                'M' + str(cx) + ' ' + str(cable_start_y)
-                + ' C' + str(cx + 35) + ' ' + str(k1)
-                + ' ' + str(cx - 40) + ' ' + str(k1 + 10)
-                + ' ' + str(cx + 10) + ' ' + str(k2 - 10)
-                + ' C' + str(cx - 45) + ' ' + str(k2)
-                + ' ' + str(cx + 50) + ' ' + str(k2 + 20)
-                + ' ' + str(cx - 15) + ' ' + str(k3 - 5)
-                + ' C' + str(cx + 40) + ' ' + str(k3 + 5)
-                + ' ' + str(cx - 35) + ' ' + str(k3 + 25)
-                + ' ' + str(cx + 8) + ' ' + str(k4)
-                + ' C' + str(cx - 25) + ' ' + str(k4 + 15)
-                + ' ' + str(cx + 20) + ' ' + str(bottom_y - 15)
-                + ' ' + str(cx) + ' ' + str(bottom_y)
-            )
-
-        # Draw cable
-        svg += (
-            '<path d="' + path + '" fill="none" stroke="' + color
-            + '" stroke-width="4" stroke-linecap="round"/>'
-        )
-
-        # Earpiece at bottom (circle)
-        svg += (
-            '<circle cx="' + str(cx) + '" cy="' + str(bottom_y + 10)
-            + '" r="12" fill="' + color + '" opacity="0.8"/>'
-            '<circle cx="' + str(cx) + '" cy="' + str(bottom_y + 10)
-            + '" r="5" fill="#2D3748"/>'
-        )
-
-        # Signal indicator (small waves from earpiece — more for straight, none for knot)
-        if style in ("straight", "wave"):
-            for w in range(1, 3):
+            if b < signal_bars:
+                # Filled bar (has signal)
                 svg += (
-                    '<path d="M' + str(cx + 14 + w * 5) + ' ' + str(bottom_y + 4)
-                    + ' q 3 6 0 12" fill="none" stroke="' + color
-                    + '" stroke-width="1.5" opacity="' + str(0.7 - w * 0.2) + '"/>'
+                    '<rect x="' + str(bx) + '" y="' + str(by)
+                    + '" width="' + str(bar_width) + '" height="' + str(bar_h)
+                    + '" rx="3" fill="' + color + '"/>'
+                )
+            else:
+                # Empty bar (no signal) — just outline
+                svg += (
+                    '<rect x="' + str(bx) + '" y="' + str(by)
+                    + '" width="' + str(bar_width) + '" height="' + str(bar_h)
+                    + '" rx="3" fill="none" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="3 2"/>'
                 )
 
-        # Bracket label below
+        # "X" mark for no signal
+        if signal_bars == 0:
+            svg += (
+                '<text x="' + str(cx) + '" y="' + str(base_y - max_bar_height // 2 + 5)
+                + '" text-anchor="middle" font-size="28" fill="#E63946" font-weight="700">'
+                '✕</text>'
+            )
+
+        # Score (big number below bars)
         svg += (
-            '<text x="' + str(cx) + '" y="' + str(bottom_y + 42)
-            + '" text-anchor="middle" font-size="14" font-weight="700" fill="#2D3748">'
+            '<text x="' + str(cx) + '" y="' + str(base_y + 30)
+            + '" text-anchor="middle" font-size="22" font-weight="800" fill="' + color + '">'
+            + str(score) + '</text>'
+        )
+
+        # Bracket label
+        svg += (
+            '<text x="' + str(cx) + '" y="' + str(base_y + 52)
+            + '" text-anchor="middle" font-size="14" font-weight="600" fill="#2D3748">'
             + bracket + ' letters</text>'
         )
 
-        # Score
-        svg += (
-            '<text x="' + str(cx) + '" y="' + str(bottom_y + 60)
-            + '" text-anchor="middle" font-size="12" fill="#718096">'
-            'score: ' + str(score) + '</text>'
-        )
-
-    # Labels
+    # Left/right labels
     svg += (
-        '<text x="' + str(int(spacing)) + '" y="35" text-anchor="middle"'
-        ' font-size="11" fill="#059669" font-weight="600">CLEAN SIGNAL</text>'
+        '<text x="' + str(int(spacing)) + '" y="' + str(base_y + 75)
+        + '" text-anchor="middle" font-size="11" fill="#059669" font-weight="600">'
+        'FULL SIGNAL</text>'
     )
     svg += (
-        '<text x="' + str(int(spacing * num)) + '" y="35" text-anchor="middle"'
-        ' font-size="11" fill="#E63946" font-weight="600">SIGNAL LOST</text>'
+        '<text x="' + str(int(spacing * num)) + '" y="' + str(base_y + 75)
+        + '" text-anchor="middle" font-size="11" fill="#E63946" font-weight="600">'
+        'NO SIGNAL</text>'
     )
 
     svg += '</svg>'
@@ -995,8 +941,8 @@ def render():
     )
 
     st.markdown(
-        "Names with **11+ letters** average a countryness of **201** — the signal is completely lost in the tangle. "
-        "At 3–4 letters? Just **8** — a clean, straight connection to every country."
+        "Names with **11+ letters** average a countryness of **201** — no signal, can't broadcast. "
+        "At 3–4 letters? Just **8** — full bars, received loud and clear in every country."
     )
 
     st.markdown("---")
