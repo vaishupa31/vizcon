@@ -408,123 +408,78 @@ def render():
         "The first wall is the simplest: if you can't read a name, you won't use it."
     )
 
-    # ─── Part 1: Same origin, different fate ──────────────────────
+    # ─── Part 1: Same origin, different fate (mini distribution sheets) ───
     st.markdown("**Same origin. Different fate.**")
 
-    # Record label distribution sheet function
-    def distribution_sheet(track, origin, score, catalog, date, status, status_color, status_angle, countries):
+    def mini_distribution_sheet(track, score, status, status_color, status_angle, shipped_count):
         html = (
             '<div style="background:linear-gradient(135deg,#F5F0E4,#EDE8D8,#F8F4EA);'
-            'border:1px solid #C4AD82;border-radius:6px;padding:22px;'
-            'font-family:Courier New,monospace;box-shadow:0 6px 20px rgba(0,0,0,.12);'
+            'border:1px solid #C4AD82;border-radius:6px;padding:16px 18px;'
+            'font-family:Courier New,monospace;box-shadow:0 4px 12px rgba(0,0,0,.08);'
             'position:relative;overflow:hidden;">'
+            # Diagonal stamp watermark
             '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate('
-            + str(status_angle) + 'deg);font-size:1.1rem;font-weight:900;letter-spacing:3px;color:'
-            + status_color + ';opacity:.12;white-space:nowrap;">' + status + '</div>'
-            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">'
-            '<div>'
-            '<div style="font-size:.6rem;letter-spacing:4px;color:#8D7555;font-weight:700;">POLARIS RECORDS</div>'
-            '<div style="font-size:.55rem;color:#A89268;margin-top:2px;">DISTRIBUTION DEPT.</div>'
+            + str(status_angle) + 'deg);font-size:.85rem;font-weight:900;letter-spacing:3px;color:'
+            + status_color + ';opacity:.10;white-space:nowrap;">' + status + '</div>'
+            # Header
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+            '<div style="font-size:.5rem;letter-spacing:3px;color:#8D7555;font-weight:700;">POLARIS RECORDS</div>'
+            '<svg width="40" height="14" viewBox="0 0 40 14">'
+            '<rect x="0" y="0" width="1.5" height="12" fill="#2D3748"/>'
+            '<rect x="3" y="0" width="1" height="12" fill="#2D3748"/>'
+            '<rect x="5.5" y="0" width="2" height="12" fill="#2D3748"/>'
+            '<rect x="9" y="0" width="1" height="12" fill="#2D3748"/>'
+            '<rect x="11.5" y="0" width="1.5" height="12" fill="#2D3748"/>'
+            '<rect x="14.5" y="0" width="1" height="12" fill="#2D3748"/>'
+            '<rect x="17" y="0" width="2" height="12" fill="#2D3748"/>'
+            '<rect x="20.5" y="0" width="1" height="12" fill="#2D3748"/>'
+            '<rect x="23" y="0" width="1.5" height="12" fill="#2D3748"/>'
+            '<rect x="26" y="0" width="1" height="12" fill="#2D3748"/>'
+            '</svg>'
             '</div>'
-            '<div style="text-align:right;">'
-            '<div style="font-size:.58rem;color:#8D7555;font-weight:600;">' + catalog + '</div>'
-            '</div></div>'
+            # Track name centered
             '<div style="text-align:center;border-top:1px solid #CBB996;border-bottom:1px solid #CBB996;'
-            'padding:14px 0;margin-bottom:16px;">'
-            '<div style="display:inline-flex;align-items:center;gap:10px;">'
-            '<svg width="24" height="24" viewBox="0 0 24 24">'
+            'padding:10px 0;margin-bottom:10px;">'
+            '<div style="display:inline-flex;align-items:center;gap:8px;">'
+            '<svg width="18" height="18" viewBox="0 0 24 24">'
             '<circle cx="12" cy="12" r="11" fill="#2D3748"/>'
-            '<circle cx="12" cy="12" r="7" fill="none" stroke="#4A5568" stroke-width=".5"/>'
             '<circle cx="12" cy="12" r="4" fill="#7C9FD6" opacity=".8"/>'
             '<circle cx="12" cy="12" r="2" fill="#2D3748"/>'
             '</svg>'
-            '<span style="font-size:1.6rem;font-weight:800;font-family:Georgia;color:#2D3748;">' + track + '</span>'
+            '<span style="font-size:1.4rem;font-weight:800;font-family:Georgia;color:#2D3748;">' + track + '</span>'
             '</div>'
-            '<div style="font-size:.7rem;color:#7B6A54;margin-top:6px;">'
-            'Origin: ' + origin + ' &nbsp;|&nbsp; Countryness Score: <b>' + score + '</b>'
+            '<div style="font-size:.65rem;color:#7B6A54;margin-top:4px;">'
+            'Origin: Ireland &nbsp;|&nbsp; Score: <b>' + score + '</b>'
             '</div></div>'
-            '<div style="font-size:.58rem;color:#8D7555;letter-spacing:2px;margin-bottom:8px;font-weight:600;">'
-            'DISTRIBUTION STATUS BY TERRITORY</div>'
-            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
-        )
-
-        for c, released in countries:
-            if released:
-                html += (
-                    '<div style="background:#ECFDF5;border:1px solid #0E9F6E;border-radius:4px;'
-                    'padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">'
-                    '<span style="font-size:.68rem;color:#4A5568;font-weight:600;">' + c + '</span>'
-                    '<span style="font-size:.62rem;font-weight:700;color:#0E9F6E;">SHIPPED ✓</span>'
-                    '</div>'
-                )
-            else:
-                html += (
-                    '<div style="background:#FEF2F2;border:1px solid #E5E7EB;border-radius:4px;'
-                    'padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">'
-                    '<span style="font-size:.68rem;color:#4A5568;font-weight:600;">' + c + '</span>'
-                    '<span style="font-size:.62rem;font-weight:700;color:#9CA3AF;">NOT SHIPPED ✕</span>'
-                    '</div>'
-                )
-
-        html += (
+            # Shipped count + status badge
+            '<div style="display:flex;justify-content:space-between;align-items:center;">'
+            '<div style="font-size:.65rem;color:#8D7555;">'
+            'Shipped to <b>' + shipped_count + '</b> of 8 territories'
             '</div>'
-            '<div style="margin-top:16px;padding-top:14px;border-top:1px solid #CBB996;'
-            'display:flex;justify-content:space-between;align-items:center;">'
-            '<span style="padding:6px 16px;border:2px solid ' + status_color + ';border-radius:3px;'
-            'font-weight:800;letter-spacing:2px;font-size:.65rem;color:' + status_color + ';">'
+            '<span style="padding:4px 10px;border:1.5px solid ' + status_color + ';border-radius:3px;'
+            'font-weight:800;letter-spacing:1.5px;font-size:.55rem;color:' + status_color + ';">'
             + status + '</span>'
-            '<div style="text-align:right;">'
-            '<svg width="60" height="20" viewBox="0 0 60 20">'
-            '<rect x="0" y="0" width="1.5" height="18" fill="#2D3748"/>'
-            '<rect x="3" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="5.5" y="0" width="2" height="18" fill="#2D3748"/>'
-            '<rect x="9" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="11.5" y="0" width="1.5" height="18" fill="#2D3748"/>'
-            '<rect x="14.5" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="17" y="0" width="2" height="18" fill="#2D3748"/>'
-            '<rect x="20.5" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="23" y="0" width="1.5" height="18" fill="#2D3748"/>'
-            '<rect x="26" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="28.5" y="0" width="2" height="18" fill="#2D3748"/>'
-            '<rect x="32" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="34.5" y="0" width="1.5" height="18" fill="#2D3748"/>'
-            '<rect x="37.5" y="0" width="1" height="18" fill="#2D3748"/>'
-            '<rect x="40" y="0" width="2" height="18" fill="#2D3748"/>'
-            '</svg>'
-            '<div style="font-size:.5rem;color:#8D7555;margin-top:2px;">' + date + '</div>'
-            '</div></div>'
+            '</div>'
             '</div>'
         )
         return html
 
-    declan = distribution_sheet(
+    declan = mini_distribution_sheet(
         track="Declan",
-        origin="Ireland",
         score="2.5",
-        catalog="CAT# IRL-1997-007",
-        date="DIST. 1997–2023",
-        status="WORLDWIDE RELEASE",
+        status="WORLDWIDE",
         status_color="#059669",
-        status_angle=-18,
-        countries=[
-            ("USA", True), ("Canada", True), ("Australia", True), ("England", True),
-            ("Scotland", True), ("Ireland", True), ("Northern Ireland", True), ("New Zealand", True),
-        ],
+        status_angle=-15,
+        shipped_count="8",
     )
 
-    niamh = distribution_sheet(
+    niamh = mini_distribution_sheet(
         track="Niamh",
-        origin="Ireland",
         score="28",
-        catalog="CAT# IRL-1997-042",
-        date="DIST. 1997–2023",
-        status="LOCAL RELEASE ONLY",
+        status="LOCAL ONLY",
         status_color="#DC2626",
-        status_angle=-15,
-        countries=[
-            ("USA", False), ("Canada", False), ("Australia", False), ("England", True),
-            ("Scotland", False), ("Ireland", True), ("Northern Ireland", True), ("New Zealand", False),
-        ],
+        status_angle=-12,
+        shipped_count="3",
     )
 
     col_left, col_right = st.columns(2)
@@ -535,68 +490,72 @@ def render():
 
     st.markdown("")
     st.markdown(
-        "Both names are Irish. Both are common. But **Declan** is phonetically transparent — "
-        "anyone can read it and say it. **Niamh** (pronounced *NEEV*) requires insider knowledge. "
-        "That single difference determined their fate."
+        "Both names are Irish. Both are common. The only difference? "
+        "**Declan** is phonetically transparent. **Niamh** (pronounced *NEEV*) requires insider knowledge."
     )
 
-        # ─── Part 2: It's not just Irish ─────────────────────────────
+    # ─── Part 2: It's not just Irish (Music Sheet) ────────────────
     st.markdown("")
     st.markdown("**It's not just Irish.**")
     st.markdown(
-        "Every country in the Anglosphere has its own phonetic code that outsiders can't crack."
+        "Every country has its own phonetic code that outsiders can't crack."
     )
 
-    # Music sheet phonetic data
+    # Music sheet data with country names + different symbols per type
     stations = {
         "Gaeilge": {
             "subtitle": "Irish Gaelic",
+            "country": "Ireland & N. Ireland",
             "color": "#A8E6C8",
             "rules": [
-                ("bh / mh", "'v'"),
-                ("dh / gh", "silent"),
-                ("aoi", "'ee'"),
-                ("fh", "silent"),
+                ("bh / mh", "'v'", "consonant"),
+                ("dh / gh", "silent", "rest"),
+                ("aoi", "'ee'", "vowel"),
+                ("fh", "silent", "rest"),
             ]
         },
         "Gàidhlig": {
             "subtitle": "Scottish Gaelic",
+            "country": "Scotland",
             "color": "#C8A8E8",
             "rules": [
-                ("idh / aidh", "silent 'ee'"),
-                ("eo", "'aw'"),
-                ("gh", "silent"),
-                ("mh", "'v'"),
+                ("idh / aidh", "silent 'ee'", "rest"),
+                ("eo", "'aw'", "vowel"),
+                ("gh", "silent", "rest"),
+                ("mh", "'v'", "consonant"),
             ]
         },
         "Français": {
             "subtitle": "Canadian French",
+            "country": "Canada",
             "color": "#F5B7C5",
             "rules": [
-                ("é / è", "'ay'"),
-                ("-ique", "'eek'"),
-                ("oi", "'wa'"),
-                ("ç", "'s'"),
+                ("é / è", "'ay'", "vowel"),
+                ("-ique", "'eek'", "vowel"),
+                ("oi", "'wa'", "diphthong"),
+                ("ç", "'s'", "consonant"),
             ]
         },
         "Te Reo": {
             "subtitle": "Māori",
+            "country": "New Zealand",
             "color": "#F5C878",
             "rules": [
-                ("ng-", "one sound"),
-                ("wh", "'f'"),
-                ("au", "'ow'"),
-                ("vowels", "all said"),
+                ("ng-", "one sound", "consonant"),
+                ("wh", "'f'", "consonant"),
+                ("au", "'ow'", "diphthong"),
+                ("vowels", "all said", "vowel"),
             ]
         },
         "Cymraeg": {
             "subtitle": "Welsh",
+            "country": "Wales",
             "color": "#F5D68A",
             "rules": [
-                ("ff", "'f'"),
-                ("f", "'v'"),
-                ("ll", "breathy 'l'"),
-                ("dd", "'th'"),
+                ("ff", "'f'", "consonant"),
+                ("f", "'v'", "consonant"),
+                ("ll", "breathy 'l'", "consonant"),
+                ("dd", "'th'", "consonant"),
             ]
         },
     }
@@ -613,22 +572,33 @@ def render():
     if selected_station:
         station = stations[selected_station]
         subtitle = station["subtitle"]
+        country = station["country"]
         color = station["color"]
         rules = station["rules"]
 
-        # Build music sheet SVG + HTML
+        # Symbol mapping by type
+        symbol_map = {
+            "rest": "𝄾",
+            "vowel": "♬",
+            "consonant": "♩",
+            "diphthong": "♫",
+        }
+
+        # Vertical position by type
+        pos_map = {
+            "rest": 30,
+            "vowel": 54,
+            "consonant": 66,
+            "diphthong": 42,
+        }
+
+        # Build music sheet SVG
         num_notes = len(rules)
-        sheet_width = 100  # percentage
-        note_spacing = sheet_width / (num_notes + 1)
-
-        # SVG staff lines + notes
         svg_width = 600
-        svg_height = 120
-        staff_top = 25
+        svg_height = 130
+        staff_top = 30
         staff_gap = 12
-        note_y = staff_top + staff_gap * 2  # notes sit on middle line
 
-        # Build SVG
         svg = '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height) + '" style="display:block;">'
 
         # 5 staff lines
@@ -636,49 +606,51 @@ def render():
             y = staff_top + i * staff_gap
             svg += '<line x1="50" y1="' + str(y) + '" x2="' + str(svg_width - 20) + '" y2="' + str(y) + '" stroke="#CBD5E0" stroke-width="1"/>'
 
-        # Treble clef (simplified text)
-        svg += '<text x="18" y="' + str(staff_top + staff_gap * 2 + 8) + '" font-size="42" fill="#A0AEC0" font-family="serif">𝄞</text>'
+        # Treble clef
+        svg += '<text x="12" y="' + str(staff_top + staff_gap * 2 + 10) + '" font-size="44" fill="#A0AEC0" font-family="serif">𝄞</text>'
 
-        # Notes on the staff
-        for i, (pattern, result) in enumerate(rules):
-            x = 90 + i * ((svg_width - 140) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
-            # Note head (filled circle)
-            svg += '<circle cx="' + str(x) + '" cy="' + str(note_y) + '" r="8" fill="' + color + '"/>'
-            # Note stem
-            svg += '<line x1="' + str(x + 7) + '" y1="' + str(note_y) + '" x2="' + str(x + 7) + '" y2="' + str(note_y - 30) + '" stroke="' + color + '" stroke-width="2"/>'
-            # Pattern text (above)
-            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 22) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
-            # Result text (below)
-            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 5) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
+        # Notes
+        for i, (pattern, result, stype) in enumerate(rules):
+            x = 100 + i * ((svg_width - 160) / (num_notes - 1)) if num_notes > 1 else svg_width / 2
+            note_y = pos_map[stype]
+            symbol = symbol_map[stype]
+
+            svg += '<text x="' + str(x) + '" y="' + str(note_y + 8) + '" text-anchor="middle" font-size="28" fill="' + color + '">' + symbol + '</text>'
+            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 22) + '" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2D3748" font-family="monospace">' + pattern + '</text>'
+            svg += '<text x="' + str(x) + '" y="' + str(svg_height - 6) + '" text-anchor="middle" font-size="11" fill="#718096" font-style="italic">' + result + '</text>'
 
         svg += '</svg>'
 
-        # Wrap in a card
+        # Card
         card_html = (
             '<div style="background: linear-gradient(135deg, #FFFEF5, #FFF9E6, #FFFDF2);'
             'border-radius: 12px; padding: 20px 24px; border: 1px solid #E8DFC0;'
             'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
-            # Header
-            '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">'
+            '<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px;">'
             '<span style="font-size: 1.1rem; font-weight: 700; color: #2D3748;">'
             + selected_station + '</span>'
             '<span style="font-size: .8rem; color: #718096;">'
             + subtitle + '</span>'
+            '<span style="font-size: .7rem; color: #A0AEC0; margin-left: auto;">— '
+            + country + '</span>'
             '</div>'
-            # SVG sheet
             + svg +
+            '<div style="display: flex; gap: 16px; margin-top: 6px; justify-content: center;">'
+            '<span style="font-size: .65rem; color: #A0AEC0;">♩ consonant shift</span>'
+            '<span style="font-size: .65rem; color: #A0AEC0;">♬ vowel shift</span>'
+            '<span style="font-size: .65rem; color: #A0AEC0;">♫ diphthong</span>'
+            '<span style="font-size: .65rem; color: #A0AEC0;">𝄾 silent</span>'
+            '</div>'
             '</div>'
         )
 
         st.markdown(card_html, unsafe_allow_html=True)
 
-
     # ─── Part 3: The longer the name, the higher the wall ─────────
     st.markdown("")
     st.markdown("**The longer the name, the higher the wall.**")
     st.markdown(
-        "It's not just exotic characters — length itself is a barrier. "
-        "The more complex a name looks, the less likely anyone outside will try it."
+        "It's not just exotic characters — length itself is a barrier."
     )
 
     length_data = {
