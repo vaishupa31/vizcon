@@ -414,17 +414,6 @@ def render():
     # 🏷️ CAN'T READ THE LYRICS (Pronunciation Wall)
     # ══════════════════════════════════════════════════════════════
 
-    # Fixed-width container — consistent layout across laptop/desktop
-    st.markdown("""
-    <style>
-        .block-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
     st.markdown("### 🏷️ Can't Read the Lyrics")
     st.markdown(
         "The first wall is the simplest: if you can't read a name, you won't use it. "
