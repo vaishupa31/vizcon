@@ -177,3 +177,399 @@ def render():
     )
 
     st.markdown("---")
+    """
+Discoveries Tab — Controversial Names Section
+"⚠️ Banned from the Airwaves"
+
+Names killed by real-world events (Isis, Osama) and meme culture (Karen)
+"""
+import streamlit as st
+import streamlit.components.v1 as components
+
+
+def render_controversial_names():
+    """Render the controversial names section."""
+
+    # Section header
+    st.markdown("### ⚠️ Banned from the Airwaves")
+    st.markdown(
+        "Some tracks don't fade naturally — they get **pulled from rotation**. "
+        "A name can carry a thousand years of history, then lose it all in a single news cycle."
+    )
+
+    st.markdown("")
+
+    # --- ISIS & OSAMA: "BROADCAST BAN" notices ---
+    st.markdown("#### 📵 Emergency Broadcast Bans")
+    st.markdown(
+        "These names weren't declining. They were healthy, growing, beloved — "
+        "until a global event made them radioactive overnight."
+    )
+
+    col_isis, col_osama = st.columns(2)
+
+    with col_isis:
+        # ISIS ban card
+        isis_html = (
+            '<div style="'
+            'background: linear-gradient(135deg, #FFF5F5, #FED7D7, #FFF5F5);'
+            'border: 2px solid #FC8181;'
+            'border-radius: 16px;'
+            'padding: 28px 24px;'
+            'position: relative;'
+            'overflow: hidden;'
+            '">'
+            # Diagonal "BANNED" watermark
+            '<div style="'
+            'position: absolute;'
+            'top: 50%;'
+            'left: 50%;'
+            'transform: translate(-50%, -50%) rotate(-25deg);'
+            'font-size: 64px;'
+            'font-weight: 900;'
+            'color: rgba(229, 62, 62, 0.08);'
+            'letter-spacing: 12px;'
+            'white-space: nowrap;'
+            'pointer-events: none;'
+            '">BANNED</div>'
+            # Header
+            '<div style="'
+            'display: flex;'
+            'align-items: center;'
+            'gap: 12px;'
+            'margin-bottom: 16px;'
+            '">'
+            '<div style="'
+            'background: #E53E3E;'
+            'color: white;'
+            'padding: 4px 10px;'
+            'border-radius: 4px;'
+            'font-size: 11px;'
+            'font-weight: 700;'
+            'letter-spacing: 1px;'
+            '">BROADCAST BAN</div>'
+            '<span style="color: #A0AEC0; font-size: 12px;">June 2014</span>'
+            '</div>'
+            # Name
+            '<div style="'
+            'font-size: 42px;'
+            'font-weight: 800;'
+            'color: #2D3748;'
+            'margin-bottom: 4px;'
+            'text-decoration: line-through;'
+            'text-decoration-color: #E53E3E;'
+            'text-decoration-thickness: 3px;'
+            '">Isis</div>'
+            '<div style="'
+            'font-size: 13px;'
+            'color: #718096;'
+            'margin-bottom: 20px;'
+            '">Egyptian goddess of magic & motherhood</div>'
+            # Stats
+            '<div style="'
+            'display: grid;'
+            'grid-template-columns: 1fr 1fr;'
+            'gap: 12px;'
+            'margin-bottom: 16px;'
+            '">'
+            '<div style="background: white; border-radius: 8px; padding: 12px; text-align: center;">'
+            '<div style="font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: 0.5px;">Before</div>'
+            '<div style="font-size: 24px; font-weight: 700; color: #2D3748;">576</div>'
+            '<div style="font-size: 11px; color: #718096;">babies/year (2007)</div>'
+            '</div>'
+            '<div style="background: white; border-radius: 8px; padding: 12px; text-align: center;">'
+            '<div style="font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: 0.5px;">After</div>'
+            '<div style="font-size: 24px; font-weight: 700; color: #E53E3E;">8</div>'
+            '<div style="font-size: 11px; color: #718096;">babies/year (2018)</div>'
+            '</div>'
+            '</div>'
+            # Drop stat
+            '<div style="'
+            'background: #E53E3E;'
+            'color: white;'
+            'border-radius: 8px;'
+            'padding: 10px 16px;'
+            'text-align: center;'
+            'font-weight: 700;'
+            'font-size: 18px;'
+            'margin-bottom: 12px;'
+            '">−98.4%</div>'
+            # Recovery note
+            '<div style="'
+            'background: rgba(72, 187, 120, 0.1);'
+            'border-left: 3px solid #48BB78;'
+            'padding: 8px 12px;'
+            'border-radius: 0 8px 8px 0;'
+            'font-size: 12px;'
+            'color: #2F855A;'
+            '">📡 Signal returning: 159 babies in 2023 — parents reclaiming the goddess</div>'
+            '</div>'
+        )
+        st.markdown(isis_html, unsafe_allow_html=True)
+
+    with col_osama:
+        # OSAMA ban card
+        osama_html = (
+            '<div style="'
+            'background: linear-gradient(135deg, #FFF5F5, #FED7D7, #FFF5F5);'
+            'border: 2px solid #FC8181;'
+            'border-radius: 16px;'
+            'padding: 28px 24px;'
+            'position: relative;'
+            'overflow: hidden;'
+            '">'
+            # Diagonal "BANNED" watermark
+            '<div style="'
+            'position: absolute;'
+            'top: 50%;'
+            'left: 50%;'
+            'transform: translate(-50%, -50%) rotate(-25deg);'
+            'font-size: 64px;'
+            'font-weight: 900;'
+            'color: rgba(229, 62, 62, 0.08);'
+            'letter-spacing: 12px;'
+            'white-space: nowrap;'
+            'pointer-events: none;'
+            '">BANNED</div>'
+            # Header
+            '<div style="'
+            'display: flex;'
+            'align-items: center;'
+            'gap: 12px;'
+            'margin-bottom: 16px;'
+            '">'
+            '<div style="'
+            'background: #E53E3E;'
+            'color: white;'
+            'padding: 4px 10px;'
+            'border-radius: 4px;'
+            'font-size: 11px;'
+            'font-weight: 700;'
+            'letter-spacing: 1px;'
+            '">BROADCAST BAN</div>'
+            '<span style="color: #A0AEC0; font-size: 12px;">September 2001</span>'
+            '</div>'
+            # Name
+            '<div style="'
+            'font-size: 42px;'
+            'font-weight: 800;'
+            'color: #2D3748;'
+            'margin-bottom: 4px;'
+            'text-decoration: line-through;'
+            'text-decoration-color: #E53E3E;'
+            'text-decoration-thickness: 3px;'
+            '">Osama</div>'
+            '<div style="'
+            'font-size: 13px;'
+            'color: #718096;'
+            'margin-bottom: 20px;'
+            '">Arabic: "lion" — a common name for centuries</div>'
+            # Stats
+            '<div style="'
+            'display: grid;'
+            'grid-template-columns: 1fr 1fr;'
+            'gap: 12px;'
+            'margin-bottom: 16px;'
+            '">'
+            '<div style="background: white; border-radius: 8px; padding: 12px; text-align: center;">'
+            '<div style="font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: 0.5px;">Before</div>'
+            '<div style="font-size: 24px; font-weight: 700; color: #2D3748;">71</div>'
+            '<div style="font-size: 11px; color: #718096;">babies/year (1999)</div>'
+            '</div>'
+            '<div style="background: white; border-radius: 8px; padding: 12px; text-align: center;">'
+            '<div style="font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: 0.5px;">After</div>'
+            '<div style="font-size: 24px; font-weight: 700; color: #E53E3E;">3</div>'
+            '<div style="font-size: 11px; color: #718096;">babies/year (2009)</div>'
+            '</div>'
+            '</div>'
+            # Drop stat
+            '<div style="'
+            'background: #E53E3E;'
+            'color: white;'
+            'border-radius: 8px;'
+            'padding: 10px 16px;'
+            'text-align: center;'
+            'font-weight: 700;'
+            'font-size: 18px;'
+            'margin-bottom: 12px;'
+            '">−96%</div>'
+            # Difference note
+            '<div style="'
+            'background: rgba(113, 128, 150, 0.1);'
+            'border-left: 3px solid #718096;'
+            'padding: 8px 12px;'
+            'border-radius: 0 8px 8px 0;'
+            'font-size: 12px;'
+            'color: #4A5568;'
+            '">🇬🇧→🇺🇸 split: USA dropped to 0 instantly. England held on 3 more years.</div>'
+            '</div>'
+        )
+        st.markdown(osama_html, unsafe_allow_html=True)
+
+    st.markdown("")
+    st.markdown(
+        "Two names. Two histories stretching back millennia. "
+        "Both destroyed in under 24 months by a single association. "
+        "Isis — the Egyptian goddess who reassembled Osiris and birthed Horus — "
+        "became unsayable in a maternity ward. "
+        "Osama — meaning 'lion' in Arabic, used for centuries across the Muslim world — "
+        "vanished from American birth certificates within a year of September 11."
+    )
+
+    st.markdown("")
+
+    # --- KAREN: "Fading signal + interference" ---
+    st.markdown("#### 📉 Death by Meme")
+    st.markdown(
+        "Not every name dies from a single blow. Some are already fading — "
+        "and then the internet decides to make them a punchline."
+    )
+
+    # Karen card — different design: a "declining signal" / fading playlist entry
+    karen_html = (
+        '<div style="'
+        'background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);'
+        'border: 2px solid #E2E8F0;'
+        'border-radius: 16px;'
+        'padding: 28px 32px;'
+        'max-width: 700px;'
+        '">'
+        # Header row
+        '<div style="'
+        'display: flex;'
+        'justify-content: space-between;'
+        'align-items: center;'
+        'margin-bottom: 20px;'
+        '">'
+        '<div>'
+        '<div style="font-size: 36px; font-weight: 800; color: #2D3748;">Karen</div>'
+        '<div style="font-size: 13px; color: #718096;">Peak popularity: 1960s (outside our dataset)</div>'
+        '</div>'
+        '<div style="'
+        'background: #ECC94B;'
+        'color: #744210;'
+        'padding: 4px 10px;'
+        'border-radius: 4px;'
+        'font-size: 11px;'
+        'font-weight: 700;'
+        'letter-spacing: 1px;'
+        '">FADING + MEME</div>'
+        '</div>'
+        # Timeline
+        '<div style="'
+        'display: flex;'
+        'align-items: center;'
+        'gap: 0;'
+        'margin-bottom: 20px;'
+        '">'
+        # 1997 marker
+        '<div style="text-align: center; flex: 1;">'
+        '<div style="font-size: 20px; font-weight: 700; color: #2D3748;">2,588</div>'
+        '<div style="font-size: 10px; color: #A0AEC0;">1997</div>'
+        '</div>'
+        # Arrow
+        '<div style="flex: 0.5; text-align: center; color: #CBD5E0; font-size: 20px;">→</div>'
+        # Pre-meme
+        '<div style="text-align: center; flex: 1;">'
+        '<div style="font-size: 20px; font-weight: 700; color: #718096;">563</div>'
+        '<div style="font-size: 10px; color: #A0AEC0;">2017 (pre-meme)</div>'
+        '</div>'
+        # Arrow with meme marker
+        '<div style="flex: 0.5; text-align: center;">'
+        '<div style="font-size: 16px;">💀</div>'
+        '<div style="font-size: 9px; color: #E53E3E; font-weight: 600;">meme</div>'
+        '</div>'
+        # Post-meme
+        '<div style="text-align: center; flex: 1;">'
+        '<div style="font-size: 20px; font-weight: 700; color: #E53E3E;">204</div>'
+        '<div style="font-size: 10px; color: #A0AEC0;">2021 (bottom)</div>'
+        '</div>'
+        # Arrow
+        '<div style="flex: 0.5; text-align: center; color: #CBD5E0; font-size: 20px;">→</div>'
+        # Now
+        '<div style="text-align: center; flex: 1;">'
+        '<div style="font-size: 20px; font-weight: 700; color: #48BB78;">238</div>'
+        '<div style="font-size: 10px; color: #A0AEC0;">2023</div>'
+        '</div>'
+        '</div>'
+        # Insight
+        '<div style="'
+        'background: rgba(236, 201, 75, 0.1);'
+        'border-left: 3px solid #ECC94B;'
+        'padding: 12px 16px;'
+        'border-radius: 0 8px 8px 0;'
+        'font-size: 13px;'
+        'color: #744210;'
+        'line-height: 1.5;'
+        '">'
+        '<strong>The difference:</strong> Karen was already on a 40-year decline. '
+        'The "Karen" meme (2019–2020) didn\'t kill it — it accelerated an existing death. '
+        'From 2017→2021, it dropped 64%. Without the meme, the generational curve suggests '
+        'it would have fallen ~40% anyway. The meme added roughly 24 percentage points of extra damage.'
+        '</div>'
+        '</div>'
+    )
+    st.markdown(karen_html, unsafe_allow_html=True)
+
+    st.markdown("")
+
+    # --- Comparison / Insight ---
+    st.markdown(
+        "**The pattern:** Real-world violence creates **instant, total** bans "
+        "(Isis: −98%, Osama: −96%). Internet culture creates **accelerated fades** "
+        "(Karen: −64% in 4 years vs. an expected −40%). "
+        "One is a cliff. The other is a steeper slope."
+    )
+
+    # Recovery comparison
+    recovery_html = (
+        '<div style="'
+        'display: grid;'
+        'grid-template-columns: 1fr 1fr 1fr;'
+        'gap: 16px;'
+        'margin-top: 16px;'
+        '">'
+        # Isis recovery
+        '<div style="'
+        'background: linear-gradient(135deg, #F0FFF4, #C6F6D5);'
+        'border: 1px solid #9AE6B4;'
+        'border-radius: 12px;'
+        'padding: 16px;'
+        'text-align: center;'
+        '">'
+        '<div style="font-size: 13px; color: #276749; font-weight: 600;">Isis</div>'
+        '<div style="font-size: 24px; font-weight: 800; color: #22543D; margin: 4px 0;">↑ recovering</div>'
+        '<div style="font-size: 11px; color: #48BB78;">8 → 159 since 2018</div>'
+        '</div>'
+        # Osama
+        '<div style="'
+        'background: linear-gradient(135deg, #FFFFF0, #FEFCBF);'
+        'border: 1px solid #ECC94B;'
+        'border-radius: 12px;'
+        'padding: 16px;'
+        'text-align: center;'
+        '">'
+        '<div style="font-size: 13px; color: #744210; font-weight: 600;">Osama</div>'
+        '<div style="font-size: 24px; font-weight: 800; color: #975A16; margin: 4px 0;">↗ slow return</div>'
+        '<div style="font-size: 11px; color: #B7791F;">3 → 32 over 14 years</div>'
+        '</div>'
+        # Karen
+        '<div style="'
+        'background: linear-gradient(135deg, #FFF5F5, #FED7D7);'
+        'border: 1px solid #FC8181;'
+        'border-radius: 12px;'
+        'padding: 16px;'
+        'text-align: center;'
+        '">'
+        '<div style="font-size: 13px; color: #9B2C2C; font-weight: 600;">Karen</div>'
+        '<div style="font-size: 24px; font-weight: 800; color: #C53030; margin: 4px 0;">↓ still falling</div>'
+        '<div style="font-size: 11px; color: #E53E3E;">generational decline continues</div>'
+        '</div>'
+        '</div>'
+    )
+    st.markdown(recovery_html, unsafe_allow_html=True)
+
+
+if __name__ == "__main__":
+    render_controversial_names()
+
