@@ -1,8 +1,9 @@
+"""
+Discoveries Tab — Full Page
+"🎉 I Never Knew That"
+"""
 import streamlit as st
 import plotly.graph_objects as go
-import plotly.express as px
-import os
-from utils.data_loader import load_metrics, load_summary
 from utils.charts import CHART_LAYOUT, COLORS, COUNTRY_COLORS
 
 
@@ -35,10 +36,6 @@ def render():
     )
 
     # ─── Alexa & Siri line charts ─────────────────────────────────
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
-
-    # Data
     alexa_data = {
         "year": [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],
         "frequency": [3398,3927,3926,3927,4197,4750,4938,4798,5039,6649,6348,5878,6063,5807,5288,5011,4785,4880,6702,5450,4535,3394,2128,1334,718,605,511]
@@ -49,7 +46,6 @@ def render():
         "frequency": [8,7,9,5,6,25,33,65,68,66,83,94,69,66,10,11,8,3,3,7]
     }
 
-    # Two side-by-side charts
     col_alexa, col_siri = st.columns(2)
 
     with col_alexa:
@@ -63,7 +59,6 @@ def render():
             fill="tozeroy",
             fillcolor="rgba(124,159,214,0.1)",
         ))
-        # Add vertical line for Amazon Echo launch
         fig_alexa.add_vline(x=2014, line_dash="dash", line_color="#E63946", opacity=0.7)
         fig_alexa.add_annotation(
             x=2014, y=6702,
@@ -92,7 +87,6 @@ def render():
             fill="tozeroy",
             fillcolor="rgba(200,168,232,0.1)",
         ))
-        # Add vertical line for Apple Siri launch
         fig_siri.add_vline(x=2011, line_dash="dash", line_color="#E63946", opacity=0.7)
         fig_siri.add_annotation(
             x=2011, y=94,
@@ -177,20 +171,11 @@ def render():
     )
 
     st.markdown("---")
-    """
-Discoveries Tab — Controversial Names Section
-"⚠️ Banned from the Airwaves"
 
-Names killed by real-world events (Isis, Osama) and meme culture (Karen)
-"""
-import streamlit as st
-import streamlit.components.v1 as components
+    # ══════════════════════════════════════════════════════════════
+    # ⚠️ BANNED FROM THE AIRWAVES (Controversial Names)
+    # ══════════════════════════════════════════════════════════════
 
-
-def render_controversial_names():
-    """Render the controversial names section."""
-
-    # Section header
     st.markdown("### ⚠️ Banned from the Airwaves")
     st.markdown(
         "Some tracks don't fade naturally — they get **pulled from rotation**. "
@@ -209,7 +194,6 @@ def render_controversial_names():
     col_isis, col_osama = st.columns(2)
 
     with col_isis:
-        # ISIS ban card
         isis_html = (
             '<div style="'
             'background: linear-gradient(135deg, #FFF5F5, #FED7D7, #FFF5F5);'
@@ -308,7 +292,6 @@ def render_controversial_names():
         st.markdown(isis_html, unsafe_allow_html=True)
 
     with col_osama:
-        # OSAMA ban card
         osama_html = (
             '<div style="'
             'background: linear-gradient(135deg, #FFF5F5, #FED7D7, #FFF5F5);'
@@ -401,7 +384,7 @@ def render_controversial_names():
             'border-radius: 0 8px 8px 0;'
             'font-size: 12px;'
             'color: #4A5568;'
-            '">🇬🇧→🇺🇸 split: USA dropped to 0 instantly. England held on 3 more years.</div>'
+            '">USA dropped to 0 instantly. England held on 3 more years.</div>'
             '</div>'
         )
         st.markdown(osama_html, unsafe_allow_html=True)
@@ -418,14 +401,13 @@ def render_controversial_names():
 
     st.markdown("")
 
-    # --- KAREN: "Fading signal + interference" ---
+    # --- KAREN: "Death by Meme" ---
     st.markdown("#### 📉 Death by Meme")
     st.markdown(
         "Not every name dies from a single blow. Some are already fading — "
         "and then the internet decides to make them a punchline."
     )
 
-    # Karen card — different design: a "declining signal" / fading playlist entry
     karen_html = (
         '<div style="'
         'background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);'
@@ -462,31 +444,24 @@ def render_controversial_names():
         'gap: 0;'
         'margin-bottom: 20px;'
         '">'
-        # 1997 marker
         '<div style="text-align: center; flex: 1;">'
         '<div style="font-size: 20px; font-weight: 700; color: #2D3748;">2,588</div>'
         '<div style="font-size: 10px; color: #A0AEC0;">1997</div>'
         '</div>'
-        # Arrow
-        '<div style="flex: 0.5; text-align: center; color: #CBD5E0; font-size: 20px;">→</div>'
-        # Pre-meme
+        '<div style="flex: 0.5; text-align: center; color: #CBD5E0; font-size: 20px;">&rarr;</div>'
         '<div style="text-align: center; flex: 1;">'
         '<div style="font-size: 20px; font-weight: 700; color: #718096;">563</div>'
         '<div style="font-size: 10px; color: #A0AEC0;">2017 (pre-meme)</div>'
         '</div>'
-        # Arrow with meme marker
         '<div style="flex: 0.5; text-align: center;">'
-        '<div style="font-size: 16px;">💀</div>'
+        '<div style="font-size: 16px;">&#128128;</div>'
         '<div style="font-size: 9px; color: #E53E3E; font-weight: 600;">meme</div>'
         '</div>'
-        # Post-meme
         '<div style="text-align: center; flex: 1;">'
         '<div style="font-size: 20px; font-weight: 700; color: #E53E3E;">204</div>'
         '<div style="font-size: 10px; color: #A0AEC0;">2021 (bottom)</div>'
         '</div>'
-        # Arrow
-        '<div style="flex: 0.5; text-align: center; color: #CBD5E0; font-size: 20px;">→</div>'
-        # Now
+        '<div style="flex: 0.5; text-align: center; color: #CBD5E0; font-size: 20px;">&rarr;</div>'
         '<div style="text-align: center; flex: 1;">'
         '<div style="font-size: 20px; font-weight: 700; color: #48BB78;">238</div>'
         '<div style="font-size: 10px; color: #A0AEC0;">2023</div>'
@@ -503,8 +478,8 @@ def render_controversial_names():
         'line-height: 1.5;'
         '">'
         '<strong>The difference:</strong> Karen was already on a 40-year decline. '
-        'The "Karen" meme (2019–2020) didn\'t kill it — it accelerated an existing death. '
-        'From 2017→2021, it dropped 64%. Without the meme, the generational curve suggests '
+        "The &quot;Karen&quot; meme (2019-2020) didn't kill it — it accelerated an existing death. "
+        'From 2017 to 2021, it dropped 64%. Without the meme, the generational curve suggests '
         'it would have fallen ~40% anyway. The meme added roughly 24 percentage points of extra damage.'
         '</div>'
         '</div>'
@@ -521,7 +496,7 @@ def render_controversial_names():
         "One is a cliff. The other is a steeper slope."
     )
 
-    # Recovery comparison
+    # Recovery comparison cards
     recovery_html = (
         '<div style="'
         'display: grid;'
@@ -538,8 +513,8 @@ def render_controversial_names():
         'text-align: center;'
         '">'
         '<div style="font-size: 13px; color: #276749; font-weight: 600;">Isis</div>'
-        '<div style="font-size: 24px; font-weight: 800; color: #22543D; margin: 4px 0;">↑ recovering</div>'
-        '<div style="font-size: 11px; color: #48BB78;">8 → 159 since 2018</div>'
+        '<div style="font-size: 24px; font-weight: 800; color: #22543D; margin: 4px 0;">&uarr; recovering</div>'
+        '<div style="font-size: 11px; color: #48BB78;">8 &rarr; 159 since 2018</div>'
         '</div>'
         # Osama
         '<div style="'
@@ -550,8 +525,8 @@ def render_controversial_names():
         'text-align: center;'
         '">'
         '<div style="font-size: 13px; color: #744210; font-weight: 600;">Osama</div>'
-        '<div style="font-size: 24px; font-weight: 800; color: #975A16; margin: 4px 0;">↗ slow return</div>'
-        '<div style="font-size: 11px; color: #B7791F;">3 → 32 over 14 years</div>'
+        '<div style="font-size: 24px; font-weight: 800; color: #975A16; margin: 4px 0;">&#8599; slow return</div>'
+        '<div style="font-size: 11px; color: #B7791F;">3 &rarr; 32 over 14 years</div>'
         '</div>'
         # Karen
         '<div style="'
@@ -562,14 +537,9 @@ def render_controversial_names():
         'text-align: center;'
         '">'
         '<div style="font-size: 13px; color: #9B2C2C; font-weight: 600;">Karen</div>'
-        '<div style="font-size: 24px; font-weight: 800; color: #C53030; margin: 4px 0;">↓ still falling</div>'
+        '<div style="font-size: 24px; font-weight: 800; color: #C53030; margin: 4px 0;">&darr; still falling</div>'
         '<div style="font-size: 11px; color: #E53E3E;">generational decline continues</div>'
         '</div>'
         '</div>'
     )
     st.markdown(recovery_html, unsafe_allow_html=True)
-
-
-if __name__ == "__main__":
-    render_controversial_names()
-
