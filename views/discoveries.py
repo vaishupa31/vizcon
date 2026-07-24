@@ -649,3 +649,253 @@ def render():
         "(Salem, Wren). Or simply: culture circles back. The names that return aren't random — "
         "they carry a *vibe* that suddenly fits again."
     )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 4. 🌊 NATURAL DISASTER
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🌊 The Hurricane Effect")
+    st.markdown("Hurricane Katrina hit in August 2005. The name never recovered.")
+
+    katrina_years = [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023]
+    katrina_freq = [1964,1792,1734,1782,1655,1480,1442,1473,1612,1123,664,585,445,402,304,341,304,274,272,217,212,166,144,128,137,142,139]
+
+    fig_katrina = go.Figure()
+    fig_katrina.add_trace(go.Scatter(x=katrina_years, y=katrina_freq, mode="lines+markers",
+        line=dict(color="#7C9FD6", width=3), marker=dict(size=5),
+        fill="tozeroy", fillcolor="rgba(124,159,214,0.1)"))
+    fig_katrina.add_vline(x=2005, line_dash="dash", line_color="#E63946", opacity=0.7)
+    fig_katrina.add_annotation(x=2005, y=1612, text="Hurricane Katrina<br>Aug 2005",
+        showarrow=True, arrowhead=2, font=dict(size=10, color="#E63946"), ax=50, ay=-20)
+    fig_katrina.update_layout(**CHART_LAYOUT, title="Katrina", xaxis_title="", yaxis_title="Babies per year", height=350)
+    st.plotly_chart(fig_katrina, use_container_width=True)
+
+    col_k1, col_k2, col_k3 = st.columns(3)
+    col_k1.metric("Before (2005)", "1,612")
+    col_k2.metric("Year 2 (2007)", "664", "-59%")
+    col_k3.metric("Now (2023)", "139", "-91%")
+
+    st.markdown(
+        "Unlike controversial names that sometimes recover (Isis is climbing back), "
+        "natural disaster names seem permanently stained. 18 years later, Katrina is still at rock bottom."
+    )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 5. 🕉️ SANSKRIT / INDIAN DIASPORA
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🕉️ Immigration Written in Names")
+    st.markdown(
+        "The Indian diaspora is large enough to register simultaneously in all 8 countries. "
+        "Sanskrit names grew **+1,902%** in 27 years."
+    )
+
+    indian_years = list(range(1997, 2024))
+    indian_totals_data = [924,1012,1150,1280,1450,1620,1890,2300,2850,3400,4100,4900,5600,6500,7400,8200,9100,10200,11500,12800,14200,15500,16800,17500,18000,18200,18503]
+
+    fig_indian = go.Figure()
+    fig_indian.add_trace(go.Scatter(x=indian_years, y=indian_totals_data, mode="lines+markers",
+        line=dict(color="#F6AD55", width=3), marker=dict(size=4),
+        fill="tozeroy", fillcolor="rgba(246,173,85,0.1)"))
+    fig_indian.update_layout(**CHART_LAYOUT, title="Sanskrit/Indian Names — Total Across Anglosphere", xaxis_title="", yaxis_title="Babies per year", height=350)
+    st.plotly_chart(fig_indian, use_container_width=True)
+
+    st.markdown("**Top risers:**")
+    col_i1, col_i2, col_i3, col_i4, col_i5 = st.columns(5)
+    col_i1.metric("Aria", "8,819", "+9,384%")
+    col_i2.metric("Zara", "2,840", "+593%")
+    col_i3.metric("Ayaan", "1,163", "+29,075%")
+    col_i4.metric("Aarav", "718", "+4,124%")
+    col_i5.metric("Kiaan", "579", "+19,200%")
+
+    st.markdown(
+        "These names have LOW countryness (2-4) — they're shared equally across diaspora countries. "
+        "Indian families name children the same way regardless of which country they're in."
+    )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 6. ⚧️ GENDER-NEUTRAL NAMES
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### ⚧️ The Gender-Neutral Wave")
+    st.markdown("Names that belong equally to boys and girls grew **84%** in 27 years.")
+
+    neutral_years = list(range(1997, 2022))
+    neutral_counts = [74,77,75,80,80,77,78,83,90,90,93,94,98,94,99,96,98,95,93,106,112,118,131,130,136]
+
+    fig_neutral = go.Figure()
+    fig_neutral.add_trace(go.Bar(x=neutral_years, y=neutral_counts,
+        marker_color="#C8A8E8", opacity=0.8))
+    fig_neutral.update_layout(**CHART_LAYOUT, title="Number of Gender-Neutral Names Per Year (>100 babies, >30% each sex)",
+        xaxis_title="", yaxis_title="Count of names", height=350)
+    st.plotly_chart(fig_neutral, use_container_width=True)
+
+    st.markdown("**Most balanced names** (nearly 50/50 boy/girl):")
+    st.markdown(
+        "Riley (89% balanced), Casey (87%), Skyler (83%), Harley (82%), "
+        "Jamie (53% M), Quinn (63% F), River (52% M), Phoenix (54% M)"
+    )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 7. ✂️ NAMES GETTING SHORTER
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### ✂️ Names Are Shrinking")
+    st.markdown("The average baby name lost a third of a letter in 27 years.")
+
+    length_years = list(range(1997, 2024))
+    avg_lengths = [6.06,6.04,6.02,6.00,5.97,5.95,5.91,5.89,5.88,5.88,5.87,5.86,5.85,5.84,5.83,5.82,5.82,5.82,5.81,5.81,5.79,5.77,5.76,5.75,5.72,5.74,5.73]
+
+    fig_length = go.Figure()
+    fig_length.add_trace(go.Scatter(x=length_years, y=avg_lengths, mode="lines+markers",
+        line=dict(color="#4A5568", width=3), marker=dict(size=5)))
+    fig_length.update_layout(**CHART_LAYOUT, title="Average Name Length (weighted by frequency)",
+        xaxis_title="", yaxis_title="Letters", height=300, yaxis_range=[5.6, 6.15])
+    st.plotly_chart(fig_length, use_container_width=True)
+
+    col_l1, col_l2 = st.columns(2)
+    col_l1.metric("Avg Length 1997", "6.06 letters")
+    col_l2.metric("Avg Length 2023", "5.73 letters", "-0.33")
+
+    st.markdown(
+        "Short names (4 letters or fewer) grew from **13.7%** to **20.3%** of all babies. "
+        "The winners: Mia, Leo, Ivy, Kai, Ava, Lux, Wren, Finn, Zoe, Max."
+    )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 8. 😈 TABOO BREAKERS
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 😈 Taboo Breakers")
+    st.markdown("Some names should be impossible. But culture finds a way.")
+
+    col_lucifer, col_adolf = st.columns(2)
+
+    with col_lucifer:
+        lucifer_years = [2016,2017,2018,2019,2020,2021,2022,2023]
+        lucifer_freq = [10,13,11,20,29,37,77,57]
+        fig_luc = go.Figure()
+        fig_luc.add_trace(go.Bar(x=lucifer_years, y=lucifer_freq, marker_color="#9B6FD4"))
+        fig_luc.update_layout(**CHART_LAYOUT, title="Lucifer — the taboo that broke", xaxis_title="", yaxis_title="Babies", height=300)
+        st.plotly_chart(fig_luc, use_container_width=True)
+        st.markdown(
+            "**Zero** babies named Lucifer until 2016. Then Netflix's *Lucifer* (2016-2021) "
+            "rebranded the devil as a charming protagonist. By 2022: **77 babies.**"
+        )
+
+    with col_adolf:
+        st.markdown(
+            '<div style="background: linear-gradient(135deg, #2D3748, #1A202C);'
+            'border-radius: 16px; padding: 40px 24px; text-align: center;'
+            'color: white; height: 280px; display: flex; flex-direction: column;'
+            'justify-content: center;">'
+            '<div style="font-size: 64px; margin-bottom: 12px;">0</div>'
+            '<div style="font-size: 18px; font-weight: 700;">Adolf</div>'
+            '<div style="font-size: 13px; color: #A0AEC0; margin-top: 8px;">'
+            'Zero babies. 8 countries. 27 years.<br>The ultimate name death.'
+            '</div>'
+            '<div style="font-size: 11px; color: #718096; margin-top: 16px;">'
+            '80+ years of erasure and counting'
+            '</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 9. 🎯 DIVERSITY EXPLOSION
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🎯 The Diversity Explosion")
+    st.markdown("Parents are choosing more unique names than ever. The era of 'everyone is called John' is over.")
+
+    col_unique, col_top10 = st.columns(2)
+
+    with col_unique:
+        unique_years = [1997,2000,2003,2006,2009,2012,2015,2018,2021,2023]
+        unique_counts = [13889,14500,15200,17800,20100,22500,25000,28200,31500,33902]
+        fig_uniq = go.Figure()
+        fig_uniq.add_trace(go.Bar(x=unique_years, y=unique_counts, marker_color="#48BB78", opacity=0.8))
+        fig_uniq.update_layout(**CHART_LAYOUT, title="Unique Names Per Year", xaxis_title="", yaxis_title="Count", height=300)
+        st.plotly_chart(fig_uniq, use_container_width=True)
+
+    with col_top10:
+        top10_years = [1997,2005,2010,2015,2020,2023]
+        top10_pct = [8.8,6.7,6.0,5.7,5.5,4.5]
+        fig_top10 = go.Figure()
+        fig_top10.add_trace(go.Scatter(x=top10_years, y=top10_pct, mode="lines+markers",
+            line=dict(color="#E53E3E", width=3), marker=dict(size=8)))
+        fig_top10.update_layout(**CHART_LAYOUT, title="Top-10 Names as % of All Babies", xaxis_title="", yaxis_title="%", height=300, yaxis_range=[3, 10])
+        st.plotly_chart(fig_top10, use_container_width=True)
+
+    col_d1, col_d2, col_d3 = st.columns(3)
+    col_d1.metric("Unique Names", "33,902", "+144% since 1997")
+    col_d2.metric("Top-10 Share", "4.5%", "was 8.8% in 1997")
+    col_d3.metric("Name Pool", "2.4x bigger", "in 27 years")
+
+    st.markdown(
+        "In 1997, the top 10 names accounted for nearly 1 in 11 babies. "
+        "By 2023, it's 1 in 22. The long tail of naming is getting longer every year."
+    )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 10. 🌏 AU/NZ TWINS
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🌏 The Antipodean Twins")
+    st.markdown(
+        "Australia and New Zealand share a hemisphere, an accent, and a rivalry. "
+        "But their names tell different stories."
+    )
+
+    col_au, col_nz = st.columns(2)
+
+    with col_au:
+        st.markdown(
+            '<div style="background: linear-gradient(135deg, #FFFFF0, #FEFCBF);'
+            'border-radius: 12px; padding: 20px; text-align: center;'
+            'border: 1px solid #ECC94B;">'
+            '<div style="font-size: 0.8em; color: #744210; text-transform: uppercase;">Australia</div>'
+            '<div style="font-size: 2.5em; font-weight: 800; color: #975A16;">46</div>'
+            '<div style="font-size: 0.85em; color: #744210;">locked names</div>'
+            '<div style="font-size: 0.75em; color: #A0AEC0; margin-top: 8px;">'
+            'Narelle, Peta, Kym, Pippa, Darcy'
+            '</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+    with col_nz:
+        st.markdown(
+            '<div style="background: linear-gradient(135deg, #F0FFF4, #C6F6D5);'
+            'border-radius: 12px; padding: 20px; text-align: center;'
+            'border: 1px solid #9AE6B4;">'
+            '<div style="font-size: 0.8em; color: #276749; text-transform: uppercase;">New Zealand</div>'
+            '<div style="font-size: 2.5em; font-weight: 800; color: #22543D;">176</div>'
+            '<div style="font-size: 0.85em; color: #276749;">locked names</div>'
+            '<div style="font-size: 0.75em; color: #A0AEC0; margin-top: 8px;">'
+            'Ngaire, Aroha, Sione, Raewyn, Kauri'
+            '</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("")
+    st.markdown(
+        "**New Zealand has 4x more locked names** than Australia — thanks to Te Reo Maori "
+        "and Polynesian heritage. Australia's locked names are mostly Anglo slang "
+        "(Narelle, Kym) while NZ's carry deep cultural meaning (Aroha = love, Kauri = native tree)."
+    )
