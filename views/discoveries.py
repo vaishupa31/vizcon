@@ -203,7 +203,6 @@ def render():
             'position: relative;'
             'overflow: hidden;'
             '">'
-            # Diagonal "BANNED" watermark
             '<div style="'
             'position: absolute;'
             'top: 50%;'
@@ -216,7 +215,6 @@ def render():
             'white-space: nowrap;'
             'pointer-events: none;'
             '">BANNED</div>'
-            # Header
             '<div style="'
             'display: flex;'
             'align-items: center;'
@@ -234,7 +232,6 @@ def render():
             '">BROADCAST BAN</div>'
             '<span style="color: #A0AEC0; font-size: 12px;">June 2014</span>'
             '</div>'
-            # Name
             '<div style="'
             'font-size: 42px;'
             'font-weight: 800;'
@@ -248,8 +245,7 @@ def render():
             'font-size: 13px;'
             'color: #718096;'
             'margin-bottom: 20px;'
-            '">Egyptian goddess of magic & motherhood</div>'
-            # Stats
+            '">Egyptian goddess of magic &amp; motherhood</div>'
             '<div style="'
             'display: grid;'
             'grid-template-columns: 1fr 1fr;'
@@ -267,7 +263,6 @@ def render():
             '<div style="font-size: 11px; color: #718096;">babies/year (2018)</div>'
             '</div>'
             '</div>'
-            # Drop stat
             '<div style="'
             'background: #E53E3E;'
             'color: white;'
@@ -277,8 +272,7 @@ def render():
             'font-weight: 700;'
             'font-size: 18px;'
             'margin-bottom: 12px;'
-            '">−98.4%</div>'
-            # Recovery note
+            '">&minus;98.4%</div>'
             '<div style="'
             'background: rgba(72, 187, 120, 0.1);'
             'border-left: 3px solid #48BB78;'
@@ -286,7 +280,7 @@ def render():
             'border-radius: 0 8px 8px 0;'
             'font-size: 12px;'
             'color: #2F855A;'
-            '">📡 Signal returning: 159 babies in 2023 — parents reclaiming the goddess</div>'
+            '">&#128225; Signal returning: 159 babies in 2023 — parents reclaiming the goddess</div>'
             '</div>'
         )
         st.markdown(isis_html, unsafe_allow_html=True)
@@ -301,7 +295,6 @@ def render():
             'position: relative;'
             'overflow: hidden;'
             '">'
-            # Diagonal "BANNED" watermark
             '<div style="'
             'position: absolute;'
             'top: 50%;'
@@ -314,7 +307,6 @@ def render():
             'white-space: nowrap;'
             'pointer-events: none;'
             '">BANNED</div>'
-            # Header
             '<div style="'
             'display: flex;'
             'align-items: center;'
@@ -332,7 +324,6 @@ def render():
             '">BROADCAST BAN</div>'
             '<span style="color: #A0AEC0; font-size: 12px;">September 2001</span>'
             '</div>'
-            # Name
             '<div style="'
             'font-size: 42px;'
             'font-weight: 800;'
@@ -346,8 +337,7 @@ def render():
             'font-size: 13px;'
             'color: #718096;'
             'margin-bottom: 20px;'
-            '">Arabic: "lion" — a common name for centuries</div>'
-            # Stats
+            '">Arabic: &quot;lion&quot; — a common name for centuries</div>'
             '<div style="'
             'display: grid;'
             'grid-template-columns: 1fr 1fr;'
@@ -365,7 +355,6 @@ def render():
             '<div style="font-size: 11px; color: #718096;">babies/year (2009)</div>'
             '</div>'
             '</div>'
-            # Drop stat
             '<div style="'
             'background: #E53E3E;'
             'color: white;'
@@ -375,8 +364,7 @@ def render():
             'font-weight: 700;'
             'font-size: 18px;'
             'margin-bottom: 12px;'
-            '">−96%</div>'
-            # Difference note
+            '">&minus;96%</div>'
             '<div style="'
             'background: rgba(113, 128, 150, 0.1);'
             'border-left: 3px solid #718096;'
@@ -416,7 +404,6 @@ def render():
         'padding: 28px 32px;'
         'max-width: 700px;'
         '">'
-        # Header row
         '<div style="'
         'display: flex;'
         'justify-content: space-between;'
@@ -437,7 +424,6 @@ def render():
         'letter-spacing: 1px;'
         '">FADING + MEME</div>'
         '</div>'
-        # Timeline
         '<div style="'
         'display: flex;'
         'align-items: center;'
@@ -467,7 +453,6 @@ def render():
         '<div style="font-size: 10px; color: #A0AEC0;">2023</div>'
         '</div>'
         '</div>'
-        # Insight
         '<div style="'
         'background: rgba(236, 201, 75, 0.1);'
         'border-left: 3px solid #ECC94B;'
@@ -504,7 +489,6 @@ def render():
         'gap: 16px;'
         'margin-top: 16px;'
         '">'
-        # Isis recovery
         '<div style="'
         'background: linear-gradient(135deg, #F0FFF4, #C6F6D5);'
         'border: 1px solid #9AE6B4;'
@@ -516,7 +500,6 @@ def render():
         '<div style="font-size: 24px; font-weight: 800; color: #22543D; margin: 4px 0;">&uarr; recovering</div>'
         '<div style="font-size: 11px; color: #48BB78;">8 &rarr; 159 since 2018</div>'
         '</div>'
-        # Osama
         '<div style="'
         'background: linear-gradient(135deg, #FFFFF0, #FEFCBF);'
         'border: 1px solid #ECC94B;'
@@ -528,7 +511,6 @@ def render():
         '<div style="font-size: 24px; font-weight: 800; color: #975A16; margin: 4px 0;">&#8599; slow return</div>'
         '<div style="font-size: 11px; color: #B7791F;">3 &rarr; 32 over 14 years</div>'
         '</div>'
-        # Karen
         '<div style="'
         'background: linear-gradient(135deg, #FFF5F5, #FED7D7);'
         'border: 1px solid #FC8181;'
@@ -543,3 +525,127 @@ def render():
         '</div>'
     )
     st.markdown(recovery_html, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════════════
+    # 🧟 ZOMBIE NAMES
+    # ══════════════════════════════════════════════════════════════
+
+    st.markdown("### 🧟 Back from the Dead")
+    st.markdown(
+        "Some names flatline completely — years of silence, single digits, near-zero. "
+        "Then something happens. A TV show. A cultural shift. A vibe change. "
+        "And the name claws its way back."
+    )
+
+    st.markdown("")
+
+    # ─── Top 5 Zombie Cards ───────────────────────────────────────
+    zombies = [
+        {"name": "Wren", "trough": 3, "trough_year": 1999, "peak": "2,596", "peak_year": 2022, "ratio": "865x", "trigger": "Nature names + cottagecore + gender-neutral trend", "color": "#48BB78"},
+        {"name": "Salem", "trough": 9, "trough_year": 2000, "peak": "1,246", "peak_year": 2023, "ratio": "138x", "trigger": "WitchTok + Chilling Adventures of Sabrina (2018)", "color": "#9B6FD4"},
+        {"name": "Tru", "trough": 6, "trough_year": 2011, "peak": "720", "peak_year": 2022, "ratio": "120x", "trigger": "Authenticity culture — true to yourself", "color": "#ECC94B"},
+        {"name": "Octavia", "trough": 43, "trough_year": 2011, "peak": "1,577", "peak_year": 2021, "ratio": "37x", "trigger": "The 100 (CW, 2014-2020) — Octavia Blake", "color": "#F56565"},
+        {"name": "Xena", "trough": 10, "trough_year": 2004, "peak": "278", "peak_year": 2022, "ratio": "28x", "trigger": "Streaming brought Warrior Princess to a new generation", "color": "#7C9FD6"},
+    ]
+
+    for z in zombies:
+        name = z["name"]
+        color = z["color"]
+        ratio = z["ratio"]
+        trigger = z["trigger"]
+        trough = str(z["trough"])
+        trough_year = str(z["trough_year"])
+        peak = z["peak"]
+        peak_year = str(z["peak_year"])
+
+        card_html = (
+            '<div style="'
+            'background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);'
+            'border: 1px solid #E2E8F0;'
+            'border-radius: 16px;'
+            'padding: 24px 28px;'
+            'margin-bottom: 16px;'
+            'display: grid;'
+            'grid-template-columns: 1fr auto 1fr auto;'
+            'align-items: center;'
+            'gap: 24px;'
+            '">'
+            '<div>'
+            '<div style="font-size: 28px; font-weight: 800; color: #2D3748;">'
+            + name +
+            '</div>'
+            '<div style="font-size: 12px; color: #718096; margin-top: 4px;">'
+            + trigger +
+            '</div>'
+            '</div>'
+            '<div style="text-align: center;">'
+            '<div style="font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: 0.5px;">Flatlined</div>'
+            '<div style="font-size: 22px; font-weight: 700; color: #E53E3E;">'
+            + trough +
+            '</div>'
+            '<div style="font-size: 10px; color: #718096;">'
+            + trough_year +
+            '</div>'
+            '</div>'
+            '<div style="font-size: 24px; color: ' + color + ';">&rarr;</div>'
+            '<div style="text-align: center;">'
+            '<div style="font-size: 11px; color: #A0AEC0; text-transform: uppercase; letter-spacing: 0.5px;">Comeback</div>'
+            '<div style="font-size: 22px; font-weight: 700; color: ' + color + ';">'
+            + peak +
+            '</div>'
+            '<div style="font-size: 10px; color: #718096;">'
+            + peak_year + ' (' + ratio + ')'
+            '</div>'
+            '</div>'
+            '</div>'
+        )
+        st.markdown(card_html, unsafe_allow_html=True)
+
+    st.markdown("")
+
+    # ─── Combined comeback chart ──────────────────────────────────
+    st.markdown("#### The Comeback Curves")
+
+    fig_zombie = go.Figure()
+
+    chart_data = {
+        "Wren": {"years": [1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], "freqs": [3,6,5,14,11,17,24,54,41,86,107,159,203,288,419,504,569,855,1012,1053,1159,1325,1988,2596,2535], "color": "#48BB78"},
+        "Salem": {"years": [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], "freqs": [34,18,40,9,44,43,40,43,55,46,54,56,70,77,57,84,88,150,220,263,305,327,564,711,951,1152,1246], "color": "#9B6FD4"},
+        "Tru": {"years": [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], "freqs": [72,55,42,14,39,29,37,6,10,30,31,36,21,52,138,261,338,538,720,670], "color": "#ECC94B"},
+        "Octavia": {"years": [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], "freqs": [220,233,202,177,156,176,128,74,143,84,67,91,79,47,43,63,53,66,279,391,682,943,1066,1152,1577,1509,1441], "color": "#F56565"},
+        "Xena": {"years": [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], "freqs": [246,156,86,74,37,31,18,10,13,13,14,12,13,18,14,34,38,38,58,70,109,126,162,169,162,278,261], "color": "#7C9FD6"},
+    }
+
+    for name, data in chart_data.items():
+        fig_zombie.add_trace(go.Scatter(
+            x=data["years"],
+            y=data["freqs"],
+            mode="lines",
+            name=name,
+            line=dict(color=data["color"], width=2.5),
+        ))
+
+    fig_zombie.update_layout(
+        **CHART_LAYOUT,
+        title="",
+        xaxis_title="",
+        yaxis_title="Babies per year",
+        height=400,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5,
+        ),
+    )
+    st.plotly_chart(fig_zombie, use_container_width=True)
+
+    st.markdown(
+        "**What brings a name back?** Streaming services resurrecting old shows (Xena). "
+        "A breakout character on a new series (Octavia). Aesthetic movements that go viral "
+        "(Salem, Wren). Or simply: culture circles back. The names that return aren't random — "
+        "they carry a *vibe* that suddenly fits again."
+    )
