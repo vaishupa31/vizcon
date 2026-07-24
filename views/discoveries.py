@@ -107,7 +107,6 @@ def render():
             xaxis_title="",
             yaxis_title="Babies per year",
             height=350,
-            margin=dict(t=50, b=40),
         )
         st.plotly_chart(fig_siri, use_container_width=True)
 
