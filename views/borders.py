@@ -28,8 +28,8 @@ def render():
     # ─── Header ───────────────────────────────────────────────────
     st.markdown(
         """
-        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4); 
-                    border-radius: 16px; padding: 50px 30px; text-align: center; 
+        <div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);
+                    border-radius: 16px; padding: 50px 30px; text-align: center;
                     margin-bottom: 20px; border: 1px solid #E2E8F0;">
             <h1 style="font-size: 2.8em; font-weight: 800; color: #2D3748; margin: 0 0 12px 0;">
                 💿 The Local Vinyl
@@ -194,15 +194,15 @@ def render():
 
         st.markdown(
             f"""
-            <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5); 
+            <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFF5);
                         border: 2px solid #A8E6C8; border-radius: 12px;
                         padding: 18px; text-align: center; margin-top: 10px;">
-                <div style="font-size: 0.75em; color: #059669; text-transform: uppercase; 
+                <div style="font-size: 0.75em; color: #059669; text-transform: uppercase;
                             letter-spacing: 2px;">▶ Now Playing:</div>
                 <div style="font-size: 1.8em; font-weight: 700; color: #059669; margin: 6px 0;">
                     "{c_actual}"
                 </div>
-                <div style="font-size: 0.85em; color: #4A5568; margin-top: 8px; 
+                <div style="font-size: 0.85em; color: #4A5568; margin-top: 8px;
                             background: rgba(6,214,160,0.08); border-radius: 6px; padding: 8px 12px;">
                     📖 {c_explain}
                 </div>
@@ -227,7 +227,7 @@ def render():
         # Countryness fact
         st.markdown(
             f"""
-            <div style="background: #FFF5F5; border-radius: 8px; padding: 10px; 
+            <div style="background: #FFF5F5; border-radius: 8px; padding: 10px;
                         margin-top: 10px; text-align: center; font-size: 0.9em;">
                 <span style="color: #e63946; font-weight: 600;">
                     Countryness: {c_countryness:,}
@@ -342,8 +342,8 @@ def render():
     st.markdown("### 🎧 Why Do Some Tracks Never Make the Global Playlist?")
     st.markdown(
         "Sometimes the lyrics are unreadable. Sometimes the cover exists in another language. "
-        "Sometimes the artist chooses to stay underground. And sometimes — they press a record "
-        "that was never meant to leave town."
+        "And sometimes — the artist chooses to stay underground, pressing records that were "
+        "never meant to leave town."
     )
 
     st.markdown("---")
@@ -726,7 +726,7 @@ def render():
 
             # Item 4: Rest
             '<path d="M' + str(key_start_x + item_gap * 3 + 6) + ' ' + str(key_y_base - 6) + ' l3 5 l-3 5 l3 5" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/>'
-            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="16" fill="#4A5568">Silence \u2014 nothing plays</text>'
+            '<text x="' + str(key_start_x + item_gap * 3 + 22) + '" y="' + str(key_y_base + 9) + '" font-size="16" fill="#4A5568">Silence — nothing plays</text>'
 
             '</g>'
         )
@@ -756,109 +756,12 @@ def render():
 
         components.html(full_html, height=460, scrolling=False)
 
-    # ─── Part 3: The longer the name, the higher the wall ─────────
+    # ─── Part 3: The longer the name, the higher the wall (one line) ─
     st.markdown("")
     st.markdown(
-        "There's a measurable pattern here too: **the longer the name, the higher the wall.** "
-        "Names with **11+ letters** average a countryness of **201** — no signal, can't broadcast. "
-        "At 3–4 letters? Just **8** — full bars, received loud and clear in every country."
-    )
-
-    # Signal bars — like phone reception
-    bars_data = [
-        ("3–4", 8, 5, "#A8E6C8"),     # 5 bars — full signal
-        ("5–6", 14, 4, "#7C9FD6"),     # 4 bars
-        ("7–8", 27, 3, "#F5D68A"),     # 3 bars
-        ("9–10", 89, 1, "#F5B7C5"),    # 1 bar
-        ("11+", 201, 0, "#E63946"),    # 0 bars — no signal
-    ]
-
-    svg_width = 900
-    svg_height = 320
-    base_y = 220
-
-    svg = (
-        '<svg width="100%" viewBox="0 0 ' + str(svg_width) + ' ' + str(svg_height)
-        + '" preserveAspectRatio="xMidYMid meet" style="display:block;">'
-    )
-
-    # Title
-    svg += (
-        '<text x="' + str(svg_width // 2) + '" y="30" text-anchor="middle"'
-        ' font-size="14" fill="#718096" letter-spacing="2" font-weight="600">'
-        'BROADCAST SIGNAL STRENGTH</text>'
-    )
-
-    num = len(bars_data)
-    spacing = svg_width / (num + 1)
-    max_bars = 5
-    bar_width = 14
-    bar_gap = 5
-    max_bar_height = 120
-
-    for i, (bracket, score, signal_bars, color) in enumerate(bars_data):
-        cx = int(spacing * (i + 1))
-
-        total_bars_width = max_bars * bar_width + (max_bars - 1) * bar_gap
-        start_x = cx - total_bars_width // 2
-
-        for b in range(max_bars):
-            bx = start_x + b * (bar_width + bar_gap)
-            bar_h = int(max_bar_height * (b + 1) / max_bars)
-            by = base_y - bar_h
-
-            if b < signal_bars:
-                svg += (
-                    '<rect x="' + str(bx) + '" y="' + str(by)
-                    + '" width="' + str(bar_width) + '" height="' + str(bar_h)
-                    + '" rx="3" fill="' + color + '"/>'
-                )
-            else:
-                svg += (
-                    '<rect x="' + str(bx) + '" y="' + str(by)
-                    + '" width="' + str(bar_width) + '" height="' + str(bar_h)
-                    + '" rx="3" fill="none" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="3 2"/>'
-                )
-
-        if signal_bars == 0:
-            svg += (
-                '<text x="' + str(cx) + '" y="' + str(base_y - max_bar_height // 2 + 5)
-                + '" text-anchor="middle" font-size="28" fill="#E63946" font-weight="700">'
-                '\u2715</text>'
-            )
-
-        svg += (
-            '<text x="' + str(cx) + '" y="' + str(base_y + 30)
-            + '" text-anchor="middle" font-size="22" font-weight="800" fill="' + color + '">'
-            + str(score) + '</text>'
-        )
-
-        svg += (
-            '<text x="' + str(cx) + '" y="' + str(base_y + 52)
-            + '" text-anchor="middle" font-size="14" font-weight="600" fill="#2D3748">'
-            + bracket + ' letters</text>'
-        )
-
-    svg += (
-        '<text x="' + str(int(spacing)) + '" y="' + str(base_y + 75)
-        + '" text-anchor="middle" font-size="11" fill="#059669" font-weight="600">'
-        'FULL SIGNAL</text>'
-    )
-    svg += (
-        '<text x="' + str(int(spacing * num)) + '" y="' + str(base_y + 75)
-        + '" text-anchor="middle" font-size="11" fill="#E63946" font-weight="600">'
-        'NO SIGNAL</text>'
-    )
-
-    svg += '</svg>'
-
-    # Render in pastel gradient card
-    st.markdown(
-        '<div style="background: linear-gradient(135deg, #EEF2FF, #E8F4FD, #F0FFF4);'
-        'border-radius: 12px; padding: 20px 24px; border: 1px solid #E2E8F0;'
-        'box-shadow: 0 4px 16px rgba(0,0,0,.06);">'
-        + svg + '</div>',
-        unsafe_allow_html=True
+        "🎚️ And there's a measurable pattern too: **the longer the track title, the weaker the reception.** "
+        "Short names like *Mia* come through loud and clear in every country; long ones like *Aoibhínn* "
+        "fade into static and never leave home."
     )
 
     st.markdown("---")
@@ -883,7 +786,7 @@ def render():
         with col_img:
             st.image(saint_img, caption="St. Patrick — one saint, two spellings, two fates", use_container_width=True)
 
-    # ─── Album cover cards: Original vs International Remix ───────
+    # ─── Album cover cards: Original (lilac) vs Remix (blue) ──────
     col_original, col_remix = st.columns(2)
 
     with col_original:
@@ -893,27 +796,27 @@ def render():
                     box-shadow: 0 8px 24px rgba(0,0,0,.3); position: relative; overflow: hidden;">
             <div style="position:absolute; inset:0; opacity:.04;
                         background:repeating-linear-gradient(45deg, #fff 0px, #fff 1px, transparent 1px, transparent 6px);"></div>
-            <div style="font-size:.55rem; letter-spacing:4px; color:#E63946; font-weight:700; margin-bottom:12px;">
+            <div style="font-size:.55rem; letter-spacing:4px; color:#C9A8F5; font-weight:700; margin-bottom:12px;">
                 ● ORIGINAL PRESSING
             </div>
-            <div style="background: linear-gradient(135deg, #0F3443, #34e89e20);
+            <div style="background: linear-gradient(135deg, #2A1C42, #3A2A5820);
                         border-radius: 6px; padding: 30px 20px; margin: 10px 0;">
-                <div style="font-size: 2.4em; font-weight: 800; color: #F0FFF4; font-family: Georgia, serif;
+                <div style="font-size: 2.4em; font-weight: 800; color: #F0EBFA; font-family: Georgia, serif;
                             text-shadow: 0 2px 8px rgba(0,0,0,.3);">
                     Pádraig
                 </div>
-                <div style="font-size: .75rem; color: #A8E6C8; margin-top: 8px; font-style: italic;">
+                <div style="font-size: .75rem; color: #D8C8F0; margin-top: 8px; font-style: italic;">
                     /PAW-drig/
                 </div>
             </div>
             <div style="margin-top: 14px; font-size: .7rem; color: #A0AEC0; font-family: 'Courier New', monospace;">
                 Origin: Irish Gaelic<br>
-                Countryness: <b style="color:#E63946;">343</b><br>
+                Countryness: <b style="color:#C9A8F5;">343</b><br>
                 Markets: Ireland, N. Ireland only
             </div>
-            <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #E63946; border-radius: 3px;
-                        display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #E63946;">
-                LIMITED RELEASE
+            <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #C9A8F5; border-radius: 3px;
+                        display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #C9A8F5;">
+                STAYED HOME 🏠
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -925,27 +828,27 @@ def render():
                     box-shadow: 0 8px 24px rgba(0,0,0,.3); position: relative; overflow: hidden;">
             <div style="position:absolute; inset:0; opacity:.04;
                         background:repeating-linear-gradient(45deg, #fff 0px, #fff 1px, transparent 1px, transparent 6px);"></div>
-            <div style="font-size:.55rem; letter-spacing:4px; color:#059669; font-weight:700; margin-bottom:12px;">
+            <div style="font-size:.55rem; letter-spacing:4px; color:#8EC5FF; font-weight:700; margin-bottom:12px;">
                 ● INTERNATIONAL REMIX
             </div>
-            <div style="background: linear-gradient(135deg, #0F3443, #7C9FD620);
+            <div style="background: linear-gradient(135deg, #16294F, #26324E20);
                         border-radius: 6px; padding: 30px 20px; margin: 10px 0;">
-                <div style="font-size: 2.4em; font-weight: 800; color: #F0FFF4; font-family: Georgia, serif;
+                <div style="font-size: 2.4em; font-weight: 800; color: #EBF2FA; font-family: Georgia, serif;
                             text-shadow: 0 2px 8px rgba(0,0,0,.3);">
                     Patrick
                 </div>
-                <div style="font-size: .75rem; color: #7C9FD6; margin-top: 8px; font-style: italic;">
+                <div style="font-size: .75rem; color: #C1DDFF; margin-top: 8px; font-style: italic;">
                     /PAT-rik/
                 </div>
             </div>
             <div style="margin-top: 14px; font-size: .7rem; color: #A0AEC0; font-family: 'Courier New', monospace;">
                 Origin: English adaptation<br>
-                Countryness: <b style="color:#059669;">2</b><br>
+                Countryness: <b style="color:#8EC5FF;">2</b><br>
                 Markets: All 8 countries
             </div>
-            <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #059669; border-radius: 3px;
-                        display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #059669;">
-                WORLDWIDE RELEASE
+            <div style="margin-top: 14px; padding: 6px 14px; border: 1.5px solid #8EC5FF; border-radius: 3px;
+                        display: inline-block; font-size: .6rem; font-weight: 800; letter-spacing: 2px; color: #8EC5FF;">
+                WENT WORLDWIDE ✈️
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -960,13 +863,15 @@ def render():
     st.markdown("---")
 
     # ══════════════════════════════════════════════════════════════
-    # 🎸 GOING INDEPENDENT (Political Identity)
+    # 🎸 GOING INDEPENDENT (Political Identity + Cultural Revival)
     # ══════════════════════════════════════════════════════════════
 
     st.markdown("### 🎸 Going Independent")
     st.markdown(
-        "If pronunciation and tradition were the only factors, all Celtic countries "
-        "would behave the same. But they don't. Look at **Northern Ireland vs Ireland**:"
+        "If pronunciation and tradition were the only factors, all Celtic countries would behave "
+        "the same. But they don't. Some artists **leave the major label to stay underground — on purpose.** "
+        "Look at **Northern Ireland vs Ireland**: same Gaelic heritage, opposite response. And it's not "
+        "just old names surviving — communities are actively **pressing brand-new local vinyl.**"
     )
 
     # NI vs Ireland divergence chart
@@ -1001,7 +906,7 @@ def render():
     with col_ni:
         st.markdown(
             """
-            <div style="background: #E6FFF5; border-left: 4px solid #A8E6C8; 
+            <div style="background: #E6FFF5; border-left: 4px solid #A8E6C8;
                         border-radius: 8px; padding: 16px;">
                 <div style="font-weight: 700; color: #059669;">🏴 Northern Ireland</div>
                 <div style="font-size: 1.8em; font-weight: 800; color: #059669;">+38%</div>
@@ -1016,7 +921,7 @@ def render():
     with col_irl:
         st.markdown(
             """
-            <div style="background: #FFF5F5; border-left: 4px solid #F5B7C5; 
+            <div style="background: #FFF5F5; border-left: 4px solid #F5B7C5;
                         border-radius: 8px; padding: 16px;">
                 <div style="font-weight: 700; color: #e63946;">🇮🇪 Ireland</div>
                 <div style="font-size: 1.8em; font-weight: 800; color: #e63946;">−52%</div>
@@ -1031,20 +936,16 @@ def render():
 
     st.info(
         "💡 **Same Gaelic heritage. Opposite response.** In Northern Ireland, "
-        "naming a child in Gaelic is tied to the Irish language movement and "
+        "naming a baby in Gaelic is tied to the Irish language movement and "
         "post-Troubles cultural identity. It's not just tradition — it's a political act."
     )
 
-    st.markdown("---")
-
-    # ══════════════════════════════════════════════════════════════
-    # 💿 PRESSING NEW VINYL (Cultural Revival)
-    # ══════════════════════════════════════════════════════════════
-
-    st.markdown("### 💿 Pressing New Vinyl")
+    # ─── Pressing New Vinyl (folded into Going Independent) ───────
+    st.markdown("#### 💿 …and pressing brand-new vinyl")
     st.markdown(
         "It's not just old names surviving — communities are actively **inventing** "
-        "brand-new names designed to never leave."
+        "brand-new names designed to never leave. **85 brand-new high-identity Celtic names** "
+        "created since 2010, freshly minted with Gaelic orthography that outsiders can't read."
     )
 
     revival_data = {
@@ -1054,12 +955,6 @@ def render():
         "Countryness": [815, 713, 702, 547, 532, 465, 458, 446, 422, 374],
     }
     st.dataframe(revival_data, use_container_width=True, hide_index=True)
-
-    st.markdown(
-        "**85 brand-new high-identity Celtic names** created since 2010. "
-        "None of these existed in the data before — they're freshly minted "
-        "cultural markers, designed with Gaelic orthography that outsiders can't read."
-    )
 
     st.markdown("---")
 
@@ -1104,37 +999,3 @@ def render():
         "Wall Strength": ["Hard wall 🧱 (7.4x lock)", "Hard wall but fading 📉 (−79% since 1997)", "No wall! 🌍 (phonetically accessible)"],
     }
     st.dataframe(border_data, use_container_width=True, hide_index=True)
-
-    st.markdown("---")
-
-    # Culture > Geography
-    st.markdown("#### Culture > Geography")
-    st.markdown(
-        "If distance were the barrier, Australia would be the most distinct. "
-        "It's not. **Cultural tradition trumps physical isolation.**"
-    )
-
-    country_cn = data_2023.groupby("max_country")["countryness"].mean().sort_values(ascending=True).reset_index()
-
-    fig_geo = go.Figure()
-    fig_geo.add_trace(go.Bar(
-        x=country_cn["countryness"],
-        y=country_cn["max_country"],
-        orientation="h",
-        marker_color=[COUNTRY_COLORS.get(c, "#7C9FD6") for c in country_cn["max_country"]],
-        text=[f"{v:.1f}" for v in country_cn["countryness"]],
-        textposition="outside",
-    ))
-    fig_geo.update_layout(
-        **CHART_LAYOUT,
-        title="Avg Countryness by Country (2023)",
-        height=350,
-        xaxis_title="Avg Countryness Score (Higher = More Distinct)",
-    )
-    st.plotly_chart(fig_geo, use_container_width=True)
-
-    st.info(
-        "💡 **Ireland** (right next to the UK) remains 5x more distinct than **Australia** "
-        "(on the other side of the planet but culturally connected via media). "
-        "A non-English linguistic tradition matters more than distance."
-    )
