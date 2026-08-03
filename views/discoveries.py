@@ -466,7 +466,60 @@ def render():
     st.markdown(
         "**Zero** babies named Lucifer until 2016. Then Netflix's *Lucifer* (2016–2021) recast the devil "
         "as a witty, likeable protagonist — and by 2022, **77 babies** carried the name. A single show can "
-        "unlock a door that had been shut for centuries."
+        "unlock a door that had been shut for centuries. And Lucifer isn't alone…"
+    )
+
+    _tyears = list(range(1997, 2024))
+
+    # ─── Taboo #2: once-unthinkable "title" names ─────────────────
+    st.markdown("#### 👑 Naming a Baby a Title")
+    st.markdown(
+        "You couldn't once call a child *King* or *Messiah* — it was arrogant, even blasphemous. "
+        "Today thousands do. The audacious-name taboo has quietly collapsed."
+    )
+    title_names = {
+        "Messiah":  ([13,18,57,83,54,76,96,114,175,243,311,328,352,352,352,753,959,1179,1526,1795,2001,2001,2029,2038,2226,2076,1958], "#9B6FD4"),
+        "King":     ([16,21,23,30,42,20,46,47,113,185,282,301,595,708,742,1438,2120,2478,2594,2732,2778,2704,2557,2337,2072,1717,1356], "#ECC94B"),
+        "Legend":   ([5,5,0,5,0,7,0,11,45,23,48,123,142,170,173,221,276,504,807,1161,1484,1774,2624,2884,3191,2998,2563], "#48BB78"),
+        "Royal":    ([15,12,7,7,13,16,15,12,27,22,49,59,77,109,97,156,221,665,974,1105,950,900,953,1043,1174,1241,1087], "#F56565"),
+        "Saint":    ([0,0,0,0,0,0,0,0,0,9,3,0,0,0,3,0,0,5,25,70,96,240,316,489,705,1028,1216], "#7C9FD6"),
+    }
+    fig_title = go.Figure()
+    for nm, (freqs, color) in title_names.items():
+        fig_title.add_trace(go.Scatter(x=_tyears, y=freqs, mode="lines", name=nm,
+            line=dict(color=color, width=2.5)))
+    fig_title.update_layout(**CHART_LAYOUT, title="", xaxis_title="", yaxis_title="Babies per year",
+        height=380, legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5))
+    st.plotly_chart(fig_title, use_container_width=True)
+    st.markdown(
+        "**Messiah** grew ~150× (13 → a 2021 peak of 2,226). **Legend, King, Royal, Saint** all "
+        "went from near-zero to thousands — a whole class of once-forbidden 'title' names now mainstream."
+    )
+
+    # ─── Taboo #3: names invented by fiction ──────────────────────
+    st.markdown("#### 🎬 Straight Out of Fiction")
+    st.markdown(
+        "Some names didn't exist at all until a screen invented them. Parents now borrow villains and "
+        "made-up words the moment a show or film lands — names with **no history before their premiere.**"
+    )
+    fiction_names = {
+        "Khaleesi": ([0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,149,258,401,382,426,533,606,563,357,393,479,422], "#48BB78"),
+        "Kylo":     ([0,0,0,0,0,0,0,0,0,3,0,0,0,3,0,4,5,0,15,265,192,310,280,907,746,993,1042], "#7C9FD6"),
+        "Loki":     ([0,0,5,0,0,4,10,13,10,12,16,29,33,43,53,78,93,167,167,152,126,160,214,198,223,240,233], "#9B6FD4"),
+        "Renesmee": ([0,0,0,0,0,0,0,0,0,0,0,0,0,22,12,38,97,112,123,133,114,157,152,149,144,206,178], "#F56565"),
+        "Draco":    ([0,0,0,0,0,0,0,0,0,0,0,6,5,0,10,18,5,5,5,8,9,33,59,45,120,143,113], "#ECC94B"),
+    }
+    fig_fic = go.Figure()
+    for nm, (freqs, color) in fiction_names.items():
+        fig_fic.add_trace(go.Scatter(x=_tyears, y=freqs, mode="lines", name=nm,
+            line=dict(color=color, width=2.5)))
+    fig_fic.update_layout(**CHART_LAYOUT, title="", xaxis_title="", yaxis_title="Babies per year",
+        height=380, legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5))
+    st.plotly_chart(fig_fic, use_container_width=True)
+    st.markdown(
+        "**Khaleesi** (*Game of Thrones*, 2011) went 0 → 606. **Kylo** (*Star Wars*, 2015) exploded to over "
+        "1,000 a year. **Renesmee** (*Twilight*), **Draco** (*Harry Potter*), **Loki** (Marvel) — each a name "
+        "that literally did not exist until fiction spoke it into being."
     )
 
     st.markdown("---")
