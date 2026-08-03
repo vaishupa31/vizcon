@@ -874,63 +874,54 @@ def render():
         "just old names surviving — communities are actively **pressing brand-new local vinyl.**"
     )
 
-    # NI vs Ireland divergence chart
-    ni_data = df[
-        (df["max_country"].isin(["Northern Ireland", "Ireland"]))
-        & (df["countryness"] > 100)
-    ].groupby(["year", "max_country"])["name"].nunique().reset_index()
-    ni_data.columns = ["year", "country", "high_identity_names"]
+    # ─── Two "record labels" — the diverging choice (no line chart) ───
+    # Real trend sequences (high-identity name counts) drawn as rising/falling record bars.
+    ni_seq = [47, 50, 45, 38, 43, 56, 65]     # Northern Ireland — rising
+    ie_seq = [71, 59, 61, 57, 60, 41, 34]     # Ireland — falling
+    seq_max = max(ni_seq + ie_seq)
 
-    fig_ni = px.line(
-        ni_data,
-        x="year",
-        y="high_identity_names",
-        color="country",
-        color_discrete_map={
-            "Northern Ireland": "#9FE6C8",
-            "Ireland": "#F5B7C5",
-        },
-        markers=True,
-    )
-    fig_ni.update_layout(
-        **CHART_LAYOUT,
-        title="High-Identity Names (countryness > 100) Over Time",
-        xaxis_title="Year",
-        yaxis_title="Number of Highly Distinct Names",
-        legend_title=None,
-        height=400,
-    )
-    st.plotly_chart(fig_ni, use_container_width=True)
+    def label_bars(seq, color):
+        bars = ""
+        for v in seq:
+            h = int(v / seq_max * 46) + 6
+            bars += (
+                f'<div style="width:14px;height:{h}px;background:{color};'
+                f'border-radius:3px 3px 0 0;"></div>'
+            )
+        return (
+            '<div style="display:flex;align-items:flex-end;justify-content:center;'
+            'gap:6px;height:56px;margin:12px 0 6px;">' + bars + '</div>'
+        )
 
     col_ni, col_irl = st.columns(2)
     with col_ni:
         st.markdown(
-            """
-            <div style="background: #E6FFF5; border-left: 4px solid #A8E6C8;
-                        border-radius: 8px; padding: 16px;">
-                <div style="font-weight: 700; color: #059669;">🏴 Northern Ireland</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #059669;">+38%</div>
-                <div style="color: #718096; font-size: 0.9em;">
-                    47 → 65 high-identity names (1997–2021)<br>
-                    Getting MORE distinct while everyone converges
-                </div>
-            </div>
-            """,
+            '<div style="background:linear-gradient(160deg,#E6FFF5,#D8F5E8);'
+            'border:1px solid #A8E6C8;border-radius:16px;padding:22px;text-align:center;">'
+            '<div style="font-size:.62rem;letter-spacing:2px;font-weight:800;color:#059669;">'
+            '🏴 NORTHERN IRELAND · INDIE LABEL</div>'
+            '<div style="font-family:Georgia,serif;font-size:1.4em;font-weight:800;color:#2D3748;margin:4px 0;">'
+            'Going Underground</div>'
+            '<div style="font-size:2.2em;font-weight:800;color:#059669;">▲ +38%</div>'
+            + label_bars(ni_seq, "#3FA787") +
+            '<div style="font-size:.82em;color:#4A5568;">47 → 65 fiercely-local names — pressing '
+            '<b>more</b> distinct records while the world converges.</div>'
+            '</div>',
             unsafe_allow_html=True,
         )
     with col_irl:
         st.markdown(
-            """
-            <div style="background: #FFF5F5; border-left: 4px solid #F5B7C5;
-                        border-radius: 8px; padding: 16px;">
-                <div style="font-weight: 700; color: #e63946;">🇮🇪 Ireland</div>
-                <div style="font-size: 1.8em; font-weight: 800; color: #e63946;">−52%</div>
-                <div style="color: #718096; font-size: 0.9em;">
-                    71 → 34 high-identity names (1997–2021)<br>
-                    Same heritage — opposite response
-                </div>
-            </div>
-            """,
+            '<div style="background:linear-gradient(160deg,#FFF5F5,#F7E6EC);'
+            'border:1px solid #F5B7C5;border-radius:16px;padding:22px;text-align:center;">'
+            '<div style="font-size:.62rem;letter-spacing:2px;font-weight:800;color:#C98AA6;">'
+            '🇮🇪 IRELAND · MAJOR LABEL</div>'
+            '<div style="font-family:Georgia,serif;font-size:1.4em;font-weight:800;color:#2D3748;margin:4px 0;">'
+            'Signing to the Mainstream</div>'
+            '<div style="font-size:2.2em;font-weight:800;color:#e63946;">▼ −52%</div>'
+            + label_bars(ie_seq, "#E38AA0") +
+            '<div style="font-size:.82em;color:#4A5568;">71 → 34 fiercely-local names — same Gaelic '
+            'heritage, the opposite choice.</div>'
+            '</div>',
             unsafe_allow_html=True,
         )
 
@@ -940,7 +931,7 @@ def render():
         "post-Troubles cultural identity. It's not just tradition — it's a political act."
     )
 
-    # ─── Pressing New Vinyl (folded into Going Independent) ───────
+    # ─── Pressing New Vinyl — a crate of freshly-pressed records (no table) ─
     st.markdown("#### 💿 …and pressing brand-new vinyl")
     st.markdown(
         "It's not just old names surviving — communities are actively **inventing** "
@@ -948,13 +939,33 @@ def render():
         "created since 2010, freshly minted with Gaelic orthography that outsiders can't read."
     )
 
-    revival_data = {
-        "Name": ["Iarla", "Siún", "Cadain", "Siomha", "Caragh", "Aibhlinn", "Bradan", "Breagha", "Doireann", "Saorla"],
-        "First Appeared": [2015, 2013, 2017, 2017, 2021, 2018, 2016, 2018, 2020, 2012],
-        "Country": ["Ireland", "Ireland", "N. Ireland", "Ireland", "Ireland", "N. Ireland", "N. Ireland", "Scotland", "Ireland", "N. Ireland"],
-        "Countryness": [815, 713, 702, 547, 532, 465, 458, 446, 422, 374],
-    }
-    st.dataframe(revival_data, use_container_width=True, hide_index=True)
+    new_vinyl = [
+        ("Iarla", 2015), ("Siún", 2013), ("Cadain", 2017), ("Siomha", 2017),
+        ("Caragh", 2021), ("Aibhlinn", 2018), ("Doireann", 2020), ("Saorla", 2012),
+    ]
+    vc_colors = ["#7C9FD6", "#A8E6C8", "#C8A8E8", "#F5C878", "#F5B7C5", "#9FE6C8"]
+
+    crate = (
+        '<div style="background:linear-gradient(135deg,#EEF2FF,#E8F4FD,#F0FFF4);'
+        'border:1px solid #E2E8F0;border-radius:16px;padding:22px 18px;'
+        'display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:16px;">'
+    )
+    for i, (nm, yr) in enumerate(new_vinyl):
+        c = vc_colors[i % len(vc_colors)]
+        crate += (
+            '<div style="text-align:center;">'
+            '<svg width="76" height="76" viewBox="0 0 100 100">'
+            '<circle cx="50" cy="50" r="48" fill="#2D3748"/>'
+            '<circle cx="50" cy="50" r="34" fill="none" stroke="#4A5568" stroke-width="1.2"/>'
+            '<circle cx="50" cy="50" r="24" fill="none" stroke="#4A5568" stroke-width="1.2"/>'
+            '<circle cx="50" cy="50" r="14" fill="' + c + '"/>'
+            '<circle cx="50" cy="50" r="4" fill="#2D3748"/></svg>'
+            '<div style="font-size:.8em;font-weight:700;color:#2D3748;margin-top:6px;">' + nm + '</div>'
+            '<div style="font-size:.68em;color:#718096;">▶ ' + str(yr) + '</div>'
+            '</div>'
+        )
+    crate += '</div>'
+    st.markdown(crate, unsafe_allow_html=True)
 
     st.markdown("---")
 
