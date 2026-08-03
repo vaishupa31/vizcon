@@ -105,6 +105,31 @@ def multitrack(rows, unit="peak"):
     return html
 
 
+def revival_track(name, sub, values, years, color, ratio):
+    """A bold 'comeback' row: name + a tall waveform that flatlines then erupts,
+    with a ×N revival badge. Bigger and more dramatic than a multitrack row."""
+    trough = min(values)
+    trough_yr = years[values.index(trough)]
+    peak = max(values)
+    peak_yr = years[values.index(peak)]
+    return (
+        '<div style="background:linear-gradient(135deg,#EEF2FF,#E8F4FD,#F0FFF4);'
+        'border:1px solid #E2E8F0;border-radius:16px;padding:18px 22px;margin-bottom:14px;'
+        'box-shadow:0 4px 16px rgba(0,0,0,.06);">'
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">'
+        f'<div><span style="font-family:Georgia,serif;font-size:1.5em;font-weight:800;color:#2D3748;">{name}</span>'
+        f'<span style="font-size:.8em;color:#718096;margin-left:10px;">{sub}</span></div>'
+        f'<div style="background:{color};color:#fff;font-weight:800;font-size:.95em;'
+        f'padding:3px 14px;border-radius:20px;">▲ {ratio} revival</div>'
+        '</div>'
+        + soundwave(values, years, color, "📈", 110) +
+        '<div style="display:flex;justify-content:space-between;font-size:.72em;color:#718096;margin-top:2px;">'
+        f'<span>💀 flatlined at <b>{trough}</b> ({trough_yr})</span>'
+        f'<span>🔥 back to <b>{peak:,}</b> ({peak_yr})</span>'
+        '</div></div>'
+    )
+
+
 def vinyl_pair(left, right):
     """Two spinning-record cards side by side — a 'before / after' 45rpm single.
     Each: (label, name, sub, big_value, small, color, spun_out)."""
@@ -157,6 +182,32 @@ def equalizer(rows, title):
     )
 
 
+def climb_cards(cards):
+    """Rising 'ascending stairs' cards — each riser shown as an upward arrow-ramp
+    with from → to values. cards: (name, meaning, from_v, to_v, color)."""
+    tiles = ""
+    for name, meaning, fromv, tov, color in cards:
+        # small ascending ramp of 5 blocks
+        ramp = "".join(
+            f'<div style="width:9px;height:{8 + i*7}px;background:{color};'
+            f'border-radius:2px;opacity:{0.5 + i*0.12:.2f};"></div>' for i in range(5)
+        )
+        tiles += (
+            '<div style="flex:1;min-width:150px;background:#fff;border:1px solid #E2E8F0;'
+            'border-radius:14px;padding:18px 16px;box-shadow:0 4px 12px rgba(0,0,0,.05);">'
+            f'<div style="font-family:Georgia,serif;font-size:1.4em;font-weight:800;color:#2D3748;">{name}</div>'
+            f'<div style="font-size:.72em;color:#718096;font-style:italic;margin-bottom:12px;">{meaning}</div>'
+            f'<div style="display:flex;align-items:flex-end;gap:4px;height:44px;">{ramp}'
+            f'<span style="margin-left:6px;color:{color};font-size:1.3em;">↗</span></div>'
+            f'<div style="margin-top:12px;font-size:.9em;color:#4A5568;">'
+            f'<b style="color:#A0AEC0;">{fromv}</b> <span style="color:#CBD5E0;">→</span> '
+            f'<b style="color:{color};font-size:1.15em;">{tov:,}</b></div>'
+            '<div style="font-size:.66em;color:#A0AEC0;">babies/yr · 1997 → 2023</div>'
+            '</div>'
+        )
+    return '<div style="display:flex;gap:14px;flex-wrap:wrap;">' + tiles + '</div>'
+
+
 def poster_wall(cards):
     """Movie-marquee 'now showing' posters — for names invented by fiction.
     cards: (name, source, year, from_zero_to, color)."""
@@ -203,17 +254,18 @@ def render():
     st.markdown("### 🤖 Corporate Erasure")
     st.markdown("What happens when a tech giant names a product after a human name? The humans stop using it.")
 
-    # Two 45rpm singles: one still spinning at its peak, one scratched out by a product launch
+    # Two artists, each a 45rpm single: peak pressing → pulled from shelves after a product launch
+    st.markdown("**🎙️ Alexa** — the chart-topper, silenced by a speaker (Amazon Echo, 2014)")
     st.markdown(vinyl_pair(
-        ("● PEAK PRESSING (2015)", "Alexa", "before Amazon Echo", "6,702", "babies/year at its height", "#7C9FD6", False),
-        ("● PULLED FROM SHELVES (2023)", "Alexa", "after Amazon Echo", "511", "−92% · the name erased", "#E63946", True),
+        ("● PEAK PRESSING · 2015", "Alexa", "before Amazon Echo", "6,702", "babies/year at its height", "#7C9FD6", False),
+        ("● PULLED FROM SHELVES · 2023", "Alexa", "after Amazon Echo", "511", "−92% · the name erased", "#E63946", True),
     ), unsafe_allow_html=True)
-    st.markdown(
-        "<div style='text-align:center;color:#718096;font-size:.9em;margin:10px 0 0;'>"
-        "Same story for <b>Siri</b>: a rising Scandinavian name (peak 94 in 2010) → just <b>7</b> babies by 2023, "
-        "the moment Apple gave the name to a phone. −93%.</div>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("")
+    st.markdown("**🎙️ Siri** — a rising star, cut off mid-climb (Apple Siri, 2011)")
+    st.markdown(vinyl_pair(
+        ("● RISING · 2010", "Siri", "before Apple Siri", "94", "babies/year, still climbing", "#C8A8E8", False),
+        ("● OFF THE AIR · 2023", "Siri", "after Apple Siri", "7", "−93% · killed on its way up", "#E63946", True),
+    ), unsafe_allow_html=True)
     st.markdown("")
     st.info(
         "💡 **The asymmetry:** Alexa had a bigger victim pool (6,702/year) but Siri was the crueller kill "
@@ -231,13 +283,13 @@ def render():
         "Each track below is the name's own comeback clip:"
     )
     zombie_rows = [
-        ("Wren", "cottagecore + nature names", [3,6,5,14,11,17,24,54,41,86,107,159,203,288,419,504,569,855,1012,1053,1159,1325,1988,2596,2535], list(range(1999,2024)), "#48BB78"),
-        ("Salem", "WitchTok + Sabrina (2018)", [34,18,40,9,44,43,40,43,55,46,54,56,70,77,57,84,88,150,220,263,305,327,564,711,951,1152,1246], _years, "#9B6FD4"),
-        ("Octavia", "The 100 — Octavia Blake", [220,233,202,177,156,176,128,74,143,84,67,91,79,47,43,63,53,66,279,391,682,943,1066,1152,1577,1509,1441], _years, "#F56565"),
-        ("Tru", "authenticity culture", [72,55,42,14,39,29,37,6,10,30,31,36,21,52,138,261,338,538,720,670], list(range(2004,2024)), "#ECC94B"),
-        ("Xena", "streaming revival", [246,156,86,74,37,31,18,10,13,13,14,12,13,18,14,34,38,38,58,70,109,126,162,169,162,278,261], _years, "#7C9FD6"),
+        ("Wren", "cottagecore + nature names", [3,6,5,14,11,17,24,54,41,86,107,159,203,288,419,504,569,855,1012,1053,1159,1325,1988,2596,2535], list(range(1999,2024)), "#48BB78", "865×"),
+        ("Salem", "WitchTok + Sabrina (2018)", [34,18,40,9,44,43,40,43,55,46,54,56,70,77,57,84,88,150,220,263,305,327,564,711,951,1152,1246], _years, "#9B6FD4", "138×"),
+        ("Octavia", "The 100 — Octavia Blake", [220,233,202,177,156,176,128,74,143,84,67,91,79,47,43,63,53,66,279,391,682,943,1066,1152,1577,1509,1441], _years, "#F56565", "37×"),
+        ("Xena", "streaming revival", [246,156,86,74,37,31,18,10,13,13,14,12,13,18,14,34,38,38,58,70,109,126,162,169,162,278,261], _years, "#7C9FD6", "28×"),
     ]
-    st.markdown(multitrack(zombie_rows, unit="comeback peak"), unsafe_allow_html=True)
+    for name, sub, vals, yrs, color, ratio in zombie_rows:
+        st.markdown(revival_track(name, sub, vals, yrs, color, ratio), unsafe_allow_html=True)
     st.markdown(
         "**What brings a name back?** Streaming reviving old shows (Xena), a breakout character (Octavia), "
         "or aesthetic movements going viral (Salem, Wren). Watch each waveform: silent for years, then it *erupts*."
@@ -257,14 +309,14 @@ def render():
         None, "", "3,814 (1997) → 28,607 (2023) · +650% across a 24-name basket"),
         unsafe_allow_html=True)
 
-    st.markdown("**Top individual risers — 2023 volume (each climbed from near-silence):**")
-    st.markdown(equalizer([
-        ("Aria",  8819, 8819, "#F6AD55"),
-        ("Arya",  2691, 8819, "#F5A9C0"),
-        ("Ayaan", 1163, 8819, "#9B6FD4"),
-        ("Aarav",  718, 8819, "#48BB78"),
-        ("Ishaan", 398, 8819, "#7C9FD6"),
-    ], "🎚️ DIASPORA RISERS · babies per year, 2023"), unsafe_allow_html=True)
+    st.markdown("**Top individual risers — each climbed from near-silence:**")
+    st.markdown(climb_cards([
+        ("Aria", "Sanskrit 'melody' / air", "93", 8819, "#F6AD55"),
+        ("Arya", "'noble'", "24", 2691, "#F5A9C0"),
+        ("Ayaan", "'gift of God'", "4", 1163, "#9B6FD4"),
+        ("Aarav", "'peaceful'", "0", 718, "#48BB78"),
+        ("Ishaan", "'the sun'", "0", 398, "#7C9FD6"),
+    ]), unsafe_allow_html=True)
     st.info(
         "💡 These names have LOW countryness (2–4) — shared equally across diaspora countries. "
         "Indian families name children the same way regardless of which country they're in — "
@@ -378,8 +430,8 @@ def render():
         ("Draco", "Harry Potter", 2001, "0 → 143", "#ECC94B"),
     ]), unsafe_allow_html=True)
     st.markdown(
-        "Each waveform starts as **pure silence** — then the premiere hits and the name is suddenly real. "
-        "Culture doesn't just revive names; it *invents* them."
+        "**Khaleesi** (*Game of Thrones*, 2011) went 0 → 606. **Kylo** (*Star Wars*, 2015) exploded to over "
+        "1,000 a year. Each name literally did not exist until fiction spoke it into being."
     )
     st.markdown("---")
 
