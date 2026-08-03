@@ -105,6 +105,77 @@ def multitrack(rows, unit="peak"):
     return html
 
 
+def vinyl_pair(left, right):
+    """Two spinning-record cards side by side — a 'before / after' 45rpm single.
+    Each: (label, name, sub, big_value, small, color, spun_out)."""
+    def disc(label, name, sub, big, small, color, dim=False):
+        op = "0.4" if dim else "1"
+        return (
+            '<div style="flex:1;min-width:220px;background:linear-gradient(160deg,#2A2438,#1A1626);'
+            'border-radius:16px;padding:24px;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,.3);">'
+            f'<div style="font-size:.6rem;letter-spacing:3px;font-weight:800;color:{color};">{label}</div>'
+            f'<svg width="120" height="120" viewBox="0 0 100 100" style="margin:14px auto 6px;opacity:{op};">'
+            '<circle cx="50" cy="50" r="48" fill="#12101c"/>'
+            '<circle cx="50" cy="50" r="34" fill="none" stroke="#3a3350" stroke-width="1.2"/>'
+            '<circle cx="50" cy="50" r="24" fill="none" stroke="#3a3350" stroke-width="1.2"/>'
+            f'<circle cx="50" cy="50" r="15" fill="{color}"/><circle cx="50" cy="50" r="4" fill="#12101c"/></svg>'
+            f'<div style="font-family:Georgia,serif;font-size:1.5em;font-weight:800;color:#F0EBFA;">{name}</div>'
+            f'<div style="font-size:.72em;color:#9A8FB0;margin-bottom:8px;">{sub}</div>'
+            f'<div style="font-size:2em;font-weight:800;color:{color};">{big}</div>'
+            f'<div style="font-size:.72em;color:#A0AEC0;">{small}</div>'
+            '</div>'
+        )
+    return ('<div style="display:flex;gap:18px;flex-wrap:wrap;">'
+            + disc(*left) + disc(*right) + '</div>')
+
+
+def equalizer(rows, title):
+    """A vertical EQ: each item is a column of stacked 'level' segments (like a graphic
+    equalizer / VU meter). rows: (label, value, max_value, color)."""
+    cols = ""
+    for label, val, mx, color in rows:
+        lit = round(val / mx * 10)
+        segs = ""
+        for s in range(10, 0, -1):
+            on = s <= lit
+            segs += (f'<div style="width:26px;height:9px;border-radius:2px;margin:2px 0;'
+                     f'background:{color if on else "#E2E8F0"};opacity:{"1" if on else "0.6"};"></div>')
+        cols += (
+            '<div style="text-align:center;">'
+            f'<div style="display:flex;flex-direction:column;align-items:center;">{segs}</div>'
+            f'<div style="font-weight:800;color:{color};font-size:1.05em;margin-top:8px;">{val:,}</div>'
+            f'<div style="font-size:.72em;color:#4A5568;font-weight:600;">{label}</div>'
+            '</div>'
+        )
+    return (
+        '<div style="background:linear-gradient(135deg,#EEF2FF,#E8F4FD,#F0FFF4);'
+        'border:1px solid #E2E8F0;border-radius:16px;padding:24px 20px;box-shadow:0 4px 16px rgba(0,0,0,.06);">'
+        f'<div style="text-align:center;font-size:.72em;letter-spacing:2px;color:#718096;'
+        f'text-transform:uppercase;font-weight:700;margin-bottom:18px;">{title}</div>'
+        '<div style="display:flex;justify-content:center;gap:30px;align-items:flex-end;flex-wrap:wrap;">'
+        + cols + '</div></div>'
+    )
+
+
+def poster_wall(cards):
+    """Movie-marquee 'now showing' posters — for names invented by fiction.
+    cards: (name, source, year, from_zero_to, color)."""
+    tiles = ""
+    for name, source, year, arc, color in cards:
+        tiles += (
+            f'<div style="flex:1;min-width:150px;background:linear-gradient(180deg,#1A1A2E,#16213E);'
+            f'border-radius:10px;padding:18px 14px;text-align:center;border-top:4px solid {color};'
+            f'box-shadow:0 8px 20px rgba(0,0,0,.3);">'
+            '<div style="font-size:.55rem;letter-spacing:2px;color:#ECC94B;font-weight:700;">🎬 NOW SHOWING</div>'
+            f'<div style="font-family:Georgia,serif;font-size:1.5em;font-weight:800;color:#F0EBFA;margin:10px 0 2px;">{name}</div>'
+            f'<div style="font-size:.72em;color:#9FB0C8;font-style:italic;">{source}</div>'
+            f'<div style="margin:12px 0 4px;font-size:.7rem;color:#718096;">premiered {year}</div>'
+            f'<div style="font-size:1.05em;font-weight:800;color:{color};">{arc}</div>'
+            '</div>'
+        )
+    return '<div style="display:flex;gap:14px;flex-wrap:wrap;">' + tiles + '</div>'
+
+
 def render():
     _years = list(range(1997, 2024))
 
@@ -118,8 +189,8 @@ def render():
                 🎉 I Never Knew That
             </h1>
             <p style="font-size: 1.2em; color: #4A5568; max-width: 650px; margin: 0 auto; line-height: 1.7;">
-                Surprising stories hiding in 27 years of baby name data —
-                each one a little sound clip of a name's rise and fall.
+                Five surprising stories hiding in 27 years of baby name data —
+                told the way they deserve: on record, on the charts, on the marquee.
             </p>
         </div>
         """,
@@ -132,19 +203,18 @@ def render():
     st.markdown("### 🤖 Corporate Erasure")
     st.markdown("What happens when a tech giant names a product after a human name? The humans stop using it.")
 
-    alexa_years = _years
-    alexa_freq = [3398,3927,3926,3927,4197,4750,4938,4798,5039,6649,6348,5878,6063,5807,5288,5011,4785,4880,6702,5450,4535,3394,2128,1334,718,605,511]
-    siri_years = [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023]
-    siri_freq  = [8,7,9,5,5,5,6,25,33,65,68,66,83,94,69,66,10,11,10,9,8,6,5,4,3,5,7]
-
-    col_alexa, col_siri = st.columns(2)
-    with col_alexa:
-        st.markdown(wave_card("Alexa", alexa_freq, alexa_years, "#7C9FD6", "🔻",
-            2014, "Echo 2014", "Peak 6,702 (2015) → 511 (2023) · −92%"), unsafe_allow_html=True)
-    with col_siri:
-        st.markdown(wave_card("Siri", siri_freq, siri_years, "#C8A8E8", "🔻",
-            2011, "Siri 2011", "Peak 94 (2010) → 7 (2023) · −93%"), unsafe_allow_html=True)
-
+    # Two 45rpm singles: one still spinning at its peak, one scratched out by a product launch
+    st.markdown(vinyl_pair(
+        ("● PEAK PRESSING (2015)", "Alexa", "before Amazon Echo", "6,702", "babies/year at its height", "#7C9FD6", False),
+        ("● PULLED FROM SHELVES (2023)", "Alexa", "after Amazon Echo", "511", "−92% · the name erased", "#E63946", True),
+    ), unsafe_allow_html=True)
+    st.markdown(
+        "<div style='text-align:center;color:#718096;font-size:.9em;margin:10px 0 0;'>"
+        "Same story for <b>Siri</b>: a rising Scandinavian name (peak 94 in 2010) → just <b>7</b> babies by 2023, "
+        "the moment Apple gave the name to a phone. −93%.</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown("")
     st.info(
         "💡 **The asymmetry:** Alexa had a bigger victim pool (6,702/year) but Siri was the crueller kill "
         "— it was actively *growing* when Apple took it. Alexa was already past peak."
@@ -187,13 +257,14 @@ def render():
         None, "", "3,814 (1997) → 28,607 (2023) · +650% across a 24-name basket"),
         unsafe_allow_html=True)
 
-    riser_rows = [
-        ("Aria", "Sanskrit 'melody' / air", [93,120,180,260,360,470,620,760,900,1100,1400,1800,2400,3200,4100,5200,6400,7600,8900,9800,10620,10400,9900,9200,9100,8900,8819], _years, "#F6AD55"),
-        ("Arya", "'noble'", [24,30,45,70,90,120,160,210,290,380,500,660,900,1200,1500,1900,2400,2900,3400,3700,3913,3600,3300,3000,2900,2800,2691], _years, "#F5A9C0"),
-        ("Ayaan", "'gift of God'", [4,6,10,18,30,50,90,150,220,300,400,520,640,760,860,930,1000,1080,1150,1210,1240,1257,1230,1200,1180,1170,1163], _years, "#9B6FD4"),
-    ]
-    st.markdown("**Top individual risers — from near-silence to thousands a year:**")
-    st.markdown(multitrack(riser_rows, unit="2023 total"), unsafe_allow_html=True)
+    st.markdown("**Top individual risers — 2023 volume (each climbed from near-silence):**")
+    st.markdown(equalizer([
+        ("Aria",  8819, 8819, "#F6AD55"),
+        ("Arya",  2691, 8819, "#F5A9C0"),
+        ("Ayaan", 1163, 8819, "#9B6FD4"),
+        ("Aarav",  718, 8819, "#48BB78"),
+        ("Ishaan", 398, 8819, "#7C9FD6"),
+    ], "🎚️ DIASPORA RISERS · babies per year, 2023"), unsafe_allow_html=True)
     st.info(
         "💡 These names have LOW countryness (2–4) — shared equally across diaspora countries. "
         "Indian families name children the same way regardless of which country they're in — "
@@ -300,13 +371,12 @@ def render():
         "Some names didn't exist at all until a screen invented them — flat silence, then a spike the "
         "moment the show or film lands. Names with **no history before their premiere:**"
     )
-    fiction_rows = [
-        ("Kylo", "Star Wars (2015)", [0,0,0,0,0,0,0,0,0,3,0,0,0,3,0,4,5,0,15,265,192,310,280,907,746,993,1042], _years, "#7C9FD6"),
-        ("Khaleesi", "Game of Thrones (2011)", [0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,149,258,401,382,426,533,606,563,357,393,479,422], _years, "#48BB78"),
-        ("Loki", "Marvel", [0,0,5,0,0,4,10,13,10,12,16,29,33,43,53,78,93,167,167,152,126,160,214,198,223,240,233], _years, "#9B6FD4"),
-        ("Renesmee", "Twilight (2008)", [0,0,0,0,0,0,0,0,0,0,0,0,0,22,12,38,97,112,123,133,114,157,152,149,144,206,178], _years, "#F56565"),
-    ]
-    st.markdown(multitrack(fiction_rows, unit="peak"), unsafe_allow_html=True)
+    st.markdown(poster_wall([
+        ("Kylo", "Star Wars", 2015, "0 → 1,042", "#7C9FD6"),
+        ("Khaleesi", "Game of Thrones", 2011, "0 → 606", "#48BB78"),
+        ("Renesmee", "Twilight", 2008, "0 → 206", "#F56565"),
+        ("Draco", "Harry Potter", 2001, "0 → 143", "#ECC94B"),
+    ]), unsafe_allow_html=True)
     st.markdown(
         "Each waveform starts as **pure silence** — then the premiere hits and the name is suddenly real. "
         "Culture doesn't just revive names; it *invents* them."
