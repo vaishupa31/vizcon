@@ -258,9 +258,15 @@ def render():
     _years = list(range(1997, 2024))
     with col_unique:
         unique_counts = [13889,14060,14163,14622,14842,15112,15777,16345,16779,17519,18351,18725,18935,18932,18955,19196,18704,18559,18523,18304,18092,17899,17756,17431,17763,34184,33902]
+        # "Widening songbook" — filled area, not bars
         fig_uniq = go.Figure()
-        fig_uniq.add_trace(go.Bar(x=_years, y=unique_counts, marker_color="#48BB78", opacity=0.8))
-        fig_uniq.update_layout(**CHART_LAYOUT, title="Unique Names Per Year", xaxis_title="", yaxis_title="Count", height=300)
+        fig_uniq.add_trace(go.Scatter(
+            x=_years, y=unique_counts, mode="lines",
+            line=dict(color="#48BB78", width=3, shape="spline"),
+            fill="tozeroy", fillcolor="rgba(72,187,120,0.18)",
+        ))
+        fig_uniq.update_layout(**CHART_LAYOUT, title="📖 The Widening Songbook — Unique Names Per Year",
+            xaxis_title="", yaxis_title="Distinct names", height=300)
         st.plotly_chart(fig_uniq, use_container_width=True)
     with col_top10:
         top10_pct = [8.83,8.61,8.33,7.98,7.64,7.55,7.39,7.16,6.68,6.24,6.01,5.89,5.91,5.97,5.94,6.00,5.91,5.75,5.68,5.62,5.61,5.53,5.55,5.47,5.41,4.57,4.53]
@@ -346,6 +352,7 @@ def render():
         "are quietly vanishing. No single letter has fallen further."
     )
 
+    # ─── "Mixing board" — each letter is a fader that slid up or down ───
     letter_change = [
         ("J", -6.01, "#E63946"),
         ("C", -2.65, "#F56565"),
@@ -354,17 +361,53 @@ def render():
         ("E", 3.26, "#68B58A"),
         ("L", 3.65, "#48BB78"),
     ]
-    fig_letter = go.Figure()
-    fig_letter.add_trace(go.Bar(
-        x=[l[0] for l in letter_change],
-        y=[l[1] for l in letter_change],
-        marker_color=[l[2] for l in letter_change],
-        text=[f"{l[1]:+.1f}" for l in letter_change],
-        textposition="outside",
-    ))
-    fig_letter.update_layout(**CHART_LAYOUT, title="Change in Share of Babies by First Letter (1997 → 2023, % points)",
-        xaxis_title="First letter", yaxis_title="Change (% points)", height=340, showlegend=False)
-    st.plotly_chart(fig_letter, use_container_width=True)
+    max_abs = max(abs(v) for _, v, _ in letter_change)
+    faders = ""
+    for letter, val, color in letter_change:
+        rising = val >= 0
+        fill_h = int(abs(val) / max_abs * 70)          # px of the coloured travel
+        knob_bottom = 78 + fill_h if rising else 78 - fill_h  # knob position within 160px track
+        arrow = "▲" if rising else "▼"
+        faders += (
+            '<div style="text-align:center;">'
+            # vertical track
+            '<div style="position:relative;width:34px;height:160px;margin:0 auto;'
+            'background:linear-gradient(#E2E8F0,#EDF2F7);border-radius:8px;border:1px solid #DDE3EC;">'
+            # centre line (zero)
+            '<div style="position:absolute;top:78px;left:0;right:0;height:2px;background:#CBD5E0;"></div>'
+            # coloured travel from centre
+            + (
+                f'<div style="position:absolute;left:9px;width:14px;bottom:{160-78}px;height:{fill_h}px;'
+                f'background:{color};border-radius:6px 6px 0 0;"></div>'
+                if rising else
+                f'<div style="position:absolute;left:9px;width:14px;top:78px;height:{fill_h}px;'
+                f'background:{color};border-radius:0 0 6px 6px;"></div>'
+            )
+            # knob
+            + f'<div style="position:absolute;left:4px;width:26px;height:12px;'
+              f'bottom:{knob_bottom-6}px;background:#fff;border:2px solid {color};'
+              f'border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.15);"></div>'
+            '</div>'
+            # letter + value
+            f'<div style="font-family:Georgia,serif;font-size:1.6em;font-weight:800;color:{color};margin-top:8px;">{letter}</div>'
+            f'<div style="font-size:.8em;font-weight:700;color:{color};">{arrow} {val:+.1f}</div>'
+            '</div>'
+        )
+    st.markdown(
+        '<div style="background:linear-gradient(135deg,#EEF2FF,#E8F4FD,#F0FFF4);'
+        'border:1px solid #E2E8F0;border-radius:16px;padding:24px 20px;box-shadow:0 4px 16px rgba(0,0,0,.06);">'
+        '<div style="text-align:center;font-size:.72em;letter-spacing:2px;color:#718096;'
+        'text-transform:uppercase;font-weight:700;margin-bottom:16px;">🎛️ THE NAMING MIXING BOARD · first-letter share, 1997 → 2023</div>'
+        '<div style="display:flex;justify-content:center;gap:22px;flex-wrap:wrap;">'
+        + faders +
+        '</div>'
+        '<div style="display:flex;justify-content:space-between;max-width:520px;margin:14px auto 0;">'
+        '<span style="font-size:.72em;color:#48BB78;font-weight:700;">▲ FADED UP</span>'
+        '<span style="font-size:.72em;color:#E63946;font-weight:700;">FADED DOWN ▼</span>'
+        '</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
         "**'J' lost 6 percentage points** — a bigger drop than any other letter. Meanwhile soft-sounding "
@@ -386,15 +429,24 @@ def render():
 
     col_luc_chart, col_luc_note = st.columns([1.4, 1])
     with col_luc_chart:
-        lucifer_years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
-        lucifer_freq = [10, 13, 11, 20, 29, 37, 77, 57]
+        lucifer_years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+        lucifer_freq = [0, 10, 13, 11, 20, 29, 37, 77, 57]
+        # "Flame rising from zero" — glowing area, not bars
         fig_luc = go.Figure()
-        fig_luc.add_trace(go.Bar(x=lucifer_years, y=lucifer_freq, marker_color="#9B6FD4"))
+        fig_luc.add_trace(go.Scatter(
+            x=lucifer_years, y=lucifer_freq, mode="lines",
+            line=dict(color="#9B6FD4", width=3.5, shape="spline"),
+            fill="tozeroy", fillcolor="rgba(155,111,212,0.22)",
+        ))
+        fig_luc.add_trace(go.Scatter(
+            x=[2022], y=[77], mode="markers+text", text=["🔥 77"], textposition="top center",
+            marker=dict(size=12, color="#9B6FD4"), textfont=dict(size=13, color="#6B46C1"),
+        ))
         fig_luc.add_vline(x=2016, line_dash="dash", line_color="#E63946", opacity=0.6)
-        fig_luc.add_annotation(x=2016, y=13, text="Netflix's<br>Lucifer premieres",
-            showarrow=True, arrowhead=2, font=dict(size=10, color="#E63946"), ax=55, ay=-25)
-        fig_luc.update_layout(**CHART_LAYOUT, title="Lucifer — the taboo that broke",
-            xaxis_title="", yaxis_title="Babies per year", height=320)
+        fig_luc.add_annotation(x=2016, y=20, text="Netflix's<br>Lucifer premieres",
+            showarrow=True, arrowhead=2, font=dict(size=10, color="#E63946"), ax=60, ay=-25)
+        fig_luc.update_layout(**CHART_LAYOUT, title="😈 From zero → 77: the taboo catches fire",
+            xaxis_title="", yaxis_title="Babies per year", height=320, showlegend=False)
         st.plotly_chart(fig_luc, use_container_width=True)
     with col_luc_note:
         st.markdown("""
