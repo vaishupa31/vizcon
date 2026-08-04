@@ -172,3 +172,7 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+with tab_baby:
+    from views.baby_narrator import render as render_baby
+    render_baby()
