@@ -969,44 +969,4 @@ def render():
 
     st.markdown("---")
 
-    # ══════════════════════════════════════════════════════════════
-    # SECTION 4: DATA FACTS
-    # ══════════════════════════════════════════════════════════════
-
-    st.markdown("### 📊 The Numbers Behind the Wall")
-
-    # 3.2% vs 30.2% chart
-    st.markdown("#### Gaelic Spelling = Cultural Lock")
-
-    fig_gaelic = go.Figure()
-    fig_gaelic.add_trace(go.Bar(
-        x=["Names that ESCAPED Ireland", "Names that STAYED"],
-        y=[3.2, 30.2],
-        marker_color=["#A8E6C8", "#F5B7C5"],
-        text=["3.2%", "30.2%"],
-        textposition="outside",
-        textfont=dict(size=16, color="#4A5568"),
-    ))
-    fig_gaelic.update_layout(
-        **CHART_LAYOUT,
-        title="% of Names with Gaelic Orthography (bh, dh, gh, mh, aoi)",
-        yaxis_title="Percentage",
-        height=350,
-        showlegend=False,
-    )
-    st.plotly_chart(fig_gaelic, use_container_width=True)
-
-    st.markdown(
-        "Of **126** Irish names that escaped to other countries, only **3.2%** had Gaelic spelling. "
-        "Of **86** that stayed locked, **30.2%** did. A **10x difference** — and a **7.4x cultural lock factor**."
-    )
-
-    # Three borders table
-    st.markdown("#### Three Linguistic Borders Within One Language")
-    border_data = {
-        "Border": ["🟣 Gaelic ↔ Anglophone", "🔵 Francophone ↔ Anglophone", "🟢 Hispanic ↔ Anglophone"],
-        "Locked (can't cross)": ["Sadhbh, Caoilfhionn, Niamh, Aoife", "Frédérique, Océanne, Laurianne", "Almost none!"],
-        "Escaped (crossed)": ["Declan, Ronan, Connor, Liam", "Very few escape", "Santiago, Diego, Carlos, Isabella"],
-        "Wall Strength": ["Hard wall 🧱 (7.4x lock)", "Hard wall but fading 📉 (−79% since 1997)", "No wall! 🌍 (phonetically accessible)"],
-    }
-    st.dataframe(border_data, use_container_width=True, hide_index=True)
+   
