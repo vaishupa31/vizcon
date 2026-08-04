@@ -18,12 +18,12 @@ st.markdown("""
     /* Hide hamburger menu and footer */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    
+
     /* Smooth scrolling */
     html {
         scroll-behavior: smooth;
     }
-    
+
     /* Chapter dividers */
     .chapter-divider {
         margin: 4rem 0 3rem 0;
@@ -51,7 +51,7 @@ st.markdown("""
         text-transform: uppercase;
         color: #667eea;
     }
-    
+
     /* Floating chapter nav */
     .chapter-nav {
         position: fixed;
@@ -80,7 +80,7 @@ st.markdown("""
     .chapter-dot.active {
         background: #667eea;
     }
-    
+
     /* Scroll progress bar */
     .scroll-progress {
         position: fixed;
@@ -91,7 +91,7 @@ st.markdown("""
         z-index: 9999;
         transition: width 0.1s;
     }
-    
+
     /* Container max width */
     .block-container {
         max-width: 1200px;
@@ -120,6 +120,15 @@ try:
     render_home()
 except Exception as e:
     st.error(f"Error loading Home: {e}")
+
+
+# ═══ CHAPTER 1½: How I Got My Name (baby narrator — the countryness explainer) ═══
+chapter_break("🎧", "How I Got My Name")
+try:
+    from views.baby_narrator import render as render_baby
+    render_baby()
+except Exception as e:
+    st.error(f"Error loading Baby Narrator: {e}")
 
 
 # ═══ CHAPTER 2: The Global Playlist ═══
@@ -172,7 +181,3 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
-
-with tab_baby:
-    from views.baby_narrator import render as render_baby
-    render_baby()
